@@ -4,9 +4,28 @@ type color =
   |Yellow
   |Green
   |Blue
+
 type card = {number : int; color: color}
+
 type deck = card list
-let load_deck = failwith "Unimplemented"
+
+let rec load_num_color numbers col =
+  match numbers with
+  | [] -> []
+  | h::t -> card(h, col)::load_num_color t col
+
+let load_deck = 
+  let numbers = [0;1;2;3;4;5;6;7;8;9] in 
+  let no_zero = [1;2;3;4;5;6;7;8;9] in
+  (load_num_color numbers Red) :: 
+  (load_num_color numbers Yellow) :: 
+  (load_num_color numbers Green) ::
+  (load_num_color numbers Blue) :: 
+  (load_num_color no_zero Red) :: 
+  (load_num_color no_zero Yellow) :: 
+  (load_num_color no_zero Green) ::
+  (load_num_color no_zero Blue)
+
 let shuffle d = failwith "Unimplemented"
 let deal d = failwith "Unimplemented"
 let add_card c d = c::d
