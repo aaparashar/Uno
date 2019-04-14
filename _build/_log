@@ -16,16 +16,19 @@ ocamlfind ocamldep -modules command.ml > command.ml.depends # cached
 # Target: command.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:command.cmo, file:command.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -o command.cmo command.ml # cached
 # Target: state.mli.depends, tags: { extension:mli, file:state.mli, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -modules state.mli > state.mli.depends # cached
+ocamlfind ocamldep -modules state.mli > state.mli.depends
 # Target: state.cmi, tags: { byte, compile, extension:mli, file:state.mli, interf, ocaml, quiet }
-ocamlfind ocamlc -c -o state.cmi state.mli # cached
+ocamlfind ocamlc -c -o state.cmi state.mli
 # Target: state.ml.depends, tags: { extension:ml, file:state.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -modules state.ml > state.ml.depends
+ocamlfind ocamldep -modules state.ml > state.ml.depends # cached
 # Target: state.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -o state.cmo state.ml
-+ ocamlfind ocamlc -c -o state.cmo state.ml
-File "state.ml", line 19, characters 27-34:
-Error: This expression has type Deck.card list
-       but an expression was expected of type Deck.t
+# Target: main.ml.depends, tags: { extension:ml, file:main.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules main.ml > main.ml.depends # cached
+# Target: main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -o main.cmo main.ml
++ ocamlfind ocamlc -c -o main.cmo main.ml
+File "main.ml", line 9, characters 2-14:
+Error: Unbound module ANSITerminal
 Command exited with code 2.
 # Compilation unsuccessful.

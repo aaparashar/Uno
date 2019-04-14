@@ -29,3 +29,5 @@ val remove_card: card -> t ->t
 val top_card: t ->card
 
 val is_valid: card -> card -> bool
+
+val empty_deck: t

@@ -14,10 +14,6 @@ type t
 
 val load_deck : t
 
-val shuffle : t -> t
-
-val load_deck : t
-
 val riffle : t -> t -> t -> t
 
 val multi_riffle : t -> int -> t
@@ -33,3 +29,5 @@ val remove_card: card -> t ->t
 val top_card: t ->card
 
 val is_valid: card -> card -> bool
+
+val empty_deck: t

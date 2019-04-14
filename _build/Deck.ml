@@ -14,7 +14,7 @@ let rec load_num_color (numbers:int list) col =
   | [] -> []
   | h::t -> let c = {number = h; color = col} in 
     c ::load_num_color t col
-
+let empty_deck: t = []
 let load_deck = 
   let numbers = [0;1;2;3;4;5;6;7;8;9] in 
   let no_zero = [1;2;3;4;5;6;7;8;9] in
