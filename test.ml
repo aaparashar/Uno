@@ -35,7 +35,7 @@ let test_shuffle
     (d: Deck.t) = 
   let shuffled = shuffle d in
   name >:: (fun _ ->
-      assert ((d.length = shuffled.length) && (contains_all d shuffled))
+      assert ((List.length d = List.length shuffled) && (contains_all d shuffled))
         ~printer:string_of_bool)
 
 let test_top_card 
