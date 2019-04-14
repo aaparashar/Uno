@@ -30,7 +30,7 @@ let rec contains_all a b =
 let test_shuffle
     (name : string)
     (d: Deck.t) = 
-  let shuffled = shuffled d in
+  let shuffled = shuffle d in
   name >:: (fun _ ->
     assert ((d.length = shuffled.length) && (contains_all d shuffled))
              ~printer:string_of_bool)
