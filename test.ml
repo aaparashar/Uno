@@ -1,4 +1,5 @@
 open Deck
+open Command
 let deck_tests =
 
   let initial_deck = load_deck in 
@@ -16,8 +17,28 @@ let deck_tests =
   ]
 let command_tests =
   [
+    "Quit" >:: (fun _ -> assert_equal (parse "quit") Quit);
+    "Draw" >:: (fun _ -> assert_equal (parse "draw") Draw);
+    "Score" >:: (fun _ -> assert_equal (parse "score") Score);
+    "Hand" >:: (fun _ -> assert_equal (parse "hand") Hand);
+    "Play" >:: (fun _ -> assert_equal (parse "play") Play);
+    "Put" >:: (fun _ ->assert_equal Put["yellow","3"]) 
+      (parse "p yellow 3"));  
+"Put with spaces" >:: (fun _ ->assert_equal Put["yellow","3"]) 
+  (parse "draw yellow      3"));  
+"Put with empty" >:: (fun _ ->assert_equal Empty) 
+  (parse "put"));  
 
-  ]
+
+
+(* "Lock door" >:: (fun _ -> assert_equal (Command.Lock ["dorm with key"]) 
+    (parse "lock dorm with key"));
+   "Unlock door" >:: (fun _ -> assert_equal (Command.Unlock ["treasure with 
+    book"]) (parse "unlock treasure with book")); *)
+"Empty String" >:: (fun _ -> assert_raises (Empty) parse "");
+"Malformed" >:: (fun _ -> assert_raises (Malformed) parse("potato"));
+]
+
 let state_tests =
   [
 

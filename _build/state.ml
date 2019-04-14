@@ -24,4 +24,5 @@ let get_players_hand st = st.players_hand
 let get_ai_hand st = st.ai_hand
 let get_draw_deck st = st.draw_deck
 
+let pick c st d= failwith "Unimplemented"
 let put c st d = failwith "Unimplemented"
