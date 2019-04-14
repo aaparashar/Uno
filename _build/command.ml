@@ -1,7 +1,7 @@
 type object_phrase = string list
 
 type command = 
-  | Pick of object_phrase
+  | Draw
   | Quit
   | Score
   | Hand
@@ -19,14 +19,26 @@ exception Malformed
     following the first if the first string is go**)
 let parse str =
   if str = "" then raise Empty
-  else let strarray = String.split_on_char ' ' str in
+  else begin 
+    let strarray = String.split_on_char ' ' str in
     match strarray with
     |[] -> raise Empty
+<<<<<<< HEAD
     |h::t -> if h = "quit" then Quit else if 
-        h = "pick" then Pick(t)
+        h = "draw" then Draw
       else if h="score" then Score
       else if h="hand" then Hand
       else if h ="play" then Play
       else if h = "put" then Put(t)
       else raise Malformed
+=======
+    |h::t when h = "quit" -> Quit 
+    |h::t when h = "draw" -> Draw
+    |h::t when h = "score" -> Score
+    |h::t when h = "hand" -> Hand
+    |h::t when h = "play" -> Play
+    |h::t when h = "put" && t <> [] -> Put t
+    |_ ->  raise Malformed
+  end
+>>>>>>> f84cc74e3a9cc724a31d4fdab5e4f8a10d1bb07d
 

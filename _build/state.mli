@@ -9,9 +9,10 @@
 (** The abstract type of values representing the game state. *)
 type t
 
-(** [init_state d] is the initial state of the game when given a deck [d].
-    In that state, the deck is shuffled and each player is dealt seven cards *)
-val init_state : Deck.t -> t
+exception Invalid_Move
+(** [init_state d] is the initial state of the game.
+    In that state, the whole game deck is shuffled and each player is dealt seven cards *)
+val init_state : t
 
 (** [current_card st] is the last card of the current state [st]
     that has been placed *)
@@ -26,4 +27,6 @@ val get_ai_hand: t -> Deck.t
 (** [draw_deck st] is the remainder of the deck at state [st] from which
     players will draw cards*)
 val get_draw_deck: t -> Deck.t
+
+val put : Deck.card -> t -> t
 

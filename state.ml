@@ -6,13 +6,13 @@ type t = {
   draw_deck : Deck.t ;
   playing_deck : Deck.t ;
 } 
-
+exception Invalid_Move
 let init_state  = 
   let deck = shuffle(load_deck) in 
   let players = fst (deal deck) in 
   let ai_deck = fst (deal (snd (deal deck))) in 
   let remaining = snd (deal (snd (deal deck))) in 
-  let playing = top_card remaining ::[] in
+  let playing = add_card (top_card remaining) empty_deck in
   let remaining2 = remove_card (top_card remaining) remaining in
   {current_card = top_card playing; players_hand = players; ai_hand= ai_deck; 
    draw_deck=remaining2; playing_deck= playing}
@@ -23,4 +23,10 @@ let get_ai_hand st = st.ai_hand
 let get_draw_deck st = st.draw_deck
 let has_won st = List.length st.players_hand = 0 || List.length st.ai_hand = 0
 
-let put c st d = failwith "Unimplemented"
+let put c (st:t)  = if (is_valid c st.current_card) 
+  then {current_card = c;
+        players_hand = remove_card c st.players_hand; 
+        ai_hand= st.ai_hand; 
+        draw_deck=st.draw_deck; 
+        playing_deck= add_card c st.playing_deck} 
+  else raise Invalid_Move
