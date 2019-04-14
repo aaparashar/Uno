@@ -32,6 +32,7 @@ type command =
   | Score
   | Hand
   | Play 
+  | Put of object_phrase
 
 (** Raised when an empty command is parsed. *)
 exception Empty
