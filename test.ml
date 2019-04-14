@@ -5,7 +5,7 @@ open Command
 
 (** [pp_card c] pretty-prints card [c]. *)
 let pp_card (c:card) = 
-  "\""^(string_of_int c.number) ^", " ^color^"\""
+  "\""^(string_of_int c.number) ^", " ^c.color^"\""
 
 (** [pp_deck pp_elt d] pretty-prints deck [d], using [pp_elt]
     to pretty-print each card in [d]. *)
@@ -34,8 +34,7 @@ let test_shuffle
     (d: Deck.t) = 
   let shuffled = shuffle d in
   name >:: (fun _ ->
-      assert ((List.length d = List.length shuffled) && (contains_all d shuffled))
-        ~printer:string_of_bool)
+      assert ((List.length d = List.length shuffled) && (contains_all d shuffled)))
 
 let test_top_card 
     (name : string)

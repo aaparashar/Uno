@@ -22,6 +22,7 @@ let get_players_hand st = st.players_hand
 let get_ai_hand st = st.ai_hand
 let get_draw_deck st = st.draw_deck
 let has_won st = List.length st.players_hand = 0 || List.length st.ai_hand = 0
+let get_current_score = failwith "Unimplemented"
 
 let put c (st:t)  = if (is_valid c st.current_card) 
   then {current_card = c;
