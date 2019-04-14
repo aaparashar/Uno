@@ -1,8 +1,9 @@
+open Deck;
 type state = {
-    current_card : card
-    players_hand : Deck.t
-    ai_hand : Deck.t
-    draw_deck : Deck.t 
+  current_card : card;
+  players_hand : Deck.t;
+  ai_hand : Deck.t;
+  draw_deck : Deck.t ;
 
 } 
 

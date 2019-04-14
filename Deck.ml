@@ -9,21 +9,22 @@ type card = {number : int; color: color}
 
 type deck = card list
 
-let rec load_num_color numbers col =
+let rec load_num_color (numbers:int list) col =
   match numbers with
   | [] -> []
-  | h::t -> card(h, col)::load_num_color t col
+  | h::t -> let c = {number = h; color = col} in 
+    c ::load_num_color t col
 
 let load_deck = 
   let numbers = [0;1;2;3;4;5;6;7;8;9] in 
   let no_zero = [1;2;3;4;5;6;7;8;9] in
-  (load_num_color numbers Red) :: 
-  (load_num_color numbers Yellow) :: 
-  (load_num_color numbers Green) ::
-  (load_num_color numbers Blue) :: 
-  (load_num_color no_zero Red) :: 
-  (load_num_color no_zero Yellow) :: 
-  (load_num_color no_zero Green) ::
+  (load_num_color numbers Red) @
+  (load_num_color numbers Yellow) @ 
+  (load_num_color numbers Green) @
+  (load_num_color numbers Blue) @ 
+  (load_num_color no_zero Red) @
+  (load_num_color no_zero Yellow) @ 
+  (load_num_color no_zero Green) @
   (load_num_color no_zero Blue)
 
 let shuffle d = failwith "Unimplemented"
