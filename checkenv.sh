@@ -4,7 +4,7 @@
 environment=good
 OCAMLV=4.06.1
 OUNITV=2.0.8
-YOJSONV=1.4.1
+YOJSONV=1.5.0
 
 OPAM_LOCATION="$(command -v opam)"
 if [[ $OPAM_LOCATION == "" ]]; then

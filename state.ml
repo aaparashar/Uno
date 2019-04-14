@@ -1,4 +1,4 @@
-open Deck;
+open Deck
 type state = {
   current_card : card;
   players_hand : Deck.t;

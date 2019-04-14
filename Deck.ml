@@ -30,10 +30,10 @@ let load_deck =
 let shuffle d = failwith "Unimplemented"
 let deal d = failwith "Unimplemented"
 let add_card c d = c::d
-let remove_card c d = 
+let rec remove_card c d acc= 
   match d with
   |[] -> d
-  |h::t -> if c= h then failwith "Unimplemented" else failwith "Unimplemented"
+  |h::t -> if c= h then acc@t else remove_card c t (h::acc)
 let top_card d = 
   match d with 
   |[] -> failwith "No Cards in Deck"

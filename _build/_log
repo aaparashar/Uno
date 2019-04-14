@@ -1,0 +1,15 @@
+### Starting build.
+Backtrace:
+                      - Failed to build the target deck.cmo
+                          - Building deck.cmo:
+                              - Failed to build all of these:
+                                  - Building deck.ml:
+                                      - Failed to build all of these:
+                                          - Building deck.mly
+                                          - Building deck.mll
+                                  - Building deck.mli:
+                                      - Building deck.mly
+                                  - Building deck.mlpack
+                                  - Building deck.mli:
+                                      - Building deck.mly
+# Compilation unsuccessful.
