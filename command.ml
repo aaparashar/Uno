@@ -27,7 +27,6 @@ let parse str =
     |h::t when h = "draw" -> Draw
     |h::t when h = "score" -> Score
     |h::t when h = "hand" -> Hand
-    |h::t when h = "play" -> Play
     |h::t when h = "put" && t <> [] -> Put t
     |_ ->  raise Malformed
   end

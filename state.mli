@@ -27,3 +27,5 @@ val get_ai_hand: t -> Deck.t
     players will draw cards*)
 val get_draw_deck: t -> Deck.t
 
+val put: Deck.card -> t ->  string -> t
+
