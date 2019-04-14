@@ -12,7 +12,13 @@ type card
 (** The abstract type of values representing a deck. *)
 type deck
 
+val load_num_color : int -> color -> deck
+
 val load_deck : deck
+
+val riffle : deck -> deck -> deck -> deck
+
+val multi_riffle : deck -> int -> deck
 
 val shuffle : deck -> deck
 

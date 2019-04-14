@@ -27,7 +27,28 @@ let load_deck =
   (load_num_color no_zero Green) @
   (load_num_color no_zero Blue)
 
-let shuffle d = failwith "Unimplemented"
+let rec riffle 
+    (d:deck) 
+    (acc_a:deck)
+    (acc_b:deck) = 
+    match d with
+    | [] -> List.rev acc_a @ List.rev acc_b
+    | h::t -> let n = Random.int 2 in 
+    if n = 1 then riffle t (acc_a@[h]) acc_b 
+    else riffle t acc_a (acc_b@[h]) 
+
+let rec multi_riffle 
+    (d: card list) 
+    (k:int) = 
+  match k with
+  |  0 -> d
+  | _ -> multi_riffle (riffle d [] []) (k-1)
+
+let shuffle d = let n = Random.int 8 in 
+  match n with 
+  | 0 -> multi_riffle d 1
+  | _ -> multi_riffle d n
+
 let deal d = failwith "Unimplemented"
 let add_card c d = c::d
 let rec remove_card c d acc= 
