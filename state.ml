@@ -24,10 +24,19 @@ let get_draw_deck st = st.draw_deck
 let has_won st = List.length st.players_hand = 0 || List.length st.ai_hand = 0
 let get_current_score = failwith "Unimplemented"
 
-let put c (st:t)  = if (is_valid c st.current_card) 
+let put c (st:t) s = if (is_valid c st.current_card && s="player") 
   then {current_card = c;
         players_hand = remove_card c st.players_hand; 
         ai_hand= st.ai_hand; 
         draw_deck=st.draw_deck; 
         playing_deck= add_card c st.playing_deck} 
+  else if (is_valid c st.current_card && s="ai")
+  then {current_card = c;
+        players_hand = st.players_hand
+            ai_hand= remove_card c st.ai_hand; 
+        draw_deck=st.draw_deck; 
+        playing_deck= add_card c st.playing_deck} 
   else raise Invalid_Move
+
+
+
