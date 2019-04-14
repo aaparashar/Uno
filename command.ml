@@ -1,7 +1,7 @@
 type object_phrase = string list
 
 type command = 
-  | Pick of object_phrase
+  | Draw
   | Quit
   | Score
   | Hand
@@ -23,7 +23,7 @@ let parse str =
     match strarray with
     |[] -> raise Empty
     |h::t -> if h = "quit" then Quit else if 
-        h = "pick" then Pick(t)
+        h = "draw" then Draw
       else if h="score" then Score
       else if h="hand" then Hand
       else if h ="play" then Play

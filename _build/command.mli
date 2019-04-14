@@ -31,7 +31,7 @@ type command =
   | Quit
   | Score
   | Hand
-  | Play of object_phrase
+  | Play 
   | Put of object_phrase
 
 
