@@ -1,4 +1,5 @@
 ### Starting build.
+<<<<<<< HEAD
 # Target: Deck.mli.depends, tags: { extension:mli, file:Deck.mli, ocaml, ocamldep, quiet }
 ocamlfind ocamldep -modules Deck.mli > Deck.mli.depends # cached
 # Target: Deck.cmi, tags: { byte, compile, extension:mli, file:Deck.mli, interf, ocaml, quiet }
@@ -30,5 +31,12 @@ ocamlfind ocamlc -c -o main.cmo main.ml
 + ocamlfind ocamlc -c -o main.cmo main.ml
 File "main.ml", line 9, characters 2-14:
 Error: Unbound module ANSITerminal
+=======
+# Target: test.ml.depends, tags: { debug, extension:ml, file:test.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules test.ml > test.ml.depends
++ ocamlfind ocamldep -modules test.ml > test.ml.depends
+File "test.ml", line 38, characters 8-17:
+Error: Syntax error: operator expected.
+>>>>>>> f84cc74e3a9cc724a31d4fdab5e4f8a10d1bb07d
 Command exited with code 2.
 # Compilation unsuccessful.
