@@ -17,6 +17,24 @@ let pp_deck pp_elt lst =
     in loop 0 "" lst
   in "[" ^ pp_elts lst ^ "]"
 
+let rec contains a b =
+  match a with 
+  | [] -> False
+  | h::t -> h = b || contains t b
+
+let rec contains_all a b =
+  match b with 
+  | [] -> True
+  | h::t -> contains a h && contains_all a t
+
+let test_shuffle
+    (name : string)
+    (d: Deck.t) = 
+  let shuffled = shuffled d in
+  name >:: (fun _ ->
+    assert ((d.length = shuffled.length) && (contains_all d shuffled))
+             ~printer:string_of_bool)
+
 let test_top_card 
     (name : string)
     (d: Deck.t)
@@ -54,10 +72,9 @@ let deck_tests =
   [
     (* Top Card tests **)
     let c1 = {color= Red; number = 0} in 
-    let c2 = {color = Yellow; number = 3}
-    let c3 = {color= Yellow; number = 6} in
+    let c2 = {color= Yellow; number = 6} in
     test_top_card "Player's Top Card" my_deck c1;
-    test_top_card "Remaining Top Card" remaining c3;
+    test_top_card "Remaining Top Card" remaining c2;
   ]
 
 let command_tests =
