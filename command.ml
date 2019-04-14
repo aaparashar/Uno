@@ -5,7 +5,7 @@ type command =
   | Quit
   | Score
   | Hand
-  | Play of object_phrase
+  | Play 
   | Put of object_phrase
 
 
@@ -26,7 +26,7 @@ let parse str =
         h = "pick" then Pick(t)
       else if h="score" then Score
       else if h="hand" then Hand
-      else if h ="play" then Play(t)
+      else if h ="play" then Play
       else if h = "put" then Put(t)
       else raise Malformed
 
