@@ -5,8 +5,6 @@ type t = {
   ai_hand : Deck.t;
   draw_deck : Deck.t ;
   playing_deck : Deck.t ;
-
-
 } 
 
 let init_state  = 
@@ -23,5 +21,6 @@ let get_current_card (st:t) = st.current_card
 let get_players_hand st = st.players_hand
 let get_ai_hand st = st.ai_hand
 let get_draw_deck st = st.draw_deck
+let has_won st = List.length st.players_hand = 0 || List.length st.ai_hand = 0
 
 let put c st d = failwith "Unimplemented"
