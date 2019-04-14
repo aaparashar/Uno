@@ -10,18 +10,18 @@
 type card
 
 (** The abstract type of values representing a deck. *)
-type deck
+type t
 
-val load_deck : deck
+val load_deck : t
 
-val shuffle : deck -> deck
+val shuffle : t -> t
 
-val deal : deck -> deck
+val deal : t -> t*t
 
-val add_card: card -> deck -> deck
+val add_card: card -> t -> t -> t
 
-val remove_card: card -> deck ->deck
+val remove_card: card -> t ->t
 
-val top_card: deck ->card
+val top_card: t ->card
 
 val is_valid: card -> card -> bool

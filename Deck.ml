@@ -7,7 +7,7 @@ type color =
 
 type card = {number : int; color: color}
 
-type deck = card list
+type t = card list
 
 let rec load_num_color (numbers:int list) col =
   match numbers with
@@ -28,7 +28,13 @@ let load_deck =
   (load_num_color no_zero Blue)
 
 let shuffle d = failwith "Unimplemented"
-let deal d = failwith "Unimplemented"
+let deal d = 
+  let rec deal' n d2 acc =
+    match d2 with 
+    |[]-> failwith "not enough cards in deck"
+    |h::t -> if n=0 then (acc, t) else deal' (n-1) t (h::acc)
+  in deal' 7 d []
+
 let add_card c d = c::d
 let rec remove_card c d acc= 
   match d with
