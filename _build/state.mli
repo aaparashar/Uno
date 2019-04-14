@@ -16,7 +16,7 @@ val init_state : t
 
 (** [current_card st] is the last card of the current state [st]
     that has been placed *)
-val get_current_card : t -> card
+val get_current_card : t -> Deck.card
 
 (** [players_hand st] is the cards in the player's hand at state [st]*)
 val get_players_hand: t -> Deck.t
