@@ -31,3 +31,5 @@ val top_card: t ->card
 val is_valid: card -> card -> bool
 
 val empty_deck: t
+
+val len: t -> int

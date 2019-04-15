@@ -21,7 +21,7 @@ let get_current_card (st:t) = st.current_card
 let get_players_hand st = st.players_hand
 let get_ai_hand st = st.ai_hand
 let get_draw_deck st = st.draw_deck
-let has_won st = List.length st.players_hand = 0 || List.length st.ai_hand = 0
+let has_won st = Deck.len st.players_hand = 0 || Deck.len st.ai_hand = 0
 let get_current_score = failwith "Unimplemented"
 
 let put c (st:state.t) s = if (is_valid c st.current_card && s="player") 
@@ -31,8 +31,8 @@ let put c (st:state.t) s = if (is_valid c st.current_card && s="player")
         draw_deck=st.draw_deck; 
         playing_deck= add_card c st.playing_deck} 
   else if (is_valid c st.current_card && s="ai")
-  then Valid_Move {current_card = c;
-        players_hand = st.players_hand
+  then {current_card = c;
+        players_hand = st.players_hand;
             ai_hand= remove_card c st.ai_hand; 
         draw_deck=st.draw_deck; 
         playing_deck= add_card c st.playing_deck} 
