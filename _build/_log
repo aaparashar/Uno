@@ -1,0 +1,31 @@
+### Starting build.
+# Target: Deck.mli.depends, tags: { extension:mli, file:Deck.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules Deck.mli > Deck.mli.depends
+# Target: Deck.cmi, tags: { byte, compile, extension:mli, file:Deck.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -o Deck.cmi Deck.mli
+# Target: Deck.ml.depends, tags: { extension:ml, file:Deck.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules Deck.ml > Deck.ml.depends
+# Target: Deck.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:Deck.cmo, file:Deck.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -o Deck.cmo Deck.ml
+# Target: command.mli.depends, tags: { extension:mli, file:command.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules command.mli > command.mli.depends
+# Target: command.cmi, tags: { byte, compile, extension:mli, file:command.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -o command.cmi command.mli
+# Target: command.ml.depends, tags: { extension:ml, file:command.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules command.ml > command.ml.depends
+# Target: command.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:command.cmo, file:command.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -o command.cmo command.ml
+# Target: state.mli.depends, tags: { extension:mli, file:state.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules state.mli > state.mli.depends
+# Target: state.cmi, tags: { byte, compile, extension:mli, file:state.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -o state.cmi state.mli
+# Target: state.ml.depends, tags: { extension:ml, file:state.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules state.ml > state.ml.depends
+# Target: state.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -o state.cmo state.ml
++ ocamlfind ocamlc -c -o state.cmo state.ml
+File "state.ml", line 24, characters 29-44:
+Error: This expression has type Deck.t but an expression was expected of type
+         'a list
+Command exited with code 2.
+# Compilation unsuccessful.
