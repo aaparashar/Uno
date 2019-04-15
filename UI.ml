@@ -28,6 +28,5 @@ let do_play_game st =
         exit 0;
     | Score -> ("Score: "^(string_of_int(State.get_current_score st))^"\n", "")
     | Hand -> ("\n In Your Hand:\n"^print_hand(st.players_hand))
-    | Play -> (, "play")
     | Put -> (,"put")
   in
