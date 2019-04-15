@@ -1,7 +1,46 @@
 ### Starting build.
+<<<<<<< HEAD
 # Target: test.ml.depends, tags: { package(oUnit), debug, extension:ml, file:test.ml, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -package oUnit -modules test.ml > test.ml.depends
 # Target: command.mli.depends, tags: { package(oUnit), debug, extension:mli, file:command.mli, ocaml, ocamldep, quiet, traverse }
+=======
+<<<<<<< HEAD
+# Target: Deck.mli.depends, tags: { extension:mli, file:Deck.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules Deck.mli > Deck.mli.depends
+# Target: Deck.cmi, tags: { byte, compile, extension:mli, file:Deck.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -o Deck.cmi Deck.mli
+# Target: Deck.ml.depends, tags: { extension:ml, file:Deck.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules Deck.ml > Deck.ml.depends
+# Target: Deck.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:Deck.cmo, file:Deck.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -o Deck.cmo Deck.ml
+# Target: command.mli.depends, tags: { extension:mli, file:command.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules command.mli > command.mli.depends
+# Target: command.cmi, tags: { byte, compile, extension:mli, file:command.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -o command.cmi command.mli
+# Target: command.ml.depends, tags: { extension:ml, file:command.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules command.ml > command.ml.depends
+# Target: command.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:command.cmo, file:command.ml, implem, ocaml, quiet }
+ocamlfind ocamlc -c -o command.cmo command.ml
+# Target: state.mli.depends, tags: { extension:mli, file:state.mli, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules state.mli > state.mli.depends
+# Target: state.cmi, tags: { byte, compile, extension:mli, file:state.mli, interf, ocaml, quiet }
+ocamlfind ocamlc -c -o state.cmi state.mli
+# Target: state.ml.depends, tags: { extension:ml, file:state.ml, ocaml, ocamldep, quiet }
+ocamlfind ocamldep -modules state.ml > state.ml.depends
++ ocamlfind ocamldep -modules state.ml > state.ml.depends
+File "state.ml", line 27, characters 19-20:
+Error: Syntax error: type expected.
+=======
+# Target: Deck.mli.depends, tags: { package(oUnit), extension:mli, file:Deck.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -modules Deck.mli > Deck.mli.depends # cached
+# Target: Deck.cmi, tags: { package(oUnit), byte, compile, extension:mli, file:Deck.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -o Deck.cmi Deck.mli # cached
+# Target: Deck.ml.depends, tags: { package(oUnit), extension:ml, file:Deck.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -modules Deck.ml > Deck.ml.depends # cached
+# Target: Deck.cmo, tags: { package(oUnit), byte, compile, extension:cmo, extension:ml, file:Deck.cmo, file:Deck.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -o Deck.cmo Deck.ml # cached
+# Target: command.mli.depends, tags: { package(oUnit), extension:mli, file:command.mli, ocaml, ocamldep, quiet, traverse }
+>>>>>>> 2b103813e1d8a0ec023d583effe33a607ed7b93a
 ocamlfind ocamldep -package oUnit -modules command.mli > command.mli.depends # cached
 # Target: command.cmi, tags: { package(oUnit), byte, compile, debug, extension:mli, file:command.mli, interf, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -g -package oUnit -o command.cmi command.mli # cached
@@ -11,6 +50,7 @@ ocamlfind ocamldep -package oUnit -modules Deck.mli > Deck.mli.depends # cached
 ocamlfind ocamlc -c -g -package oUnit -o Deck.cmi Deck.mli # cached
 # Target: state.mli.depends, tags: { package(oUnit), debug, extension:mli, file:state.mli, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -package oUnit -modules state.mli > state.mli.depends # cached
+<<<<<<< HEAD
 # Target: state.cmi, tags: { package(oUnit), byte, compile, debug, extension:mli, file:state.mli, interf, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -g -package oUnit -o state.cmi state.mli # cached
 # Target: test.cmo, tags: { package(oUnit), byte, compile, debug, extension:cmo, extension:ml, file:test.cmo, file:test.ml, implem, ocaml, quiet, traverse }
@@ -18,5 +58,18 @@ ocamlfind ocamlc -c -g -package oUnit -o test.cmo test.ml
 + ocamlfind ocamlc -c -g -package oUnit -o test.cmo test.ml
 File "test.ml", line 194, characters 11-16:
 Error: Unbound record field color
+=======
+# Target: state.cmi, tags: { package(oUnit), byte, compile, extension:mli, file:state.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -o state.cmi state.mli # cached
+# Target: state.ml.depends, tags: { package(oUnit), extension:ml, file:state.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -modules state.ml > state.ml.depends
+# Target: state.cmo, tags: { package(oUnit), byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -o state.cmo state.ml
++ ocamlfind ocamlc -c -package oUnit -o state.cmo state.ml
+File "state.ml", line 28, characters 7-17:
+Error: Unbound constructor Valid_Move
+Hint: Did you mean Invalid_Move?
+>>>>>>> 1ea18ee6ee8bac725640a93a59470ee1185aea5c
+>>>>>>> 2b103813e1d8a0ec023d583effe33a607ed7b93a
 Command exited with code 2.
 # Compilation unsuccessful.

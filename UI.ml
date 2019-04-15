@@ -23,7 +23,7 @@ let rec do_play_game st =
     else 
         ANSITeriminal.(print_string [cyan]("\nLast Card on the Discard Pile:\t"));
         print_string (print_card(st.current_card));
-        ANSITeriminal.(print_string [cyan]("\n In Your Hand:\n"));
+        print_string ("\n In Your Hand:\n");
         print_string(print_hand(st.players_hand));
         ANSITeriminal.(print_string [cyan] ("\nWhat's your next move?\n"));
         print_string  "> ";
@@ -42,7 +42,7 @@ let rec do_play_game st =
           (match State.put t st "player" with
             | Invalid_Move -> ANSITeriminal(print_string[magenta]"\n Can't play that card \n");
                do_play_game st
-            | Valid_Move(newState) -> ANSITeriminal(print_string[cyan] out_string); 
+            | newState -> ANSITeriminal(print_string[cyan] out_string); 
                 do_play_game newState) 
       | _ -> ANSITeriminal(print_stringpcyan out_string);
         do_play_game st
