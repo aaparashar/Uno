@@ -16,7 +16,8 @@ ocamlfind ocamlc -c -g -package oUnit -o state.cmi state.mli # cached
 # Target: test.cmo, tags: { package(oUnit), byte, compile, debug, extension:cmo, extension:ml, file:test.cmo, file:test.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -g -package oUnit -o test.cmo test.ml
 + ocamlfind ocamlc -c -g -package oUnit -o test.cmo test.ml
-File "test.ml", line 9, characters 24-30:
-Error: Unbound record field number
+File "test.ml", line 93, characters 19-27:
+Error: This expression has type Deck.t but an expression was expected of type
+         Deck.card list
 Command exited with code 2.
 # Compilation unsuccessful.

@@ -71,3 +71,13 @@ let is_valid  card1 card2 =
   card1.color = card2.color ||card1.number=card2.number
 
 let len d = List.length d
+
+let card_num c = c.number
+
+let card_col c = function
+  |Red -> "Red"
+  |Yellow -> "Yellow"
+  |Green -> "Green"
+  |Blue -> "Blue"
+
+let to_list t = t

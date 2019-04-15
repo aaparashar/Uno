@@ -33,3 +33,9 @@ val is_valid: card -> card -> bool
 val empty_deck: t
 
 val len: t -> int
+
+val card_num: card -> int
+
+val card_col: card -> string
+
+val to_list: t -> card list

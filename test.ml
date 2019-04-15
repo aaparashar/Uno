@@ -6,7 +6,7 @@ open State
 
 (** [pp_card c] pretty-prints card [c]. *)
 let pp_card (c:Deck.card) = 
-  "\""^(string_of_int c.number) ^", " ^c.color^"\""
+  "\""^(string_of_int (Deck.card_num c)) ^", " ^Deck.card_col c^"\""
 
 (** [pp_deck pp_elt d] pretty-prints deck [d], using [pp_elt]
     to pretty-print each card in [d]. *)
@@ -20,14 +20,52 @@ let pp_deck pp_elt lst =
     in loop 0 "" lst
   in "[" ^ pp_elts lst ^ "]"
 
+let cmp_set_like_lists lst1 lst2 =
+  let uniq1 = List.sort_uniq compare lst1 in
+  let uniq2 = List.sort_uniq compare lst2 in
+  List.length lst1 = List.length uniq1
+  &&
+  List.length lst2 = List.length uniq2
+  &&
+  uniq1 = uniq2 
+
+let list_format fmt el_format lst = 
+  let rec list_format_ = function
+    | [] -> Format.fprintf fmt "]"
+    | h::[] ->
+      el_format fmt h;
+      list_format_ []
+    | h::t -> 
+      el_format fmt h;
+      Format.fprintf fmt "; ";
+      list_format_ t
+  in
+  Format.fprintf fmt "[";
+  list_format_ lst
+
+let diff fmt formatter (a,b) =
+  Format.fprintf fmt "\nExpected:\n ";
+  formatter fmt a;
+  Format.fprintf fmt "\nBut got:\n ";
+  formatter fmt b
+
+let entry_format fmt card = 
+    Format.fprintf fmt "(%d, %s)" (Deck.card_num card) (Deck.card_col card)
+
+let deck_format fmt d =
+    list_format fmt entry_format d
+
+let deck_diff fmt (a,b) =
+    diff fmt deck_format (a,b)
+
 let rec contains a b =
   match a with 
-  | [] -> False
+  | [] -> false
   | h::t -> h = b || contains t b
 
 let rec contains_all a b =
   match b with 
-  | [] -> True
+  | [] -> true
   | h::t -> contains a h && contains_all a t
 
 let test_shuffle
@@ -35,7 +73,10 @@ let test_shuffle
     (d: Deck.t) = 
   let shuffled = shuffle d in
   name >:: (fun _ ->
-      assert ((List.length d = List.length shuffled) && (contains_all d shuffled)))
+      let dl = Deck.to_list d in
+      let sl = Deck.to_list shuffled in
+      assert_equal dl sl 
+        ~cmp:cmp_set_like_lists ~pp_diff:deck_diff)
 
 let test_top_card 
     (name : string)
