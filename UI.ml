@@ -23,7 +23,7 @@ let rec do_play_game st =
     else 
         ANSITeriminal.(print_string [cyan]("\nLast Card on the Discard Pile:\t"));
         print_string (print_card(st.current_card));
-        ANSITeriminal.(print_string [cyan]("\n In Your Hand:\n"));
+        print_string ("\n In Your Hand:\n");
         print_string(print_hand(st.players_hand));
         ANSITeriminal.(print_string [cyan] ("\nWhat's your next move?\n"));
         print_string  "> ";
