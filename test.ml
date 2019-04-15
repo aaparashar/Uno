@@ -20,14 +20,21 @@ let pp_deck pp_elt lst =
     in loop 0 "" lst
   in "[" ^ pp_elts lst ^ "]"
 
-let cmp_set_like_lists lst1 lst2 =
-  let uniq1 = List.sort_uniq compare lst1 in
-  let uniq2 = List.sort_uniq compare lst2 in
-  List.length lst1 = List.length uniq1
+
+let rec contains a b =
+  match a with 
+  | [] -> false
+  | h::t -> h = b || contains t b
+
+let rec contains_all a b =
+  match b with 
+  | [] -> true
+  | h::t -> contains a h && contains_all a t
+
+let cmp_deck_lists lst1 lst2 =
+  List.length lst1 = List.length lst2
   &&
-  List.length lst2 = List.length uniq2
-  &&
-  uniq1 = uniq2 
+  contains_all lst1 lst2
 
 let list_format fmt el_format lst = 
   let rec list_format_ = function
@@ -49,24 +56,14 @@ let diff fmt formatter (a,b) =
   Format.fprintf fmt "\nBut got:\n ";
   formatter fmt b
 
-let entry_format fmt card = 
-    Format.fprintf fmt "(%d, %s)" (Deck.card_num card) (Deck.card_col card)
+let entry_format fmt (n, col) = 
+    Format.fprintf fmt "(%d, %s)" n col
 
 let deck_format fmt d =
     list_format fmt entry_format d
 
 let deck_diff fmt (a,b) =
     diff fmt deck_format (a,b)
-
-let rec contains a b =
-  match a with 
-  | [] -> false
-  | h::t -> h = b || contains t b
-
-let rec contains_all a b =
-  match b with 
-  | [] -> true
-  | h::t -> contains a h && contains_all a t
 
 let test_shuffle
     (name : string)
@@ -75,8 +72,8 @@ let test_shuffle
   name >:: (fun _ ->
       let dl = Deck.to_list d in
       let sl = Deck.to_list shuffled in
-      assert_equal dl sl 
-        ~cmp:cmp_set_like_lists ~pp_diff:deck_diff)
+      assert_equal sl dl 
+        ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
 
 let test_top_card 
     (name : string)
@@ -88,16 +85,22 @@ let test_top_card
 let test_add_card 
     (name : string)
     (d: Deck.t)
-    (expected : Deck.t) =
+    (c: Deck.card)
+    (expected: card list) =
   name >:: (fun _ ->
-      assert_equal expected (add_card d) ~printer:(pp_deck pp_card))
+      let dl = add_card c d |> Deck.to_list in 
+      assert_equal expected dl 
+        ~cmp:cmp_deck_lists ~pp_diff:(deck_diff))
 
 let test_remove_card 
     (name : string)
     (d: Deck.t)
-    (expected : Deck.t) =
+    (c: Deck.card)
+    (expected : Deck.card list) =
   name >:: (fun _ ->
-      assert_equal expected (remove_card d) ~printer:(pp_deck pp_card))
+      let dl = remove_card c d |> Deck.to_list in
+      assert_equal expected dl 
+        ~cmp:cmp_deck_lists ~pp_diff:(deck_diff))
 
 let test_is_valid 
     (name : string)
@@ -110,8 +113,8 @@ let test_is_valid
 let deck_tests =
 let initial_deck = load_deck in
 let my_deck = fst (deal initial_deck) in
-let ai_deck = fst deal (snd (deal initial_deck)) in
-let remaining = snd deal (snd (deal initial_deck)) in
+let ai_deck = fst (deal (snd (deal initial_deck))) in
+let remaining = snd (deal (snd (deal initial_deck))) in
     [
       (* Top Card tests **)
       let c1 = {color= Red; number = 0} in 

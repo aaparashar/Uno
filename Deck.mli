@@ -38,4 +38,6 @@ val card_num: card -> int
 
 val card_col: card -> string
 
-val to_list: t -> card list
+val list_card: card -> int*string
+
+val to_list: t -> (int*string) list

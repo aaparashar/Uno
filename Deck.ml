@@ -74,10 +74,13 @@ let len d = List.length d
 
 let card_num c = c.number
 
-let card_col c = function
+let card_col c =
+match c.color with
   |Red -> "Red"
   |Yellow -> "Yellow"
   |Green -> "Green"
   |Blue -> "Blue"
 
-let to_list t = t
+let list_card c = (c.number, card_col c)
+
+let to_list t = t |> List.map list_card
