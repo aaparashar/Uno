@@ -10,10 +10,9 @@ type card = {number : int; color: color}
 type t = card list
 
 let rec load_num_color (numbers:int list) col =
-  match numbers with
-  | [] -> []
-  | h::t -> let c = {number = h; color = col} in 
-    c ::load_num_color t col
+  let load_helper acc h = ({number = h; color = col}::acc) in
+  List.fold_left load_helper [] numbers
+
 let empty_deck: t = []
 let load_deck = 
   let numbers = [0;1;2;3;4;5;6;7;8;9] in 
@@ -27,6 +26,7 @@ let load_deck =
   (load_num_color no_zero Green) @
   (load_num_color no_zero Blue)
 
+(* TODO: are the list concatenations on line 37-38 necessary? *)
 let rec riffle 
     (d:t) 
     (acc_a:t)
@@ -69,3 +69,5 @@ let top_card d =
   |h::t -> h
 let is_valid  card1 card2 = 
   card1.color = card2.color ||card1.number=card2.number
+
+let len d = List.length d
