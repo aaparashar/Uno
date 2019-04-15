@@ -15,21 +15,50 @@ let rec print_hand d =
 let print_card c =
   ANSITerminal.([c.color] (c.color+ " " c.number))
   
-let do_play_game st =
+let rec do_play_game st =
     if State.has_won st then
-        print_string ("\n You ")
-        if st.players_hand = 0 then print_string("Win :D Thanks for playing!")
-        else print_string("Lose :( Better luck next time")
+        ANSITeriminal.(print_string [cyan]("\n You "));
+        if st.players_hand = 0 then ANSITeriminal.(print_string [cyan]("Win :D Thanks for playing!"));
+        else ANSITeriminal.(print_string [cyan]("Lose :( Better luck next time"));
     else 
-        print_string("\n Last Play:\t" ^ pp_card(st.current_card))
-        print_string("\n In Your Hand:\n"^print_hand(st.players_hand))
-        print_string ("\nWhat's your next move?\n")
-        print_string  "> "
-    let(out_string,cmd) = match Command.parse (read_line()) with
-    | exception (Command.Empty) -> ("\nWhat's your next move?\n","");
-    | exception (Command.Malformed) -> ("\n\nCommand not recognized\n","");
-    | Quit -> ("\n\nSee ya next time!\n")
-                exit 0;
-    | Score -> ("Score: "^(string_of_int(State.get_current_score st))^"\n", "")
-    | Hand -> ("\n In Your Hand:\n"^print_hand(st.players_hand))
-    | Put(t)-> ("\n You placed "^print_card(st.current_card)^"on the deck")
+        ANSITeriminal.(print_string [cyan]("\nLast Card on the Discard Pile:\t"));
+        print_string (print_card(st.current_card));
+        ANSITeriminal.(print_string [cyan]("\n In Your Hand:\n"));
+        print_string(print_hand(st.players_hand));
+        ANSITeriminal.(print_string [cyan] ("\nWhat's your next move?\n"));
+        print_string  "> ";
+    let (out_string,cmd) = 
+    match Command.parse (read_line()) with
+      | exception (Command.Empty) -> ("\nWhat's your next move?\n","");
+      | exception (Command.Malformed) -> ("\n\nCommand not recognized\n","");
+      | Quit -> ("\n\nSee ya next time!\n")
+                  exit 0;
+      | Score -> ("Score:\t"^(string_of_int(State.get_current_score st))^"\n", "")
+      | Hand -> ("\n In Your Hand:\n"^print_hand(st.players_hand),"")
+      | Put(t)-> ("\n You played:\t"^print_card(t),"put")
+    in
+    match cmd with
+      | "put" -> 
+          (match State.put t st "player" with
+            | Invalid_Move -> ANSITeriminal(print_string[magenta]"\n Can't play that card \n");
+               do_play_game st
+            | Valid_Move(newState) -> ANSITeriminal(print_string[cyan] out_string); 
+                do_play_game newState) 
+      | _ -> ANSITeriminal(print_stringpcyan out_string);
+        do_play_game st
+
+let play_game p = 
+  ANSITerminal.(print_string [cyan] "Welcome, "^pname^" to the Uno Casino.");
+  ANSITerminal.(print_string [cyan] "\nLet's deal you in");  
+  do_play_game (State.init_state)
+
+  
+
+let rec main () = 
+  ANSITerminal.(print_string [cyan]
+                  "\n\nWelcome to the Uno Game Engine\n"); 
+     print_endline "Please enter your player name:\n";
+     print_string  "> ";
+     match read_line () with
+     | "" -> main ()
+     | pname -> play_game pname 
