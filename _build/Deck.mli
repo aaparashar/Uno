@@ -41,3 +41,7 @@ val card_col: card -> string
 val list_card: card -> int*string
 
 val to_list: t -> (int*string) list
+
+val contains: card -> t -> bool
+
+val get_valid_card: card ->t -> card option

@@ -27,12 +27,12 @@ let has_won st = Deck.len st.players_hand = 0 || Deck.len st.ai_hand = 0
 let get_current_score = failwith "Unimplemented"
 let get_turn st = st.turn
 
-let put c (st:t) s = if (is_valid c st.current_card && s="player" && contains c st.player_hand) 
+let put c (st:t) s = if (is_valid c st.current_card && s="player" && contains c st.players_hand) 
   then {current_card = c;
         players_hand = remove_card c st.players_hand; 
         ai_hand= st.ai_hand; 
         draw_deck=st.draw_deck; 
-        playing_deck= add_card c st.playing_deck} 
+        playing_deck= add_card c st.playing_deck; turn = false} 
   else if (is_valid c st.current_card && s="ai"&& contains c st.ai_hand)
   then {current_card = c;
         players_hand = st.players_hand;
@@ -44,7 +44,7 @@ let put c (st:t) s = if (is_valid c st.current_card && s="player" && contains c 
 
 
 let draw (st:t) s = 
-  if (draw_deck = empty_deck && s= "player") then 
+  if (st.draw_deck = empty_deck && s= "player") then 
     let reset = {st with draw_deck=shuffle (remove_card(st.current_card st.playing_deck)); 
                          playing_deck = add_card(st.current_card empty_deck)} in 
     {reset with players_hand = (add_card (top_card reset.draw_deck) reset.players_hand); 

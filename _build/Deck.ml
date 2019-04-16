@@ -75,7 +75,7 @@ let len d = List.length d
 let card_num c = c.number
 
 let card_col c =
-match c.color with
+  match c.color with
   |Red -> "red"
   |Yellow -> "yellow"
   |Green -> "green"
@@ -84,3 +84,12 @@ match c.color with
 let list_card c = (c.number, card_col c)
 
 let to_list t = t |> List.map list_card
+
+let contains (c:card) (d:t) = List.mem c d
+
+let get_valid_card c (d:t) = 
+  let rec valid' c2 = function 
+    |[]-> None
+    |h::t -> if is_valid h c then Some h else valid' c2 t
+
+  in valid' c d

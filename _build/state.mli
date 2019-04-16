@@ -10,7 +10,7 @@
 open Deck
 
 type t
- 
+
 (** [init_state d] is the initial state of the game when given a deck [d].
     In that state, the deck is shuffled and each player is dealt seven cards *)
 val init_state : t
@@ -30,4 +30,6 @@ val get_ai_hand: t -> Deck.t
 val get_draw_deck: t -> Deck.t
 
 val put: Deck.card -> t ->  string -> t
+
+val get_turn: t ->bool
 
