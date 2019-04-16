@@ -76,10 +76,10 @@ let card_num c = c.number
 
 let card_col c =
   match c.color with
-  |Red -> "Red"
-  |Yellow -> "Yellow"
-  |Green -> "Green"
-  |Blue -> "Blue"
+  |Red -> "red"
+  |Yellow -> "yellow"
+  |Green -> "green"
+  |Blue -> "blue"
 
 let list_card c = (c.number, card_col c)
 

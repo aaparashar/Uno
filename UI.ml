@@ -19,7 +19,7 @@ let rec do_play_game st =
   if st.players_hand = 0 then ANSITeriminal.(print_string [cyan]("Win :D Thanks for playing!"));
 else ANSITeriminal.(print_string [cyan]("Lose :( Better luck next time"));
 else if st.turn
-    ANSITeriminal.(print_string [cyan]("\nLast Card on the Discard Pile:\t"));
+    ANSITeriminal.(print_string [cyan]("\nLast Card:\t"));
   print_string (print_card(st.current_card));
   ANSITeriminal.(print_string [cyan]("\n In Your Hand:\n"));
   print_string(print_hand(st.players_hand));
@@ -41,13 +41,15 @@ else if st.turn
     (match State.put t st "player" with
      | Invalid_Move -> ANSITeriminal(print_string[magenta]"\n Can't play that card \n");
        do_play_game st
-     | Valid_Move(newState) -> ANSITeriminal(print_string[cyan] out_string); 
-       do_play_game newState) 
-  | "draw"
+     | newState -> ANSITeriminal(print_string[cyan] out_string); 
+       do_play_game newState)
+  | "draw" -> State.draw st "player"
   | _ -> ANSITeriminal(print_stringpcyan out_string);
     do_play_game st
 
 else st.ai_turn
+
+
 
 let play_game p = 
   ANSITerminal.(print_string [cyan] "Welcome, "^pname^" to the Uno Casino.");

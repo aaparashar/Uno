@@ -5,8 +5,8 @@ open State
 
 
 (** [pp_card c] pretty-prints card [c]. *)
-let pp_card (c:Deck.card) = 
-  "\""^(string_of_int (Deck.card_num c)) ^", " ^Deck.card_col c^"\""
+let pp_card (n, col) = 
+  "\""^(string_of_int n) ^", " ^col^"\""
 
 (** [pp_deck pp_elt d] pretty-prints deck [d], using [pp_elt]
     to pretty-print each card in [d]. *)
@@ -20,6 +20,31 @@ let pp_deck pp_elt lst =
     in loop 0 "" lst
   in "[" ^ pp_elts lst ^ "]"
 
+(** [pp_string s] pretty-prints string [s]. *)
+let pp_string s = "\"" ^ s ^ "\""
+
+(** [pp_list pp_elt lst] pretty-prints list [lst], using [pp_elt]
+    to pretty-print each element of [lst]. *)
+let pp_list pp_elt lst =
+  let pp_elts lst =
+    let rec loop n acc = function
+      | [] -> acc
+      | [h] -> acc ^ pp_elt h
+      | h1::(h2::t as t') ->
+        if n=100 then acc ^ "..."  (* stop printing long list *)
+        else loop (n+1) (acc ^ (pp_elt h1) ^ "; ") t'
+    in loop 0 "" lst
+  in "[" ^ pp_elts lst ^ "]"
+
+let pp_cmd cmd =
+  match cmd with
+  | Put phrase -> pp_list pp_string phrase
+  | Draw -> pp_string "Draw"
+  | Quit -> pp_string "Quit"
+  | Score -> pp_string "Score"
+  | Hand -> pp_string "Hand"
+  | Play -> pp_string "Play"
+  | _ -> pp_string "unimplemented command"
 
 let rec contains a b =
   match a with 
@@ -65,6 +90,10 @@ let deck_format fmt d =
 let deck_diff fmt (a,b) =
     diff fmt deck_format (a,b)
 
+
+(*************    Deck Tests    *************)
+
+
 let test_shuffle
     (name : string)
     (d: Deck.t) = 
@@ -78,15 +107,16 @@ let test_shuffle
 let test_top_card 
     (name : string)
     (d: Deck.t)
-    (expected : card) =
+    (expected : (int*string)) =
   name >:: (fun _ ->
-      assert_equal expected (top_card d) ~printer:pp_card)
+      let c = top_card d |> list_card in
+      assert_equal expected c ~printer:pp_card)
 
 let test_add_card 
     (name : string)
     (d: Deck.t)
     (c: Deck.card)
-    (expected: card list) =
+    (expected: (int*string) list) =
   name >:: (fun _ ->
       let dl = add_card c d |> Deck.to_list in 
       assert_equal expected dl 
@@ -96,7 +126,7 @@ let test_remove_card
     (name : string)
     (d: Deck.t)
     (c: Deck.card)
-    (expected : Deck.card list) =
+    (expected : (int*string) list) =
   name >:: (fun _ ->
       let dl = remove_card c d |> Deck.to_list in
       assert_equal expected dl 
@@ -117,25 +147,38 @@ let ai_deck = fst (deal (snd (deal initial_deck))) in
 let remaining = snd (deal (snd (deal initial_deck))) in
     [
       (* Top Card tests **)
-      let c1 = {color= Red; number = 0} in 
-      let c2 = {color= Yellow; number = 6} in
-      test_top_card "Player's Top Card" my_deck c1;
-      test_top_card "Remaining Top Card" remaining c2;
     ]
+
+
+(*************    Command Tests    *************)
+
+(** [make_parse_test name input_string expected_output] constructs an OUnit
+    test named [name] that asserts the quality of [expected_output]
+    with [parse input_string]. *)  
+let make_parse_test
+    (name : string)
+    (input_string : string)
+    (expected_output : command) : test = 
+  name >:: (fun _ ->
+      let real_output = parse input_string in
+      assert_equal expected_output real_output ~printer:pp_cmd)
+
 
 let command_tests =
   [
-    "Quit" >:: (fun _ -> assert_equal (parse "quit") Quit);
+  (let expected_cmd = Quit in
+   make_parse_test "Parse: Quit" "Quit" expected_cmd);
+    (* "Quit" >:: (fun _ -> assert_equal (parse "quit") Quit);
     "Draw" >:: (fun _ -> assert_equal (parse "draw") Draw);
     "Score" >:: (fun _ -> assert_equal (parse "score") Score);
     "Hand" >:: (fun _ -> assert_equal (parse "hand") Hand);
     "Play" >:: (fun _ -> assert_equal (parse "play") Play);
-    "Put" >:: (fun _ ->assert_equal Put["yellow","3"]) 
-      (parse "p yellow 3");  
-"Put with spaces" >:: (fun _ ->assert_equal Put["yellow","3"]) 
-  (parse "draw yellow      3");  
-"Put with empty" >:: (fun _ ->assert_equal Empty) 
-  (parse "put");  
+    "Put yellow 3" >:: (fun _ ->assert_equal Put ["yellow","3"] 
+    (parse "put yellow 3"));  
+    "Put red 8" >:: (fun _ -> assert_equal Put ["red","8"] 
+    (parse "  put  red    8"));  
+    "Put with empty" >:: (fun _ ->assert_equal Empty 
+    (parse "put"));   *)
 
 
 
@@ -143,8 +186,8 @@ let command_tests =
     (parse "lock dorm with key"));
    "Unlock door" >:: (fun _ -> assert_equal (Command.Unlock ["treasure with 
     book"]) (parse "unlock treasure with book")); *)
-"Empty String" >:: (fun _ -> assert_raises (Empty) parse "");
-"Malformed" >:: (fun _ -> assert_raises (Malformed) parse("potato"));
+(* "Empty String" >:: (fun _ -> assert_raises (Empty) parse "");
+"Malformed" >:: (fun _ -> assert_raises (Malformed) parse("potato")); *)
 ]
 
 let state_tests =

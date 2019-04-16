@@ -7,6 +7,7 @@ type t = {
   playing_deck : Deck.t ;
   turn:bool;
 } 
+
 exception Invalid_Move
 let init_state  = 
   let deck = shuffle(load_deck) in 
@@ -26,14 +27,13 @@ let has_won st = Deck.len st.players_hand = 0 || Deck.len st.ai_hand = 0
 let get_current_score = failwith "Unimplemented"
 let get_turn st = st.turn
 
-
 let put c (st:t) s = if (is_valid c st.current_card && s="player" && contains c st.player_hand) 
-  then Valid_Move {current_card = c;
-                   players_hand = remove_card c st.players_hand; 
-                   ai_hand= st.ai_hand; 
-                   draw_deck=st.draw_deck; 
-                   playing_deck= add_card c st.playing_deck; turn = false;} 
-  else if (is_valid c st.current_card && s="ai" && contains c st.ai_hand )
+  then {current_card = c;
+        players_hand = remove_card c st.players_hand; 
+        ai_hand= st.ai_hand; 
+        draw_deck=st.draw_deck; 
+        playing_deck= add_card c st.playing_deck} 
+  else if (is_valid c st.current_card && s="ai"&& contains c st.ai_hand)
   then {current_card = c;
         players_hand = st.players_hand;
         ai_hand= remove_card c st.ai_hand; 

@@ -1,4 +1,5 @@
 ### Starting build.
+<<<<<<< HEAD
 # Target: Deck.mli.depends, tags: { package(oUnit), extension:mli, file:Deck.mli, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -package oUnit -modules Deck.mli > Deck.mli.depends
 # Target: Deck.cmi, tags: { package(oUnit), byte, compile, extension:mli, file:Deck.mli, interf, ocaml, quiet, traverse }
@@ -27,5 +28,26 @@ ocamlfind ocamlc -c -package oUnit -o state.cmo state.ml
 File "state.ml", line 28, characters 7-17:
 Error: Unbound constructor Valid_Move
 Hint: Did you mean Invalid_Move?
+=======
+# Target: test.ml.depends, tags: { package(oUnit), debug, extension:ml, file:test.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -modules test.ml > test.ml.depends
+# Target: command.mli.depends, tags: { package(oUnit), debug, extension:mli, file:command.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -modules command.mli > command.mli.depends # cached
+# Target: Deck.mli.depends, tags: { package(oUnit), debug, extension:mli, file:Deck.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -modules Deck.mli > Deck.mli.depends # cached
+# Target: state.mli.depends, tags: { package(oUnit), debug, extension:mli, file:state.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -modules state.mli > state.mli.depends # cached
+# Target: Deck.cmi, tags: { package(oUnit), byte, compile, debug, extension:mli, file:Deck.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -g -package oUnit -o Deck.cmi Deck.mli
+# Target: command.cmi, tags: { package(oUnit), byte, compile, debug, extension:mli, file:command.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -g -package oUnit -o command.cmi command.mli
+# Target: state.cmi, tags: { package(oUnit), byte, compile, debug, extension:mli, file:state.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -g -package oUnit -o state.cmi state.mli
+# Target: test.cmo, tags: { package(oUnit), byte, compile, debug, extension:cmo, extension:ml, file:test.cmo, file:test.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -g -package oUnit -o test.cmo test.ml
++ ocamlfind ocamlc -c -g -package oUnit -o test.cmo test.ml
+File "test.ml", line 194, characters 11-16:
+Error: Unbound record field color
+>>>>>>> 8bcd28923ab7633dc5fc0562237f7d3a9e9200ee
 Command exited with code 2.
 # Compilation unsuccessful.

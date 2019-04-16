@@ -6,6 +6,7 @@ type t = {
   draw_deck : Deck.t ;
   playing_deck : Deck.t ;
 } 
+
 exception Invalid_Move
 let init_state  = 
   let deck = shuffle(load_deck) in 
@@ -25,7 +26,7 @@ let has_won st = Deck.len st.players_hand = 0 || Deck.len st.ai_hand = 0
 let get_current_score = failwith "Unimplemented"
 
 let put c (st:t) s = if (is_valid c st.current_card && s="player") 
-  then Valid_Move {current_card = c;
+  then {current_card = c;
         players_hand = remove_card c st.players_hand; 
         ai_hand= st.ai_hand; 
         draw_deck=st.draw_deck; 
