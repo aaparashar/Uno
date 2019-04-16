@@ -1,9 +1,9 @@
-MODULES=Deck command state main authors
+MODULES=Deck command state UI authors
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
 TEST=test.byte
-MAIN=main.byte
+MAIN=UI.byte
 OCAMLBUILD=ocamlbuild -use-ocamlfind
 PKGS = oUnit
 

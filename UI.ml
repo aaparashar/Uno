@@ -1,30 +1,32 @@
 open Deck
-open state
+open State
 open ANSITerminal
 open Format
 
 let pp_card (c:card) = 
-  ANSITerminal.(string_of_int[c.color] c.number)
+  ANSITerminal.(print_string [Deck.card_col c] Deck.card_num)
 
 let rec print_hand d =
   match d with 
   | h::t -> "\t"^pp_card^"\n" ^ print_hand t
   | [] -> "\n"
 let print_card c =
-  ANSITerminal.([c.color] (c.color+ " " c.number))
+  ANSITerminal.(print_string [Deck.card_col c] (Deck.card_col+ " " Deck.card_num))
 
 let rec do_play_game st =
-  if State.has_won st then
+  if State.has_won st then 
+  begin
     ANSITeriminal.(print_string [cyan]("\n You "));
-  if st.players_hand = 0 then ANSITeriminal.(print_string [cyan]("Win :D Thanks for playing!"));
-else ANSITeriminal.(print_string [cyan]("Lose :( Better luck next time"));
-else if st.turn
+    if st.players_hand = 0 then ANSITeriminal.(print_string [cyan]("Win :D Thanks for playing!"))
+    else ANSITeriminal.(print_string [cyan]("Lose :( Better luck next time")) 
+  end
+  else if st.turn then begin
     ANSITeriminal.(print_string [cyan]("\nLast Card:\t"));
-  print_string (print_card(st.current_card));
-  ANSITeriminal.(print_string [cyan]("\n In Your Hand:\n"));
-  print_string(print_hand(st.players_hand));
-  ANSITeriminal.(print_string [cyan] ("\nWhat's your next move?\n"));
-  print_string  "> ";
+    print_string (print_card(st.current_card));
+    ANSITeriminal.(print_string [cyan]("\n In Your Hand:\n"));
+    print_string(print_hand(st.players_hand));
+    ANSITeriminal.(print_string [cyan] ("\nWhat's your next move?\n"));
+    print_string  "> ";
   let (out_string,cmd) = 
     match Command.parse (read_line()) with
     | exception (Command.Empty) -> ("\nWhat's your next move?\n","");
@@ -46,8 +48,8 @@ else if st.turn
   | "draw" -> State.draw st "player"
   | _ -> ANSITeriminal(print_stringpcyan out_string);
     do_play_game st
-
-else st.ai_turn
+  end
+  else st.ai_turn
 
 
 

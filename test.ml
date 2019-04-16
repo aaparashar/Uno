@@ -191,10 +191,10 @@ let command_tests =
 ]
 
 let state_tests =
-  let c = {color =Yellow; number = 1} in
-  let test = put c init_state "player" in 
+  (* let c = {color =Yellow; number = 1} in
+  let test = put c init_state "player" in  *)
   [
-    "Current Card" >:: (fun _ ->assert_equal (get_current_card test) c );
+    (* "Current Card" >:: (fun _ ->assert_equal (get_current_card test) c );
     "Players Hand" >:: (fun _ ->assert_equal (get_players_hand test)  
                            (remove_card c (get_players_hand init_state) )); 
     "AI Hand" >:: (fun _ ->assert_equal (get_ai_hand test) 
@@ -202,7 +202,7 @@ let state_tests =
     "Draw Deck" >:: (fun _ ->assert_equal (get_draw_deck test)
                         (get_draw_deck init_state)); 
     "Playing Deck" >:: (fun _ ->assert_equal (get_playing_deck test) 
-                           (add_card c (get_playing_deck init_state) )); 
+                           (add_card c (get_playing_deck init_state) ));  *)
   ]
 let suite =
   "test suite for A6"  >::: List.flatten [

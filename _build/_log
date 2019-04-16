@@ -1,31 +1,39 @@
 ### Starting build.
-# Target: Deck.mli.depends, tags: { package(oUnit), extension:mli, file:Deck.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package oUnit -modules Deck.mli > Deck.mli.depends # cached
-# Target: Deck.cmi, tags: { package(oUnit), byte, compile, extension:mli, file:Deck.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package oUnit -o Deck.cmi Deck.mli # cached
-# Target: Deck.ml.depends, tags: { package(oUnit), extension:ml, file:Deck.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package oUnit -modules Deck.ml > Deck.ml.depends # cached
-# Target: Deck.cmo, tags: { package(oUnit), byte, compile, extension:cmo, extension:ml, file:Deck.cmo, file:Deck.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package oUnit -o Deck.cmo Deck.ml # cached
-# Target: command.mli.depends, tags: { package(oUnit), extension:mli, file:command.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package oUnit -modules command.mli > command.mli.depends # cached
-# Target: command.cmi, tags: { package(oUnit), byte, compile, extension:mli, file:command.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package oUnit -o command.cmi command.mli # cached
-# Target: command.ml.depends, tags: { package(oUnit), extension:ml, file:command.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package oUnit -modules command.ml > command.ml.depends # cached
-# Target: command.cmo, tags: { package(oUnit), byte, compile, extension:cmo, extension:ml, file:command.cmo, file:command.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package oUnit -o command.cmo command.ml # cached
-# Target: state.mli.depends, tags: { package(oUnit), extension:mli, file:state.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package oUnit -modules state.mli > state.mli.depends # cached
-# Target: state.cmi, tags: { package(oUnit), byte, compile, extension:mli, file:state.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package oUnit -o state.cmi state.mli # cached
-# Target: state.ml.depends, tags: { package(oUnit), extension:ml, file:state.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package oUnit -modules state.ml > state.ml.depends
-# Target: state.cmo, tags: { package(oUnit), byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package oUnit -o state.cmo state.ml
-+ ocamlfind ocamlc -c -package oUnit -o state.cmo state.ml
-File "state.ml", line 48, characters 56-71:
-Error: This expression has type Deck.card
-       This is not a function; it cannot be applied.
+# Target: Deck.mli.depends, tags: { package(ANSITerminal), package(oUnit), extension:mli, file:Deck.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules Deck.mli > Deck.mli.depends # cached
+# Target: Deck.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:mli, file:Deck.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o Deck.cmi Deck.mli # cached
+# Target: Deck.ml.depends, tags: { package(ANSITerminal), package(oUnit), extension:ml, file:Deck.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules Deck.ml > Deck.ml.depends # cached
+# Target: Deck.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:cmo, extension:ml, file:Deck.cmo, file:Deck.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o Deck.cmo Deck.ml # cached
+# Target: command.mli.depends, tags: { package(ANSITerminal), package(oUnit), extension:mli, file:command.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules command.mli > command.mli.depends # cached
+# Target: command.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:mli, file:command.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o command.cmi command.mli # cached
+# Target: command.ml.depends, tags: { package(ANSITerminal), package(oUnit), extension:ml, file:command.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules command.ml > command.ml.depends # cached
+# Target: command.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:cmo, extension:ml, file:command.cmo, file:command.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o command.cmo command.ml # cached
+# Target: state.mli.depends, tags: { package(ANSITerminal), package(oUnit), extension:mli, file:state.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules state.mli > state.mli.depends # cached
+# Target: state.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:mli, file:state.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o state.cmi state.mli # cached
+# Target: state.ml.depends, tags: { package(ANSITerminal), package(oUnit), extension:ml, file:state.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules state.ml > state.ml.depends # cached
+# Target: state.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o state.cmo state.ml # cached
+# Target: UI.mli.depends, tags: { package(ANSITerminal), package(oUnit), extension:mli, file:UI.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules UI.mli > UI.mli.depends # cached
+# Target: UI.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:mli, file:UI.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o UI.cmi UI.mli # cached
+# Target: UI.ml.depends, tags: { package(ANSITerminal), package(oUnit), extension:ml, file:UI.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules UI.ml > UI.ml.depends
+# Target: UI.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:cmo, extension:ml, file:UI.cmo, file:UI.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o UI.cmo UI.ml
++ ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o UI.cmo UI.ml
+File "UI.ml", line 7, characters 30-45:
+Error: This expression has type string but an expression was expected of type
+         ANSITerminal.style
 Command exited with code 2.
 # Compilation unsuccessful.

@@ -24,7 +24,7 @@ let get_players_hand st = st.players_hand
 let get_ai_hand st = st.ai_hand
 let get_draw_deck st = st.draw_deck
 let has_won st = Deck.len st.players_hand = 0 || Deck.len st.ai_hand = 0
-let get_current_score = failwith "Unimplemented"
+let get_current_score = None
 let get_turn st = st.turn
 
 let put c (st:t) s = if (is_valid c st.current_card && s="player" && contains c st.players_hand) 
@@ -45,20 +45,20 @@ let put c (st:t) s = if (is_valid c st.current_card && s="player" && contains c 
 
 let draw (st:t) s = 
   if (st.draw_deck = empty_deck && s= "player") then 
-    let reset = {st with draw_deck=shuffle (remove_card(st.current_card st.playing_deck)); 
-                         playing_deck = add_card(st.current_card empty_deck)} in 
+    let reset = {st with draw_deck=shuffle (remove_card st.current_card st.playing_deck); 
+                         playing_deck = add_card st.current_card empty_deck} in 
     {reset with players_hand = (add_card (top_card reset.draw_deck) reset.players_hand); 
                 draw_deck = remove_card (top_card reset.draw_deck) reset.draw_deck; turn = false;}
-  else if (draw_deck = empty_deck && s= "ai") then 
-    let reset = {st with draw_deck=shuffle (remove_card(st.current_card st.playing_deck)); 
-                         playing_deck = add_card(st.current_card empty_deck)} in 
+  else if (st.draw_deck = empty_deck && s= "ai") then 
+    let reset = {st with draw_deck=shuffle (remove_card st.current_card st.playing_deck); 
+                         playing_deck = add_card st.current_card empty_deck} in 
     {reset with ai_hand = (add_card (top_card reset.draw_deck) reset.ai_hand); 
                 draw_deck = remove_card (top_card reset.draw_deck) reset.draw_deck;turn=true;}
   else if (s = "ai") then 
     {st with ai_hand = (add_card (top_card st.draw_deck) st.ai_hand); 
              draw_deck = remove_card (top_card st.draw_deck) st.draw_deck;turn=true;}
   else 
-    {st with player_hand = (add_card (top_card st.draw_deck) st.player_hand); 
+    {st with players_hand = (add_card (top_card st.draw_deck) st.players_hand); 
              draw_deck = remove_card (top_card st.draw_deck) st.draw_deck;turn=false;}
 
 let ai_turn st = 
