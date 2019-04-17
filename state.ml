@@ -14,7 +14,7 @@ let init_state  =
   let players = fst (deal deck) in 
   let ai_deck = fst (deal (snd (deal deck))) in 
   let remaining = snd (deal (snd (deal deck))) in 
-  let playing = add_card (top_card remaining) empty_deck in
+  let playing = add_card (top_card remaining) Deck.empty_deck in
   let remaining2 = remove_card (top_card remaining) remaining in
   {current_card = top_card playing; players_hand = players; ai_hand= ai_deck; 
    draw_deck=remaining2; playing_deck= playing; turn = true}

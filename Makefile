@@ -1,4 +1,4 @@
-MODULES=Deck command state UI authors
+MODULES=Deck command state authors
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)

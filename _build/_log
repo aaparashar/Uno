@@ -23,17 +23,12 @@ ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o state.cmi state.mli 
 ocamlfind ocamldep -package oUnit -package ANSITerminal -modules state.ml > state.ml.depends # cached
 # Target: state.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o state.cmo state.ml # cached
-# Target: UI.mli.depends, tags: { package(ANSITerminal), package(oUnit), extension:mli, file:UI.mli, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package oUnit -package ANSITerminal -modules UI.mli > UI.mli.depends # cached
-# Target: UI.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:mli, file:UI.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o UI.cmi UI.mli # cached
-# Target: UI.ml.depends, tags: { package(ANSITerminal), package(oUnit), extension:ml, file:UI.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package oUnit -package ANSITerminal -modules UI.ml > UI.ml.depends
-# Target: UI.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:cmo, extension:ml, file:UI.cmo, file:UI.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o UI.cmo UI.ml
-+ ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o UI.cmo UI.ml
-File "UI.ml", line 7, characters 30-45:
-Error: This expression has type string but an expression was expected of type
-         ANSITerminal.style
-Command exited with code 2.
-# Compilation unsuccessful.
+# Target: authors.mli.depends, tags: { package(ANSITerminal), package(oUnit), extension:mli, file:authors.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules authors.mli > authors.mli.depends
+# Target: authors.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:mli, file:authors.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o authors.cmi authors.mli
+# Target: authors.ml.depends, tags: { package(ANSITerminal), package(oUnit), extension:ml, file:authors.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules authors.ml > authors.ml.depends
+# Target: authors.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:cmo, extension:ml, file:authors.cmo, file:authors.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o authors.cmo authors.ml
+# Compilation successful.

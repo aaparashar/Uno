@@ -12,6 +12,9 @@ type card
 (** The abstract type of values representing a deck. *)
 type t
 
+(** [empty_deck] is an empty deck. *)
+val empty_deck : t
+
 (** [load_deck] is a deck consisting of four colors –– Red, Blue, Yellow,
     Green –– and each color consists of one zero card, and 
     two of each 1 through 9 *)

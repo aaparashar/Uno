@@ -3,17 +3,26 @@ open State
 open ANSITerminal
 open Format
 
+let style_color color = 
+  match color with 
+  | "red" -> [red]
+  | "yellow" -> [yellow]
+  | "green" -> [green]
+  | "blue" -> [blue]
+  | _ -> failwith "unimplemented color"
 
 let pp_card (c:card) = 
-  ANSITerminal.(print_string [Deck.card_col c] (Deck.card_col c) ^" "^string_of_int(Deck.card_num c))
+  let sty = style_color (Deck.card_col c) in
+  ANSITerminal.(print_string sty ((Deck.card_col c)^" "^string_of_int(Deck.card_num c)))
+
+(** string version*)
+let print_card c =
+  (Deck.card_col c )^" " ^ (string_of_int (Deck.card_num c))
 
 let rec print_hand d =
   match d with 
-  | h::t -> "\t"^(print_card c)^"\n" ^ print_hand t
+  | h::t -> "\t"^(print_card h)^"\n" ^ print_hand t
   | [] -> "\n"
-(** string version*)
-let print_card c =
-  (Deck.card_col c )^" " ^ (Deck.card_num c)
 
 let rec do_play_game st =
   if State.has_won st then 
