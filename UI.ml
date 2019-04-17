@@ -3,13 +3,15 @@ open State
 open ANSITerminal
 open Format
 
+
 let pp_card (c:card) = 
-  ANSITerminal.(print_string [Deck.card_col c] (((Deck.card_col c) ^" "^string_of_int(Deck.card_num c))))
+  ANSITerminal.(print_string [Deck.card_col c] (Deck.card_col c) ^" "^string_of_int(Deck.card_num c))
 
 let rec print_hand d =
   match d with 
   | h::t -> "\t"^(print_card c)^"\n" ^ print_hand t
   | [] -> "\n"
+(** string version*)
 let print_card c =
   (Deck.card_col c )^" " ^ (Deck.card_num c)
 
@@ -35,7 +37,7 @@ let rec do_play_game st =
       | Score -> ("Score:\t"^(string_of_int(State.get_current_score st))^"\n", "")
       | Hand -> ("\n In Your Hand:\n"^print_hand(st.players_hand),"")
       | Put(t)-> ("\n You played:\t"^print_card(t),"put")
-      | Draw -> ("\n You drew a card.")
+      | Draw -> ("\n You drew a card.","draw")
     in
     match cmd with
     | "put" -> 
