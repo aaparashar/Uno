@@ -29,6 +29,10 @@ val get_ai_hand: t -> Deck.t
     players will draw cards*)
 val get_draw_deck: t -> Deck.t
 
+(** [get_playing_deck st] is a deck at state [st] that contains all the cards 
+    that have been played so far. *)
+val get_playing_deck: t -> Deck.t
+
 val put: Deck.card -> t ->  string -> t
 
 val get_turn: t ->bool

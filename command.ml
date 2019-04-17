@@ -23,11 +23,11 @@ let parse str =
     let strarray = String.split_on_char ' ' str in
     match strarray with
     |[] -> raise Empty
-    |h::t when h = "quit" -> Quit 
-    |h::t when h = "draw" -> Draw
-    |h::t when h = "score" -> Score
-    |h::t when h = "hand" -> Hand
-    |h::t when h = "put" && t <> [] -> Put t
+    |h::t when h = "Quit" -> Quit 
+    |h::t when h = "Draw" -> Draw
+    |h::t when h = "Score" -> Score
+    |h::t when h = "Hand" -> Hand
+    |h::t when h = "Put" && t <> [] -> Put t
     |_ ->  raise Malformed
   end
 

@@ -48,12 +48,12 @@ let pp_cmd cmd =
   | _ -> pp_string "unimplemented command"
 
 let pp_state (st:State.t) =
-  "\nCurrent Card:\t"^pp_card(st.get_current_card)
-  ^"\nPlayer's Hand:\t"^pp_deck(st.get_players_hand)
-  ^"\nAI's Hand:\t"^pp_deck(st.get_ai_hand)
-  ^"\nDraw Deck:\t"^pp_deck(st.get_draw_deck)
-  ^"\nPlaying Deck:\t"^pp_deck(st.get_playing_deck)
-  ^"\nTurn:\t"^string_of_bool(st.get_turn);
+  "\nCurrent Card:\t"^(st|>State.get_current_card|>Deck.list_card|>pp_card)
+  ^"\nPlayer's Hand:\t"^(st|>State.get_players_hand|>Deck.to_list|>(pp_deck pp_card))
+  ^"\nAI's Hand:\t"^(st|>State.get_ai_hand|>Deck.to_list|>(pp_deck pp_card))
+  ^"\nDraw Deck:\t"^(st|>State.get_draw_deck|>Deck.to_list|>(pp_deck pp_card))
+  ^"\nPlaying Deck:\t"^(st|>State.get_playing_deck|>Deck.to_list|>(pp_deck pp_card))
+  ^"\nTurn:\t"^string_of_bool(State.get_turn st)
 
 (*************    Helpers    *************)
 
@@ -103,7 +103,11 @@ let deck_diff fmt (a,b) =
 
 
 (*************    Deck Tests    *************)
-
+let test_empty_deck
+    (name : string) : test = 
+  name >:: (fun _ -> 
+      assert_equal [] (Deck.to_list Deck.empty_deck) 
+         ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
 
 let test_shuffle
     (name : string)
@@ -157,7 +161,8 @@ let my_deck = fst (deal initial_deck) in
 let ai_deck = fst (deal (snd (deal initial_deck))) in
 let remaining = snd (deal (snd (deal initial_deck))) in
     [
-      (* Top Card tests **)
+      (* Empty deck tests **)
+      test_empty_deck "Empty deck test";
     ]
 
 
@@ -195,7 +200,7 @@ let command_tests =
 
 (*************    State Tests    *************)
 
-let test_get_current_card
+(* let test_get_current_card
     (name: string)
     (st: State.t)
     (expected: card) =
@@ -258,64 +263,63 @@ let test_draw
 (* TODO: Draw tests with reset cases? *)
 let state_tests =
   [
-    let player_deck = [{color = Red; number = 1} ;{color = Red; number = 2}]
-    let ai_deck = [{color = Yellow; number = 1}; {color = Yellow; number = 2}]
-    let current_c = {color = Blue; number = 1}
-    let d_deck = [{color = Green; number = 1}; {color = Green; number = 2}; {color = Green; number = 3]
-    let p_deck = [{color = Blue; number = 4}; {color = Blue; number = 5}; {color = Blue; number = 6}]
+    let player_deck = [{color = Red; number = 1} ;{color = Red; number = 2}] in
+    let ai_deck = [{color = Yellow; number = 1}; {color = Yellow; number = 2}] in
+    let current_c = {color = Blue; number = 1} in
+    let d_deck = [{color = Green; number = 1}; {color = Green; number = 2}; {color = Green; number = 3}] in
+    let p_deck = [{color = Blue; number = 4}; {color = Blue; number = 5}; {color = Blue; number = 6}] in
 
     let test_state = {current_card = current_c; 
                       players_hand = player_deck; 
                       ai_hand = ai_deck;
                       draw_deck = d_deck;
                       play_deck = p_deck;
-                      turn = true}
-   in
-    test_get_current_card "Current Card: Blue 1" test_state {color = Blue; number = 1}
-    test_get_players_hand "Player Hand: Red 1 2" test_state [{color = Red; number = 1} ;{color = Red; number = 2}]
-    test_get_ai_hand "AI Hand: Yellow 1 2" test_state [{color = Yellow; number = 1}; {color = Yellow; number = 2}]
-    test_get_draw_deck "Draw: Green 2 3" test_state [{color = Green; number = 1}; {color = Green; number = 2}; {color = Green; number = 3]
-    test_has_won "Has Won: False" test_state false
-    test_get_turn "Turn: True" test_state true
+                      turn = true} in
+    test_get_current_card "Current Card: Blue 1" test_state {color = Blue; number = 1};
+    test_get_players_hand "Player Hand: Red 1 2" test_state [{color = Red; number = 1} ;{color = Red; number = 2}];
+    test_get_ai_hand "AI Hand: Yellow 1 2" test_state [{color = Yellow; number = 1}; {color = Yellow; number = 2}];
+    test_get_draw_deck "Draw: Green 2 3" test_state [{color = Green; number = 1}; {color = Green; number = 2}; {color = Green; number = 3}];
+    test_has_won "Has Won: False" test_state false;
+    test_get_turn "Turn: True" test_state true;
 
     let post_player_put = {current_card = {color = Red; number = 1}; 
                       players_hand = [{color = Red; number = 2}]; 
                       ai_hand = ai_deck;
                       draw_deck = d_deck;
-                      play_deck = [{color = Red; number = 1}; {color = Green; number = 1}; {color = Green; number = 2}; {color = Green; number = 3];
-                      turn = false} 
+                      play_deck = [{color = Red; number = 1}; {color = Green; number = 1}; {color = Green; number = 2}; {color = Green; number = 3}];
+                      turn = false} in
     let post_ai_put = {current_card = {color = Yellow; number = 1}; 
                       players_hand = [{color = Red; number = 2}];  
                       ai_hand = [{color = Yellow; number = 2}];
                       draw_deck = d_deck;
-                      play_deck = [{color = Yellow; number = 1}; {color = Red; number = 1}; {color = Green; number = 1}; {color = Green; number = 2}; {color = Green; number = 3];
-                      turn = true} 
-    test_put "Player Puts Red 1" {color = Red; number = 1} test_state "player" post_player_put 
-    test_put "AI Puts Yellow 1" {color = Yellow; number = 1} post_player_put "ai" post_ai_put
-    test_put "Player Puts Invalid" {color= Red ; number = 2} post_ai_put "player" post_ai_put
+                      play_deck = [{color = Yellow; number = 1}; {color = Red; number = 1}; {color = Green; number = 1}; {color = Green; number = 2}; {color = Green; number = 3}];
+                      turn = true} in
+    test_put "Player Puts Red 1" {color = Red; number = 1} test_state "player" post_player_put;
+    test_put "AI Puts Yellow 1" {color = Yellow; number = 1} post_player_put "ai" post_ai_put;
+    test_put "Player Puts Invalid" {color= Red ; number = 2} post_ai_put "player" post_ai_put;
 
     let post_player_draw = {current_card = {color = Yellow; number = 1}; 
                       players_hand = [{color = Green; number = 1}; {color = Red; number = 2}];  
                       ai_hand = [{color = Yellow; number = 2}];
-                      draw_deck = [{color = Green; number = 2}; {color = Green; number = 3];
-                      play_deck = [{color = Yellow; number = 1}; {color = Red; number = 1}; {color = Green; number = 1}; {color = Green; number = 2}; {color = Green; number = 3];
-                      turn = false} 
+                      draw_deck = [{color = Green; number = 2}; {color = Green; number = 3}];
+                      play_deck = [{color = Yellow; number = 1}; {color = Red; number = 1}; {color = Green; number = 1}; {color = Green; number = 2}; {color = Green; number = 3}];
+                      turn = false} in
     
     let post_ai_draw = {current_card = {color = Yellow; number = 1}; 
                       players_hand = [{color = Green; number = 1}; {color = Red; number = 2}];  
                       ai_hand = [{color = Green; number = 2}; {color = Yellow; number = 2}];
-                      draw_deck = [{color = Green; number = 3];
-                      play_deck = [{color = Yellow; number = 1}; {color = Red; number = 1}; {color = Green; number = 1}; {color = Green; number = 2}; {color = Green; number = 3];
-                      turn = true} 
-    test_draw "Player Draws Green 1" post_ai_put "player" post_player_draw
-    test_draw "Player Draws Green 1" post_player_draw "ai" post_ai_draw
+                      draw_deck = [{color = Green; number = 3}];
+                      play_deck = [{color = Yellow; number = 1}; {color = Red; number = 1}; {color = Green; number = 1}; {color = Green; number = 2}; {color = Green; number = 3}];
+                      turn = true} in
+    test_draw "Player Draws Green 1" post_ai_put "player" post_player_draw;
+    test_draw "Player Draws Green 1" post_player_draw "ai" post_ai_draw;
 
-  ]
+  ] *)
 let suite =
   "test suite for A6"  >::: List.flatten [
     deck_tests;
     command_tests;
-    state_tests;
+    (* state_tests; *)
   ]
 
 let _ = run_test_tt_main suite
