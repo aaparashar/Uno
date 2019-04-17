@@ -27,6 +27,7 @@ let rec do_play_game st =
     print_string (print_card(st.current_card));
     ANSITerminal.(print_string [cyan]("\n In Your Hand:\n"));
     print_string(print_hand(st.players_hand));
+    if Deck.len(st.get_ai_hand) = 1 then ANSITerminal.(print_string [cyan]("\n AI says:\t \"UNO\""));
     ANSITerminal.(print_string [cyan] ("\nWhat's your next move?\n"));
     print_string  "> ";
     let (out_string,cmd) = 
