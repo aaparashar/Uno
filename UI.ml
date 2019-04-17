@@ -15,7 +15,7 @@ let pp_card (c:card) =
   let sty = style_color (Deck.card_col c) in
   ANSITerminal.(print_string sty ((Deck.card_col c)^" "^string_of_int(Deck.card_num c)))
 
-(** string version*)
+(* string version*)
 let print_card c =
   (Deck.card_col c )^" " ^ (string_of_int (Deck.card_num c))
 
