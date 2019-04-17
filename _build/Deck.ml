@@ -9,6 +9,14 @@ type card = {number : int; color: color}
 
 type t = card list
 
+let create_card (color:string) (num:int) = 
+  match color with
+  | "red" -> {number = num; color = Red}
+  | "yellow" -> {number = num; color = Yellow}
+  | "green" -> {number = num; color = Green}
+  | "blue" -> {number = num; color = Blue}
+  | _ -> failwith "invalid card"
+
 let rec load_num_color (numbers:int list) col =
   let load_helper acc h = ({number = h; color = col}::acc) in
   List.fold_left load_helper [] numbers

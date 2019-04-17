@@ -119,6 +119,15 @@ let test_shuffle
       assert_equal sl dl 
         ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
 
+let test_deal
+  (name : string)
+  (d: Deck.t)  
+  (expected: (int*string) list) : test =
+  name >:: (fun _ ->
+      let (dt, d) = Deck.deal d in
+      assert_equal expected (Deck.to_list dt)
+        ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
+
 let test_top_card 
     (name : string)
     (d: Deck.t)
@@ -160,9 +169,24 @@ let initial_deck = load_deck in
 let my_deck = fst (deal initial_deck) in
 let ai_deck = fst (deal (snd (deal initial_deck))) in
 let remaining = snd (deal (snd (deal initial_deck))) in
+let y3 = Deck.create_card "yellow" 3 in
+let b9 = Deck.create_card "blue" 9 in
+let d1 = Deck.add_card y3 Deck.empty_deck in
+let d2 = Deck.add_card b9 d1 in
     [
       (* Empty deck tests **)
       test_empty_deck "Empty deck test";
+
+      test_add_card "Add card to empty" Deck.empty_deck y3 [(3, "yellow")];
+      test_add_card "Add card to deck 1" d1 b9 [(9, "blue"); (3, "yellow")];
+
+      (test_deal "Deal loaded deck" Deck.load_deck 
+        [(3, "red"); (4, "red"); (5, "red"); (6, "red"); (7, "red"); 
+         (8, "red"); (9, "red")]);
+
+      test_shuffle "Test shuffle loaded deck" Deck.load_deck;
+      test_shuffle "Test shuffle deck 1" d1;
+      test_shuffle "Test shuffle deck 2" d2;
     ]
 
 
