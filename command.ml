@@ -21,16 +21,9 @@ let parse str =
     let strarray = str |> String.split_on_char ' ' |> List.filter ((<>) "") in
     match strarray with
     |[] -> raise Empty
-<<<<<<< HEAD
-    |h::t when h = "Quit" -> Quit 
-    |h::t when h = "Draw" -> Draw
-   (* |h::t when h = "Score" -> Score*)
-    |h::t when h = "Hand" -> Hand
-=======
     |h::[] when h = "Quit" -> Quit 
     |h::[] when h = "Draw" -> Draw
     |h::[] when h = "Hand" -> Hand
->>>>>>> 1024233ca70ee1c15fdfabc63b29e6221341516e
     |h::t when h = "Put" && t <> [] -> Put t
     |_ -> raise Malformed
   end
