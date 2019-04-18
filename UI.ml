@@ -22,18 +22,21 @@ let print_card c =
 let rec print_hand (d:Deck.t) =
   if Deck.len d = 0 then ANSITerminal.(print_string[white]"\n")
   else let c = Deck.top_card d in 
-        ANSITerminal.(print_string [white]("\t")); 
-        pp_card c;
-        ANSITerminal.(print_string [white]("\n"));
-        print_hand (Deck.remove_card c d)
+    ANSITerminal.(print_string [white]("\t")); 
+    pp_card c;
+    ANSITerminal.(print_string [white]("\n"));
+    print_hand (Deck.remove_card c d)
 
 let rec do_play_game (st: State.t) =
   if State.has_won st then 
     begin
       ANSITerminal.(print_string [cyan]("\n You "));
       if Deck.len(State.get_players_hand st) = 0 then 
-        ANSITerminal.(print_string [cyan]("Win :D Thanks for playing!"))
-      else ANSITerminal.(print_string [cyan]("Lose :( Better luck next time")) 
+        let () = ANSITerminal.(print_string [cyan]("Win :D Thanks for playing!")) 
+        in  exit 0;
+      else let () = 
+             ANSITerminal.(print_string [cyan]("Lose :( Better luck next time")) 
+        in exit 0;
     end
   else if State.get_turn st then begin
     ANSITerminal.(print_string [cyan]("\nLast Card:\t"));
@@ -48,48 +51,51 @@ let rec do_play_game (st: State.t) =
       match Command.parse (read_line()) with
       | exception (Command.Empty) -> ("\nWhat's your next move?\n","");
       | exception (Command.Malformed) -> ("\n\nCommand not recognized\n","");
-      | Quit -> (("\n\nSee ya next time!\n"),"quit")
-      | Hand -> ("\n In Your Hand:\n","hand")
-      | Draw -> ("\n You drew a card.","draw")
+      | Quit -> (("\n\nSee ya next time!\n"),"Quit")
+      | Hand -> ("\n In Your Hand:\n","Hand")
+      | Draw -> ("\n You drew a card.","Draw")
       | Put t-> 
-         (match t with
-          | num::col::[] -> (num^","^col, "put")
-          | _ -> ("", "put") )
+        (match t with
+         | num::col::[] -> (num^","^col, "Put")
+         | _ -> ("", "Put") )
     in
     match cmd with
-    | "put" -> 
-        (let is_card n c = n >= 0 && n <= 9 && 
-                          List.mem c ["red"; "yellow"; "blue"; "green"]
-        in
-        let card_comp = String.split_on_char ',' out_string in
-        if List.length card_comp = 2 && 
-        is_card (int_of_string (List.nth card_comp 1)) (List.nth card_comp 0) then
-        begin
-            let num = int_of_string (List.nth card_comp 1) in 
-            let col = List.nth card_comp 0 in 
-            let c = Deck.create_card col num in
-            match State.put c st "player" with
-            | newState -> 
-               (ANSITerminal.(print_string [cyan]("\nYou played:\t"^print_card c));
+    | "Put" -> 
+      (let is_card n c = n >= 0 && n <= 9 && 
+                         List.mem c ["red"; "yellow"; "blue"; "green"]
+       in
+       let card_comp = String.split_on_char ',' out_string in
+       if List.length card_comp = 2 && 
+          is_card (int_of_string (List.nth card_comp 1)) (List.nth card_comp 0) then
+         begin
+           let num = int_of_string (List.nth card_comp 1) in 
+           let col = List.nth card_comp 0 in 
+           let c = Deck.create_card col num in
+           match State.put c st "player" with
+           | newState -> 
+             (ANSITerminal.(print_string [cyan]("\nYou played:\t"^print_card c));
               do_play_game newState)
-            | exception(Invalid_Move) -> 
-                (ANSITerminal.(print_string [magenta]"\n Can't put that there\n");
-               do_play_game st )
-        end
-        else 
-        begin
-            ANSITerminal.(print_string [magenta]"\n That's not a card\n");
-            do_play_game st
-        end
-        )
-    | "draw" -> do_play_game (State.draw st "player")
-    | "quit" -> let () = ANSITerminal.(print_string[cyan] out_string) in  exit 0;
-    | "hand" -> ANSITerminal.(print_string[cyan] out_string);
-                print_hand(State.get_players_hand st);
+           | exception(Invalid_Move) -> 
+             (ANSITerminal.(print_string [magenta]"\n Can't put that there\n");
+              do_play_game st )
+         end
+       else 
+         begin
+           ANSITerminal.(print_string [magenta]"\n That's not a card\n");
+           do_play_game st
+         end
+      )
+    | "Draw" -> do_play_game (State.draw st "player")
+    | "Quit" -> let () = ANSITerminal.(print_string[cyan] out_string) in  exit 0;
+    | "Hand" -> ANSITerminal.(print_string[cyan] out_string);
+      print_hand(State.get_players_hand st);
+      do_play_game st;
     | _ -> ANSITerminal.(print_string[cyan] out_string);
       do_play_game st
   end
-  else do_play_game (State.ai_turn st)
+  else 
+    ANSITerminal.(print_string[white] "\nAI is playing\n");
+  do_play_game (State.ai_turn st)
 
 
 
@@ -103,6 +109,9 @@ let play_game p =
 let rec main () = 
   ANSITerminal.(print_string [cyan]
                   "\n\nWelcome to the Uno Game Engine\n"); 
+  print_endline 
+    "Reminder that all commands start with an uppercase letter and a card is 
+  represented as lowercase with a color then a number i.e. Put blue 8.\n";
   print_endline "Please enter your player name:\n";
   ANSITerminal.(print_string [white]  "> ");
   match read_line () with
