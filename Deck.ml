@@ -52,7 +52,7 @@ let rec multi_riffle
   |  0 -> d
   | _ -> multi_riffle (riffle d [] []) (k-1)
 
-let shuffle d = let n = Random.int 8 in 
+let shuffle d = Random.self_init (); let n = Random.int 16 in 
   match n with 
   | 0 -> multi_riffle d 1
   | _ -> multi_riffle d n
