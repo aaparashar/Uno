@@ -1,32 +1,41 @@
 ### Starting build.
 # Target: test.ml.depends, tags: { package(ANSITerminal), package(oUnit), debug, extension:ml, file:test.ml, ocaml, ocamldep, quiet, traverse }
-ocamlfind ocamldep -package oUnit -package ANSITerminal -modules test.ml > test.ml.depends # cached
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules test.ml > test.ml.depends
 # Target: command.mli.depends, tags: { package(ANSITerminal), package(oUnit), debug, extension:mli, file:command.mli, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -package oUnit -package ANSITerminal -modules command.mli > command.mli.depends # cached
+# Target: command.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, debug, extension:mli, file:command.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o command.cmi command.mli # cached
 # Target: Deck.mli.depends, tags: { package(ANSITerminal), package(oUnit), debug, extension:mli, file:Deck.mli, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -package oUnit -package ANSITerminal -modules Deck.mli > Deck.mli.depends # cached
+# Target: Deck.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, debug, extension:mli, file:Deck.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o Deck.cmi Deck.mli # cached
 # Target: state.mli.depends, tags: { package(ANSITerminal), package(oUnit), debug, extension:mli, file:state.mli, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -package oUnit -package ANSITerminal -modules state.mli > state.mli.depends # cached
-# Target: Deck.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, debug, extension:mli, file:Deck.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o Deck.cmi Deck.mli
-# Target: command.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, debug, extension:mli, file:command.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o command.cmi command.mli
 # Target: state.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, debug, extension:mli, file:state.mli, interf, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o state.cmi state.mli
+ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o state.cmi state.mli # cached
 # Target: test.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, debug, extension:cmo, extension:ml, file:test.cmo, file:test.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o test.cmo test.ml # cached
+ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o test.cmo test.ml
++ ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o test.cmo test.ml
+File "test.ml", line 48, characters 4-5:
+Warning 11: this match case is unused.
+File "test.ml", line 190, characters 4-11:
+Warning 26: unused variable my_deck.
+File "test.ml", line 191, characters 4-11:
+Warning 26: unused variable ai_deck.
+File "test.ml", line 192, characters 4-13:
+Warning 26: unused variable remaining.
 # Target: command.ml.depends, tags: { package(ANSITerminal), package(oUnit), debug, extension:ml, file:command.ml, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -package oUnit -package ANSITerminal -modules command.ml > command.ml.depends # cached
+# Target: command.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, debug, extension:cmo, extension:ml, file:command.cmo, file:command.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o command.cmo command.ml # cached
 # Target: Deck.ml.depends, tags: { package(ANSITerminal), package(oUnit), debug, extension:ml, file:Deck.ml, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -package oUnit -package ANSITerminal -modules Deck.ml > Deck.ml.depends # cached
+# Target: Deck.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, debug, extension:cmo, extension:ml, file:Deck.cmo, file:Deck.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o Deck.cmo Deck.ml # cached
 # Target: state.ml.depends, tags: { package(ANSITerminal), package(oUnit), debug, extension:ml, file:state.ml, ocaml, ocamldep, quiet, traverse }
 ocamlfind ocamldep -package oUnit -package ANSITerminal -modules state.ml > state.ml.depends # cached
-# Target: command.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, debug, extension:cmo, extension:ml, file:command.cmo, file:command.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o command.cmo command.ml
-# Target: Deck.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, debug, extension:cmo, extension:ml, file:Deck.cmo, file:Deck.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o Deck.cmo Deck.ml
 # Target: state.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, debug, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet, traverse }
-ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o state.cmo state.ml
+ocamlfind ocamlc -c -g -package oUnit -package ANSITerminal -o state.cmo state.ml # cached
 # Target: test.byte, tags: { package(ANSITerminal), package(oUnit), byte, debug, dont_link_with, extension:byte, file:test.byte, link, ocaml, program, quiet, traverse }
 ocamlfind ocamlc -linkpkg -g -package oUnit -package ANSITerminal Deck.cmo command.cmo state.cmo test.cmo -o test.byte
 # Compilation successful.

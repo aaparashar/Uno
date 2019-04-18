@@ -57,6 +57,15 @@ let pp_state (st:State.t) =
 
 (*************    Helpers    *************)
 
+(** [make_exception_test name e f] constructs an OUnit
+    test named [name] that asserts the quality of exception thrown by [f]
+    with [e]. *)
+let make_exception_test
+    (name : string)
+    (e : exn) 
+    (f) =
+  name >:: (fun _ -> assert_raises e f)
+
 let rec contains a b =
   match a with 
   | [] -> false
@@ -249,23 +258,39 @@ let make_parse_test
 
 let command_tests =
   [
-   make_parse_test "Parse: Quit" "Quit" Quit;
-   make_parse_test "Parse: Quit" "  Quit" Quit;
-   make_parse_test "Parse: Quit" "Quit  " Quit;
+  make_parse_test "Parse: Quit" "Quit" Quit;
+  make_parse_test "Parse: Quit" "  Quit" Quit;
+  make_parse_test "Parse: Quit" "Quit  " Quit;
    
-   
-    (* "Quit" >:: (fun _ -> assert_equal (parse "quit") Quit);
-    "Draw" >:: (fun _ -> assert_equal (parse "draw") Draw);
-    "Score" >:: (fun _ -> assert_equal (parse "score") Score);
-    "Hand" >:: (fun _ -> assert_equal (parse "hand") Hand);
-    "Play" >:: (fun _ -> assert_equal (parse "play") Play);
-    "Put yellow 3" >:: (fun _ ->assert_equal Put ["yellow","3"] 
-    (parse "put yellow 3"));  
-    "Put red 8" >:: (fun _ -> assert_equal Put ["red","8"] 
-    (parse "  put  red    8"));  
-    "Put with empty" >:: (fun _ ->assert_equal Empty 
-    (parse "put"));   *)
+  make_parse_test "Parse: Draw" "Draw" Draw;
+  make_parse_test "Parse: Draw" "  Draw" Draw;
+  make_parse_test "Parse: Draw" "Draw  " Draw;
 
+  make_parse_test "Parse: Score" "Score" Score;
+  make_parse_test "Parse: Quit" "  Score" Score;
+  make_parse_test "Parse: Quit" "Score  " Score;
+   
+  make_parse_test "Parse: Hand" "Hand" Hand;
+  make_parse_test "Parse: Put card" "Put 1 red" (Put ["1"; "red"]);
+  make_parse_test "Parse: Put card" " Put  1   red " (Put ["1"; "red"]);
+  make_parse_test "Parse: Put card" " Put yellow 3" (Put ["yellow"; "3"]);
+   
+  make_exception_test "Parse empty exception" 
+    (Empty) (fun _ -> parse "");
+  make_exception_test "Parse empty exception" 
+    (Empty) (fun _ -> parse " ");
+  make_exception_test "Parse empty exception" 
+    (Empty) (fun _ -> parse "  ");
+  make_exception_test "Parse Malformed exception" 
+    (Malformed) (fun _ -> parse "adfs");
+  make_exception_test "Parse Malformed exception" 
+    (Malformed) (fun _ -> parse "Qu it");
+  make_exception_test "Parse Malformed exception" 
+    (Malformed) (fun _ -> parse "Quit pls");
+  make_exception_test "Parse Malformed exception" 
+    (Malformed) (fun _ -> parse "Put");
+  make_exception_test "Parse Malformed exception" 
+    (Malformed) (fun _ -> parse " P ut");
 ]
 
 (*************    State Tests    *************)
