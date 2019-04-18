@@ -15,6 +15,10 @@ type t
     i.e putting a card not in your hand. *)
 exception Invalid_Move
 
+(** [create_state c pl_h a_h d_d pl_d turn] is a state defined by the values
+    [c], [pl_h], [a_h], [d_d], [pl_d] [turn]. For testing purposes. *)
+val create_state : Deck.card -> Deck.t -> Deck.t -> Deck.t -> Deck.t -> bool -> t
+
 (** [init_state d] is the initial state of the game when given a deck [d].
     In that state, the deck is shuffled and each player is dealt seven cards *)
 val init_state : t
@@ -56,4 +60,6 @@ val ai_turn: t -> t
     then it is the players turn. If it is false, the it is the ai's turn*)
 val get_turn: t ->bool
 
+(** [has_won st] is true if either the player or the ai has won the game.
+    Otherwise, it is false. *)
 val has_won: t -> bool

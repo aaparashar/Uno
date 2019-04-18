@@ -282,16 +282,16 @@ let d3 = Deck.add_card g5 d2 in
 
 (*************    Command Tests    *************)
 
-(** [make_parse_test name input_string expected_output] constructs an OUnit
-    test named [name] that asserts the quality of [expected_output]
+(** [make_parse_test name input_string expected] constructs an OUnit
+    test named [name] that asserts the quality of [expected]
     with [parse input_string]. *)  
 let make_parse_test
     (name : string)
     (input_string : string)
-    (expected_output : command) : test = 
+    (expected : command) : test = 
   name >:: (fun _ ->
       let real_output = parse input_string in
-      assert_equal expected_output real_output ~printer:pp_cmd)
+      assert_equal expected real_output ~printer:pp_cmd)
 
 
 let command_tests =
@@ -328,35 +328,60 @@ let command_tests =
   ]
 
 (*************    State Tests    *************)
+  
+  (** [create_deck d cards] is deck [d] with the cards in card list [cards]
+    added to it. *)
+  let rec create_deck d cards = 
+    match cards with
+    |[] -> d
+    |h::t -> create_deck (add_card h d) t
 
-(*let test_get_current_card
+(** [test_get_current_card name st expected] constructs an OUnit test named 
+    [name] that asserts the quality of [list_card (State.get_current_card st)] 
+    with [expected]. *)
+  let test_get_current_card
     (name: string)
     (st: State.t)
-    (expected: Deck.card) =
+    (expected: (int*string)) =
   name >:: (fun _ ->
-    assert_equal expected (State.get_current_card st)~printer:pp_card)
+    assert_equal expected (list_card (State.get_current_card st)) ~printer:pp_card)
 
+  
+(** [test_get_players_hand name st expected] constructs an OUnit test named 
+    [name] that asserts the quality of [Deck.to_list (State.get_players_hand st)] 
+    with [expected]. *)
   let test_get_players_hand
     (name: string)
     (st: State.t)
-    (expected: Deck.t) =
+    (expected: (int*string) list) =
   name >:: (fun _ ->
-    assert_equal expected (State.get_players_hand st)~printer:pp_deck)
+    assert_equal expected (Deck.to_list (State.get_players_hand st)) 
+      ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
 
+  (** [test_get_ai_hand name st expected] constructs an OUnit test named 
+    [name] that asserts the quality of [Deck.to_list (State.get_ai_hand st)] 
+    with [expected]. *)
   let test_get_ai_hand
     (name: string)
     (st: State.t)
-    (expected: Deck.t) =
+    (expected: (int*string) list) =
   name >:: (fun _ ->
-    assert_equal expected (State.get_ai_hand st)~printer:pp_deck)
+    assert_equal expected (Deck.to_list (State.get_ai_hand st))
+      ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
 
+  (** [test_get_draw_deck name st expected] constructs an OUnit test named 
+    [name] that asserts the quality of [Deck.to_list (State.get_draw_deck st)] 
+    with [expected]. *)
   let test_get_draw_deck
     (name: string)
     (st: State.t)
-    (expected: Deck.t) =
+    (expected: (int*string) list) =
   name >:: (fun _ ->
-    assert_equal expected (State.get_draw_deck st)~printer:pp_deck)
+    assert_equal expected (Deck.to_list (State.get_draw_deck st))
+      ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
 
+  (** [test_has_won name st expected] constructs an OUnit test named 
+    [name] that asserts the quality of [State.has_won st] with [expected]. *)
   let test_has_won
     (name: string)
     (st: State.t)
@@ -364,6 +389,8 @@ let command_tests =
   name >:: (fun _ ->
     assert_equal expected (State.has_won st)~printer:string_of_bool)
 
+  (** [test_get_turn name st expected] constructs an OUnit test named 
+    [name] that asserts the quality of [State.get_turn st] with [expected]. *)
   let test_get_turn
     (name: string)
     (st: State.t)
@@ -371,84 +398,85 @@ let command_tests =
   name >:: (fun _ ->
     assert_equal expected (State.get_turn st)~printer:string_of_bool)
 
+  (** [test_put name c st s expected] constructs an OUnit test named 
+    [name] that asserts the quality of [State.put c st s] with [expected]. *)
   let test_put
     (name: string)
     (c: Deck.card)
     (st: State.t)
     (s: string)
     (expected: State.t) =
-  name >:: (fun _ -> try
-    assert_equal expected (State.put c st s)~printer:pp_state
-    with Invalid_Move -> assert_raises (Invalid_Move))
+  name >:: (fun _ -> 
+    assert_equal expected (State.put c st s) ~printer:pp_state)
 
+  (** [test_draw name st s expected] constructs an OUnit test named 
+    [name] that asserts the quality of [State.draw st s] with [expected]. *)
   let test_draw
     (name: string)
     (st: State.t)
     (s: string)
     (expected: State.t) =
   name >:: (fun _ ->
-    assert_equal expected (State.draw st s)~printer:pp_state)*)
+    assert_equal expected (State.draw st s)~printer:pp_state)
 
 (* TODO: Draw tests with reset cases? *)
 let state_tests =
+let r1 = create_card "red" 1 in
+let r2 = create_card "red" 2 in
+let y1 = create_card "yellow" 1 in
+let y2 = create_card "yellow" 2 in
+let g1 = create_card "green" 1 in
+let g2 = create_card "green" 2 in
+let g3 = create_card "green" 3 in
+let b4 = create_card "blue" 4 in
+let b5 = create_card "blue" 5 in
+let b6 = create_card "blue" 6 in
+let player_deck = create_deck empty_deck [r1; r2] in
+let ai_deck = create_deck empty_deck [y1; y2] in
+let current_c = create_card "blue" 1 in
+let d_deck = create_deck empty_deck [g3; g2; g1] in
+let p_deck = create_deck empty_deck [b6;b5;b4] in
+let test_state = create_state current_c player_deck ai_deck d_deck p_deck 
+                 true in
+let post_player_put = create_state r1 (add_card r2 empty_deck) ai_deck d_deck 
+  (add_card r1 p_deck) false in
+let post_ai_put = create_state y1 (add_card r2 empty_deck) 
+  (add_card y2 empty_deck) d_deck (create_deck p_deck [r1;y1]) true in
+let post_player_draw = create_state y1 (create_deck empty_deck [r2; g1])
+  (add_card y2 empty_deck) (create_deck empty_deck [g3; g2]) 
+  (create_deck p_deck [r1; y1]) false in
+let post_ai_draw = create_state y1 (create_deck empty_deck [r2; g1]) 
+  (create_deck empty_deck [y2; g2]) (add_card g3 empty_deck) 
+  (create_deck p_deck [r1; y1]) true in
   [
-    (* let player_deck = [{number = 1; color = Red} ;{number = 2; color = Red}] in
-       let ai_deck = [{number = 1; color = Yellow}; {number = 2; color = Yellow}] in
-       let current_c = {number = 1; color = Blue} in
-       let d_deck = [{number = 1; color = Green}; {number = 2; color = Green}; {number = 3; color = Green }] in
-       let p_deck = [{number = 4; color = Blue}; {number = 5; color = Blue}; {number = 6; color = Blue}] in
+    test_get_current_card "Current Card: Blue 1" test_state (1, "blue");
 
-       let test_state = {current_card = current_c; 
-                       players_hand = player_deck; 
-                       ai_hand = ai_deck;
-                       draw_deck = d_deck;
-                       play_deck = p_deck;
-                       turn = true} in
-       test_get_current_card "Current Card: Blue 1" test_state {number = 1; color = Blue };
-       test_get_players_hand "Player Hand: Red 1 2" test_state [{number = 1; color = Red } ;{number = 2; color = Red }];
-       test_get_ai_hand "AI Hand: Yellow 1 2" test_state [{number = 1; color = Yellow }; {number = 2; color = Yellow}];
-       test_get_draw_deck "Draw: Green 2 3" test_state [{number = 1; color = Green }; {number = 2; color = Green}; {number = 3; color = Green}];
-       test_has_won "Has Won: False" test_state false;
-       test_get_turn "Turn: True" test_state true;
+    test_get_players_hand "Player Hand: Red 1 2" test_state 
+      [(1, "red"); (2, "red")];
 
-       let post_player_put = {current_card = {number = 1; color = Red}; 
-                       players_hand = [{number = 2; color = Red}]; 
-                       ai_hand = ai_deck;
-                       draw_deck = d_deck;
-                       play_deck = [{number = 1; color = Red}; {number = 1; color = Green }; {number = 2; color = Green}; {number = 3; color = Green}];
-                       turn = false} in
-       let post_ai_put = {current_card = {number = 1; color = Yellow}; 
-                       players_hand = [{number = 2; color = Red}];  
-                       ai_hand = [{number = 2; color = Yellow}];
-                       draw_deck = d_deck;
-                       play_deck = [{number = 1; color = Yellow}; {number = 1; color = Red}; {number = 1; color = Green }; {number = 2; color = Green}; {number = 3; color = Green}];
-                       turn = true} in
-       test_put "Player Puts Red 1" {number = 1; color = Red} test_state "player" post_player_put;
-       test_put "AI Puts Yellow 1" {number = 1; color = Yellow} post_player_put "ai" post_ai_put;
-       test_put "Player Puts Invalid" {number = 2; color = Red} post_ai_put "player" post_ai_put;
+    test_get_ai_hand "AI Hand: Yellow 1 2" test_state 
+      [(1, "yellow"); (2, "yellow")];
 
-       let post_player_draw = {current_card = {number = 1; color = Yellow}; 
-                       players_hand = [{number = 1; color = Green}; {number = 2; color = Red}];  
-                       ai_hand = [{number = 2; color = Yellow}];
-                       draw_deck = [{number = 2; color = Green}; {number = 3; color = Green}];
-                       play_deck = [{number = 1; color = Yellow}; {number = 1; color = Red}; {number = 1; color = Green }; {number = 2; color = Green}; {number = 3; color = Green}];
-                       turn = false} in
+    test_get_draw_deck "Draw: Green 2 3" test_state 
+      [(1, "green"); (2, "green"); (3, "green")];
 
-       let post_ai_draw = {current_card = {number = 1; color = Yellow}; 
-                       players_hand = [{number = 1; color = Green}; {number = 2; color = Red}];  
-                       ai_hand = [{number = 2; color = Green}; {number = 2; color = Yellow}];
-                       draw_deck = [{number = 3; color = Green}];
-                       play_deck = [{number = 1; color = Yellow}; {number = 1; color = Red}; {number = 1; color = Green }; {number = 2; color = Green}; {number = 3; color = Green}];
-                       turn = true} in
-       test_draw "Player Draws Green 1" post_ai_put "player" post_player_draw;
-       test_draw "AI Draws Green 1" post_player_draw "ai" post_ai_draw;*)
+    test_has_won "Has Won: False" test_state false;
 
+    test_get_turn "Turn: True" test_state true;
+
+    test_put "Player Puts Red 1" r1 test_state "player" post_player_put;
+    test_put "AI Puts Yellow 1" y1 post_player_put "ai" post_ai_put;
+    make_exception_test "Player Puts Invalid" Invalid_Move
+      (fun _ -> State.put r2 post_ai_put "player");
+
+    test_draw "Player Draws Green 1" post_ai_put "player" post_player_draw;
+    test_draw "AI Draws Green 1" post_player_draw "ai" post_ai_draw;
   ] 
 let suite =
   "test suite for A6"  >::: List.flatten [
     deck_tests;
     command_tests;
-    (*state_tests; *)
+    state_tests;
   ]
 
 let _ = run_test_tt_main suite

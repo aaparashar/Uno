@@ -9,6 +9,15 @@ type t = {
 } 
 
 exception Invalid_Move
+
+let create_state curr_c pl_h ai_h draw_d pl_d is_turn =
+  {current_card = curr_c; 
+   players_hand = pl_h; 
+   ai_hand = ai_h;
+   draw_deck = draw_d;
+   playing_deck = pl_d;
+   turn = is_turn}
+
 let init_state  = 
   let deck = shuffle(load_deck) in 
   let players = fst (deal deck) in 
