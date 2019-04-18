@@ -1,2 +1,36 @@
 ### Starting build.
-# Compilation unsuccessful.
+# Target: UI.mli.depends, tags: { package(ANSITerminal), package(oUnit), extension:mli, file:UI.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules UI.mli > UI.mli.depends # cached
+# Target: Deck.mli.depends, tags: { package(ANSITerminal), package(oUnit), extension:mli, file:Deck.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules Deck.mli > Deck.mli.depends # cached
+# Target: state.mli.depends, tags: { package(ANSITerminal), package(oUnit), extension:mli, file:state.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules state.mli > state.mli.depends # cached
+# Target: Deck.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:mli, file:Deck.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o Deck.cmi Deck.mli
+# Target: state.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:mli, file:state.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o state.cmi state.mli
+# Target: UI.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:mli, file:UI.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o UI.cmi UI.mli # cached
+# Target: UI.ml.depends, tags: { package(ANSITerminal), package(oUnit), extension:ml, file:UI.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules UI.ml > UI.ml.depends # cached
+# Target: command.mli.depends, tags: { package(ANSITerminal), package(oUnit), extension:mli, file:command.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules command.mli > command.mli.depends # cached
+# Target: command.cmi, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:mli, file:command.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o command.cmi command.mli
+# Target: UI.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:cmo, extension:ml, file:UI.cmo, file:UI.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o UI.cmo UI.ml # cached
+# Target: command.ml.depends, tags: { package(ANSITerminal), package(oUnit), extension:ml, file:command.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules command.ml > command.ml.depends # cached
+# Target: Deck.ml.depends, tags: { package(ANSITerminal), package(oUnit), extension:ml, file:Deck.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules Deck.ml > Deck.ml.depends # cached
+# Target: state.ml.depends, tags: { package(ANSITerminal), package(oUnit), extension:ml, file:state.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -package oUnit -package ANSITerminal -modules state.ml > state.ml.depends # cached
+# Target: command.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:cmo, extension:ml, file:command.cmo, file:command.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o command.cmo command.ml
+# Target: Deck.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:cmo, extension:ml, file:Deck.cmo, file:Deck.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o Deck.cmo Deck.ml
+# Target: state.cmo, tags: { package(ANSITerminal), package(oUnit), byte, compile, extension:cmo, extension:ml, file:state.cmo, file:state.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -package oUnit -package ANSITerminal -o state.cmo state.ml
+# Target: UI.byte, tags: { package(ANSITerminal), package(oUnit), byte, dont_link_with, extension:byte, file:UI.byte, link, ocaml, program, quiet, traverse }
+ocamlfind ocamlc -linkpkg -package oUnit -package ANSITerminal Deck.cmo command.cmo state.cmo UI.cmo -o UI.byte
+# Compilation successful.

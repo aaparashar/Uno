@@ -171,6 +171,14 @@ let test_is_valid
   name >:: (fun _ ->
       assert_equal expected (is_valid c1 c2) ~printer:string_of_bool)
 
+let test_contains
+    (name : string)
+    (c: card)
+    (d : Deck.t)
+    (expected : bool) =
+  name >:: (fun _ ->
+      assert_equal expected (deck_contains c d) ~printer:string_of_bool)
+
 let test_get_valid_card
     (name : string)
     (d: Deck.t)
@@ -230,6 +238,8 @@ let d3 = Deck.add_card g5 d2 in
       test_is_valid "Test valid blue 9 red 9" b9 r9 true;
       test_is_valid "Test invalid green 5 blue 9" g5 b9 false;
       test_is_valid "Test invalid blue 9 green 5" b9 g5 false;
+
+      test_contains "Test contains deck 1" y3 d1 true;
 
       test_get_valid_card "Get valid card empty deck" empty_deck y3 (-1, "none");
       test_get_valid_card "Get valid card deck 1" d1 y3 (3, "yellow");

@@ -67,8 +67,8 @@ val list_card: card -> int*string
 (** [to_list t] is a list of tuples that contains the cards of deck [t] *)
 val to_list: t -> (int*string) list
 
-(** [contains c d] is true if card [c] is in deck [d] *)
-val contains: card -> t -> bool
+(** [deck_contains c d] is true if card [c] is in deck [d] *)
+val deck_contains: card -> t -> bool
 
 (** [get_valid_card c d] is the first card in deck [d] that is a valid
    match to card [c] or is None if there is no valid match *)

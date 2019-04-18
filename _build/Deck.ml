@@ -93,7 +93,7 @@ let list_card c = (c.number, card_col c)
 
 let to_list t = t |> List.map list_card
 
-let contains (c:card) (d:t) = List.mem c d
+let deck_contains (c:card) (d:t) = List.mem c d
 
 let get_valid_card c (d:t) = 
   let rec valid' c2 = function 
