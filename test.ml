@@ -249,8 +249,11 @@ let make_parse_test
 
 let command_tests =
   [
-  (let expected_cmd = Quit in
-   make_parse_test "Parse: Quit" "Quit" expected_cmd);
+   make_parse_test "Parse: Quit" "Quit" Quit;
+   make_parse_test "Parse: Quit" "  Quit" Quit;
+   make_parse_test "Parse: Quit" "Quit  " Quit;
+   
+   
     (* "Quit" >:: (fun _ -> assert_equal (parse "quit") Quit);
     "Draw" >:: (fun _ -> assert_equal (parse "draw") Draw);
     "Score" >:: (fun _ -> assert_equal (parse "score") Score);

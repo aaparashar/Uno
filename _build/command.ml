@@ -20,7 +20,7 @@ exception Malformed
 let parse str =
   if str = "" then raise Empty
   else begin 
-    let strarray = String.split_on_char ' ' str in
+    let strarray = str |> String.split_on_char ' ' |> List.filter ((<>) "") in
     match strarray with
     |[] -> raise Empty
     |h::t when h = "Quit" -> Quit 
