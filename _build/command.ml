@@ -18,12 +18,11 @@ exception Malformed
 let parse str =
   if str = "" then raise Empty
   else begin 
-    let strarray = String.split_on_char ' ' str in
+    let strarray = str |> String.split_on_char ' ' |> List.filter ((<>) "") in
     match strarray with
     |[] -> raise Empty
     |h::[] when h = "Quit" -> Quit 
     |h::[] when h = "Draw" -> Draw
-    |h::[] when h = "Score" -> Score
     |h::[] when h = "Hand" -> Hand
     |h::t when h = "Put" && t <> [] -> Put t
     |_ -> raise Malformed
