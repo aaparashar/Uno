@@ -20,10 +20,12 @@ let print_card c =
   (Deck.card_col c )^" "^(string_of_int (Deck.card_num c))
 
 let rec print_hand (d:Deck.t) =
-  match d with 
-  | empty_deck  -> "\n"
-  | _ -> let c = Deck.top_card d in 
-        "\t"^(print_card c)^"\n" ^ print_hand (Deck.remove_card c d)
+  if Deck.len d = 0 then ANSITerminal.(print_string[white]"\n")
+  else let c = Deck.top_card d in 
+        ANSITerminal.(print_string [white]("\t")); 
+        pp_card c;
+        ANSITerminal.(print_string [white]("\n"));
+        print_hand (Deck.remove_card c d)
 
 let rec do_play_game (st: State.t) =
   if State.has_won st then 
@@ -37,7 +39,7 @@ let rec do_play_game (st: State.t) =
     ANSITerminal.(print_string [cyan]("\nLast Card:\t"));
     ANSITerminal.(print_string [white] (print_card(State.get_current_card st)));
     ANSITerminal.(print_string [cyan]("\n In Your Hand:\n"));
-    ANSITerminal.(print_string[white](print_hand(State.get_players_hand st)));
+    print_hand(State.get_players_hand st);
     if Deck.len(State.get_ai_hand st) = 1 then 
       ANSITerminal.(print_string [cyan]("\n AI says:\t"^"\"UNO\"")); 
     ANSITerminal.(print_string [cyan] ("\nWhat's your next move?\n"));
@@ -47,7 +49,7 @@ let rec do_play_game (st: State.t) =
       | exception (Command.Empty) -> ("\nWhat's your next move?\n","");
       | exception (Command.Malformed) -> ("\n\nCommand not recognized\n","");
       | Quit -> (("\n\nSee ya next time!\n"),"quit")
-      | Hand -> ("\n In Your Hand:\n"^print_hand(State.get_players_hand st),"")
+      | Hand -> ("\n In Your Hand:\n","hand")
       | Draw -> ("\n You drew a card.","draw")
       | Put t-> 
          (match t with
@@ -61,10 +63,10 @@ let rec do_play_game (st: State.t) =
         in
         let card_comp = String.split_on_char ',' out_string in
         if List.length card_comp = 2 && 
-        is_card (int_of_string (List.nth card_comp 0)) (List.nth card_comp 1) then
+        is_card (int_of_string (List.nth card_comp 1)) (List.nth card_comp 0) then
         begin
-            let num = int_of_string (List.nth card_comp 0) in 
-            let col = List.nth card_comp 1 in 
+            let num = int_of_string (List.nth card_comp 1) in 
+            let col = List.nth card_comp 0 in 
             let c = Deck.create_card col num in
             match State.put c st "player" with
             | newState -> 
@@ -81,7 +83,9 @@ let rec do_play_game (st: State.t) =
         end
         )
     | "draw" -> do_play_game (State.draw st "player")
-    | "quit" -> let () = ANSITerminal.(print_string[cyan] out_string)in  exit 0;
+    | "quit" -> let () = ANSITerminal.(print_string[cyan] out_string) in  exit 0;
+    | "hand" -> ANSITerminal.(print_string[cyan] out_string);
+                print_hand(State.get_players_hand st);
     | _ -> ANSITerminal.(print_string[cyan] out_string);
       do_play_game st
   end
@@ -104,3 +108,5 @@ let rec main () =
   match read_line () with
   | "" -> main ()
   | pname -> play_game pname 
+
+let () = main ()

@@ -23,7 +23,7 @@ let parse str =
     |[] -> raise Empty
     |h::t when h = "Quit" -> Quit 
     |h::t when h = "Draw" -> Draw
-    |h::t when h = "Score" -> Score
+   (* |h::t when h = "Score" -> Score*)
     |h::t when h = "Hand" -> Hand
     |h::t when h = "Put" && t <> [] -> Put t
     |_ ->  raise Malformed
