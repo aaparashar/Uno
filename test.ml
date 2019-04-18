@@ -448,6 +448,10 @@ let post_player_draw = create_state y1 (create_deck empty_deck [r2; g1])
 let post_ai_draw = create_state y1 (create_deck empty_deck [r2; g1]) 
   (create_deck empty_deck [y2; g2]) (add_card g3 empty_deck) 
   (create_deck p_deck [r1; y1]) true in
+let empty_draw_deck = create_state y1 player_deck ai_deck empty_deck 
+  (create_deck empty_deck [b6;y1]) true in
+let post_empty_draw_deck = create_state y1 (create_deck player_deck [b6]) ai_deck 
+  empty_deck (add_card y1 empty_deck) false in
   [
     test_get_current_card "Current Card: Blue 1" test_state (1, "blue");
 
@@ -471,6 +475,8 @@ let post_ai_draw = create_state y1 (create_deck empty_deck [r2; g1])
 
     test_draw "Player Draws Green 1" post_ai_put "player" post_player_draw;
     test_draw "AI Draws Green 1" post_player_draw "ai" post_ai_draw;
+    test_draw "Player Draws from empty deck" empty_draw_deck 
+      "player" post_empty_draw_deck;
   ] 
 let suite =
   "test suite for A6"  >::: List.flatten [
