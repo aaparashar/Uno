@@ -65,6 +65,7 @@ let make_exception_test
     (e : exn) 
     (f) =
   name >:: (fun _ -> assert_raises e f)
+
 (**[contains a b] returns true if b has an element that is equal to a and false 
    otherwise *)
 let rec contains a b =
