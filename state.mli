@@ -56,3 +56,4 @@ val ai_turn: t -> t
     then it is the players turn. If it is false, the it is the ai's turn*)
 val get_turn: t ->bool
 
+val has_won: t -> bool

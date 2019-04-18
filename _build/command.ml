@@ -3,9 +3,7 @@ type object_phrase = string list
 type command = 
   | Draw
   | Quit
-  | Score
   | Hand
-  | Play 
   | Put of object_phrase
 
 
@@ -20,7 +18,7 @@ exception Malformed
 let parse str =
   if str = "" then raise Empty
   else begin 
-    let strarray = str |> String.split_on_char ' ' |> List.filter ((<>) "") in
+    let strarray = String.split_on_char ' ' str in
     match strarray with
     |[] -> raise Empty
     |h::[] when h = "Quit" -> Quit 
