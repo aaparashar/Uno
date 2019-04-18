@@ -16,7 +16,8 @@ let create_card (color:string) (num:int) =
   | "green" -> {number = num; color = Green}
   | "blue" -> {number = num; color = Blue}
   | _ -> failwith "invalid card"
-
+(**[load_num_color numbers col] loads cards with numbers from numbers 
+   and color col*)
 let rec load_num_color (numbers:int list) col =
   let load_helper acc h = ({number = h; color = col}::acc) in
   List.fold_left load_helper [] numbers
@@ -34,7 +35,7 @@ let load_deck =
   (load_num_color no_zero Green) @
   (load_num_color no_zero Blue)
 
-(* TODO: are the list concatenations on line 37-38 necessary? *)
+
 let rec riffle 
     (d:t) 
     (acc_a:t)
@@ -65,16 +66,19 @@ let deal d =
   in deal' 7 d []
 
 let add_card (c:card) (d:t) :t = c::d
+
 let remove_card (c:card) (d:t) :t= 
   let rec remove' (c2:card) d2 acc = 
     match d2 with
     |[] -> d
     |h::t -> if c2= h then acc@t else remove' c t (h::acc)
   in remove' c d []
+
 let top_card d = 
   match d with 
   |[] -> failwith "No Cards in Deck"
   |h::t -> h
+  
 let is_valid  card1 card2 = 
   card1.color = card2.color ||card1.number=card2.number
 

@@ -16,7 +16,7 @@ type t
     [number]. *)
 val create_card : string -> int -> card 
 
-(** [empty_deck] is an empty deck. *)
+(** [empty_deck] is an empty deck with no cards. *)
 val empty_deck : t
 
 (** [load_deck] is a deck consisting of four colors –– Red, Blue, Yellow,
@@ -69,5 +69,5 @@ val to_list: t -> (int*string) list
 val contains: card -> t -> bool
 
 (** [get_valid_card c d] is the first card in deck [d] that is a valid
-   match to card [c] or is None if there is no valid match *)
+    match to card [c] or is None if there is no valid match *)
 val get_valid_card: card ->t -> card option

@@ -66,16 +66,19 @@ let deal d =
   in deal' 7 d []
 
 let add_card (c:card) (d:t) :t = c::d
+
 let remove_card (c:card) (d:t) :t= 
   let rec remove' (c2:card) d2 acc = 
     match d2 with
     |[] -> d
     |h::t -> if c2= h then acc@t else remove' c t (h::acc)
   in remove' c d []
+
 let top_card d = 
   match d with 
   |[] -> failwith "No Cards in Deck"
   |h::t -> h
+  
 let is_valid  card1 card2 = 
   card1.color = card2.color ||card1.number=card2.number
 

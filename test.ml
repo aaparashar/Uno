@@ -106,7 +106,7 @@ let deck_diff fmt (a,b) =
 let test_empty_deck
     (name : string) : test = 
   name >:: (fun _ -> 
-      assert_equal [] (Deck.to_list Deck.empty_deck) 
+      assert_equal [] (Deck.to_list empty_deck) 
          ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
 
 let test_shuffle
@@ -124,7 +124,7 @@ let test_deal
   (d: Deck.t)  
   (expected: (int*string) list) : test =
   name >:: (fun _ ->
-      let (dt, d) = Deck.deal d in
+      let (dt, d) = deal d in
       assert_equal expected (Deck.to_list dt)
         ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
 
@@ -164,29 +164,72 @@ let test_is_valid
   name >:: (fun _ ->
       assert_equal expected (is_valid c1 c2) ~printer:string_of_bool)
 
+let test_get_valid_card
+    (name : string)
+    (d: Deck.t)
+    (c: card)
+    (expected : (int*string)) =
+  name >:: (fun _ ->
+    let vc = get_valid_card c d in
+    let uc = match vc with
+    | None -> (-1, "none")
+    | Some x -> list_card x in 
+    assert_equal expected uc ~printer:pp_card)
+
 let deck_tests =
 let initial_deck = load_deck in
 let my_deck = fst (deal initial_deck) in
 let ai_deck = fst (deal (snd (deal initial_deck))) in
 let remaining = snd (deal (snd (deal initial_deck))) in
 let y3 = Deck.create_card "yellow" 3 in
+let y4 = Deck.create_card "yellow" 4 in
+let r9 = Deck.create_card "red" 9 in
 let b9 = Deck.create_card "blue" 9 in
+let g5 = Deck.create_card "green" 5 in
 let d1 = Deck.add_card y3 Deck.empty_deck in
 let d2 = Deck.add_card b9 d1 in
+let d3 = Deck.add_card g5 d2 in
     [
       (* Empty deck tests **)
       test_empty_deck "Empty deck test";
 
-      test_add_card "Add card to empty" Deck.empty_deck y3 [(3, "yellow")];
+      test_add_card "Add card to empty" empty_deck y3 [(3, "yellow")];
       test_add_card "Add card to deck 1" d1 b9 [(9, "blue"); (3, "yellow")];
+      test_add_card "Add card to deck 1" d1 y3 [(3, "yellow"); (3, "yellow")];
 
-      (test_deal "Deal loaded deck" Deck.load_deck 
+      (test_deal "Deal loaded deck" load_deck 
         [(3, "red"); (4, "red"); (5, "red"); (6, "red"); (7, "red"); 
          (8, "red"); (9, "red")]);
 
-      test_shuffle "Test shuffle loaded deck" Deck.load_deck;
+      test_shuffle "Test shuffle loaded deck" load_deck;
       test_shuffle "Test shuffle deck 1" d1;
       test_shuffle "Test shuffle deck 2" d2;
+
+      test_remove_card "Remove card empty deck" empty_deck y3 [];
+      test_remove_card "Remove card d1" d1 y3 [];
+      test_remove_card "Remove card not in d1" d1 b9 [(3, "yellow")];
+      test_remove_card "Remove card in d3" d3 b9 [(5, "green"); (3, "yellow")];
+      test_remove_card "Repeat remove card in d3" 
+        (remove_card y3 d3) b9 [(5, "green")];
+
+      test_top_card "Loaded deck top card" load_deck (9, "red");
+      test_top_card "Loaded deck top card" d1 (3, "yellow");
+      test_top_card "Loaded deck top card" d2 (9, "blue");
+      test_top_card "Loaded deck top card" d3 (5, "green");
+
+      test_is_valid "Test valid yellow 3 yellow 4" y3 y4 true;
+      test_is_valid "Test valid yellow 4 yellow 3" y4 y3 true;
+      test_is_valid "Test valid red 9 blue 9" r9 b9 true;
+      test_is_valid "Test valid blue 9 red 9" b9 r9 true;
+      test_is_valid "Test invalid green 5 blue 9" g5 b9 false;
+      test_is_valid "Test invalid blue 9 green 5" b9 g5 false;
+
+      test_get_valid_card "Get valid card empty deck" empty_deck y3 (-1, "none");
+      test_get_valid_card "Get valid card deck 1" d1 y3 (3, "yellow");
+      test_get_valid_card "Get valid card deck 1" d1 g5 (-1, "none");
+      test_get_valid_card "Get valid card deck 3" d3 y3 (3, "yellow");
+      test_get_valid_card "Get valid card deck 3" d3 g5 (5, "green");
+      test_get_valid_card "Get valid card deck 3" d3 b9 (9, "blue");
     ]
 
 
