@@ -1,1 +1,1 @@
-command.ml: String
+command.ml: List String
