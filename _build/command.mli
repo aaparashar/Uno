@@ -29,9 +29,7 @@ type object_phrase = string list
 type command = 
   | Draw
   | Quit
-  | Score
   | Hand
-  | Play 
   | Put of object_phrase
 
 (** Raised when an empty command is parsed. *)

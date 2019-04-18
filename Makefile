@@ -1,4 +1,4 @@
-MODULES=Deck command state authors
+MODULES=Deck command state authors UI 
 OBJECTS=$(MODULES:=.cmo)
 MLS=$(MODULES:=.ml)
 MLIS=$(MODULES:=.mli)
@@ -11,13 +11,13 @@ default: build
 	utop
 
 build:
-	$(OCAMLBUILD) $(OBJECTS)
+	$(OCAMLBUILD) $(OBJECTS)  -pkgs oUnit,ANSITerminal
 
 test:
-	$(OCAMLBUILD) -tag 'debug' $(TEST) && ./$(TEST)
+	$(OCAMLBUILD) -tag 'debug' $(TEST) && ./$(TEST) 
 
 play:
-	$(OCAMLBUILD) $(MAIN) && ./$(MAIN)
+	$(OCAMLBUILD) $(MAIN) && ./$(MAIN) -use-ocamlfind -pkg ANSITerminal
 
 check:
 	bash checkenv.sh && bash checktypes.sh

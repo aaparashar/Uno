@@ -6,6 +6,8 @@
    as querying the data.
 *)
 
+type color
+
 (** The abstract type of values representing cards. *)
 type card
 

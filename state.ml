@@ -5,7 +5,7 @@ type t = {
   ai_hand : Deck.t;
   draw_deck : Deck.t ;
   playing_deck : Deck.t ;
-  turn:bool;
+  turn : bool;
 } 
 
 exception Invalid_Move

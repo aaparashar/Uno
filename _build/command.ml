@@ -3,9 +3,7 @@ type object_phrase = string list
 type command = 
   | Draw
   | Quit
-  | Score
   | Hand
-  | Play 
   | Put of object_phrase
 
 
