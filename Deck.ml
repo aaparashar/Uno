@@ -122,7 +122,10 @@ let is_valid  card1 card2 =
 
 let len d = List.length d
 
-let card_num (c:number_card) = c.number
+let card_val (c:card) = 
+match c with
+| number_card -> c.number
+| power_card -> c.power
 
 (**[color_to_string c] is the string form of color c *)
 let color_to_string (c:color) = 
