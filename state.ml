@@ -17,12 +17,14 @@ let create_state curr_c pl_h ai_h draw_d pl_d is_turn =
    draw_deck = draw_d;
    playing_deck = pl_d;
    turn = is_turn}
+
 (** [find_top c acc d ] checks if the top card c is a number card if it is not 
     it recurses through the rest of deck [d] until it finds the firts number card*)
 let rec find_top c acc d= 
-  match c with 
-  |Num_Card n -> (n, merge_decks d acc)
-  |Power_Card p ->  find_top (top_card d) (add_card p acc) (remove_card p d)
+  if is_powercard c then find_top (top_card d) (add_card c acc) (remove_card c d)
+  else (c , merge_decks d acc)
+  (* |Num_Card n -> (n, merge_decks d acc)
+  |Power_Card p ->  find_top (top_card d) (add_card p acc) (remove_card p d) *)
 
 let init_state  = 
   let deck = shuffle(load_deck) in 

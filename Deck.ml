@@ -148,6 +148,10 @@ let is_valid  card1 card2 =
 
 let len d = List.length d
 
+let is_powercard = function
+  | Power_Card p -> true
+  | _ -> false
+
 let card_val (c:card) = 
   match c with
   | Num_Card n -> (n.number, No_Power)
