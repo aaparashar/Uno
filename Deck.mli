@@ -6,7 +6,8 @@
    as querying the data.
 *)
 
-type color
+type color 
+type power
 (** The abstract type of values representing power cards. *)
 type power_card
 (** The abstract type of values representing number cards. *)

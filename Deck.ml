@@ -141,8 +141,8 @@ let len d = List.length d
 
 let card_val (c:card) = 
 match c with
-| number_card -> c.number
-| power_card -> c.power
+| Num_Card n -> n.number
+| Power_Card p -> p.power
 
 (**[color_to_string c] is the string form of color c *)
 let color_to_string (c:color) = 
