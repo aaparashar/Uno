@@ -14,9 +14,13 @@ type card
 (** The abstract type of values representing a deck. *)
 type t
 
-(** [create card color number] is a card with color [color] and number 
-    [number]. *)
-val create_card : string -> int -> card 
+val create_num_card : color -> int -> card
+
+val create_pow_card: color -> string -> card
+
+val load_num_color : int list -> color -> card list
+
+val load_pow_color : string list -> color -> card list
 
 (** [empty_deck] is an empty deck. *)
 val empty_deck : t

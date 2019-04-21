@@ -15,23 +15,45 @@ type card =
 
 type t = card list
 
-let create_num_card (color:string) (num:int) = 
-  match color with
+let create_num_card (col:color) (num:int) : card = 
+  Num_Card {number = num; color = col}
+ (* match color with
   | "red" -> {number = num; color = Red}
   | "yellow" -> {number = num; color = Yellow}
   | "green" -> {number = num; color = Green}
   | "blue" -> {number = num; color = Blue}
-  | _ -> failwith "invalid card"
+  | _ -> failwith "invalid card"*)
 
-let rec load_num_color (numbers:int list) col =
-  let load_helper acc h = ({number = h; color = col}::acc) in
+let create_pow_card col pow : card = 
+  Power_Card {power = pow; color = col}
+  (* match color with
+  | "red" -> {number = num; color = Red}
+  | "yellow" -> {number = num; color = Yellow}
+  | "green" -> {number = num; color = Green}
+  | "blue" -> {number = num; color = Blue}
+  | _ -> failwith "invalid card"*)
+
+(*let create_card c =
+  match c with 
+  | number_card -> Num_Card c 
+  | power_card -> Power_Card c*)
+
+let rec load_num_color (numbers:int list) col : t =
+  let load_helper acc h = (create_num_card col h::acc) in
   List.fold_left load_helper [] numbers
 
+let rec load_pow_color (powers: string list) col : t = 
+  let load_helper acc h = (create_pow_card col h:: acc) in 
+  List.fold_left load_helper [] powers
+
 let empty_deck: t = []
-(**TODO *)
+
 let load_deck = 
   let numbers = [0;1;2;3;4;5;6;7;8;9] in 
   let no_zero = [1;2;3;4;5;6;7;8;9] in
+  let powers = ["skip"; "reverse"; "draw two"] in
+  let wild_powers = ["wild"; "draw four"] in
+
   (load_num_color numbers Red) @
   (load_num_color numbers Yellow) @ 
   (load_num_color numbers Green) @
@@ -39,9 +61,21 @@ let load_deck =
   (load_num_color no_zero Red) @
   (load_num_color no_zero Yellow) @ 
   (load_num_color no_zero Green) @
-  (load_num_color no_zero Blue)
+  (load_num_color no_zero Blue) @
+  (load_pow_color powers Red) @
+  (load_pow_color powers Yellow) @
+  (load_pow_color powers Green) @
+  (load_pow_color powers Blue) @
+  (load_pow_color powers Red) @
+  (load_pow_color powers Yellow) @
+  (load_pow_color powers Green) @
+  (load_pow_color powers Blue) @
+  (load_pow_color wild_powers Wild)
 
-(* TODO: are the list concatenations on line 37-38 necessary? *)
+  (*List.fold_left create_card [] num_cards @
+  List.fold_left create_card [] pow_cards *)
+  
+
 let rec riffle 
     (d:t) 
     (acc_a:t)
@@ -83,8 +117,8 @@ let top_card d =
   |[] -> failwith "No Cards in Deck"
   |h::t -> h
 (**TODO *)
-let is_valid  card1 card2 = 
-  card1.color = card2.color || if (card:num_card)card1
+(let is_valid  card1 card2 = 
+  card1.color = card2.color || if (card:num_card)card1)
 
 let len d = List.length d
 
