@@ -100,3 +100,6 @@ val get_valid_card: card ->t -> card option
 (** [merge_decks c d] puts all the cards in  deck [d] and deck [c] in a single 
     deck. It maintains duplicates *)
 val merge_decks: t ->t -> t
+
+(**[get_power p] returns the power of card p *)
+val get_power: power_card -> power

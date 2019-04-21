@@ -149,9 +149,9 @@ let is_valid  card1 card2 =
 let len d = List.length d
 
 let card_val (c:card) = 
-match c with
-| Num_Card n -> (n.number, No_Power)
-| Power_Card p -> (-1, p.power)
+  match c with
+  | Num_Card n -> (n.number, No_Power)
+  | Power_Card p -> (-1, p.power)
 
 
 let string_of_color (c:color) = 
@@ -200,7 +200,8 @@ let get_valid_card c (d:t) =
   in valid' c d
 
 let merge_decks (d1:t) (d2:t) = d1@d2
-
+let get_power p = 
+  p.power
 let change_wild_color c  col= 
   Power_Card {power = c.power; color = col}
 let random_color = Random.self_init(); 

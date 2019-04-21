@@ -79,7 +79,7 @@ let put c (st:t) s =
                          players_hand = remove_card c st.players_hand;  
                          playing_deck= add_card c st.playing_deck; 
                          turn = false} 
-    |Power_Card p -> match p.power with
+    |Power_Card p -> match get_power p with
       |Draw_Two -> ANSITerminal.(print_string [cyan] 
                                    ("\nThe AI has been dealt 2 cards"));
         draw (draw st "ai") "ai"
@@ -143,7 +143,7 @@ let put c (st:t) s =
                          ai_hand = remove_card c st.ai_hand;  
                          playing_deck= add_card c st.playing_deck; 
                          turn = false} 
-    |Power_Card p -> match p.power with
+    |Power_Card p -> match get_power p with
       |Draw_Two -> draw (draw st "player") "player"
       |Draw_Four -> let st2 = 
                       draw (draw(draw (draw st "player") "player") "player") "player" in 
