@@ -5,17 +5,20 @@
    the rooms and exits.  It handles loading of that data from JSON as well
    as querying the data.
 *)
+type color
 
-type color 
-type power
-(** The abstract type of values representing power cards. *)
-type power_card
-(** The abstract type of values representing number cards. *)
-type number_card
-(** The abstract type of values representing cards. *)
-type card
 (** The abstract type of values representing special card's powers. *)
 type power
+
+(** The abstract type of values representing power cards. *)
+type power_card
+
+(** The abstract type of values representing number cards. *)
+type number_card
+
+(** The abstract type of values representing cards. *)
+type card
+
 (** The abstract type of values representing a deck. *)
 type t
 
@@ -51,21 +54,31 @@ val deal : t -> t*t
 (** [add_card c d] is deck [d] with card [c] add to the top *)
 val add_card: card -> t -> t 
 
-(** [remove_card c d] is deck [d] with card [c] removed *)
+(** [remove_card c d] is deck [d] with card [c] removed. *)
 val remove_card: card -> t ->t
 
-(**[top_card d] is the first element of the card list/deck [d] *)
+(**[top_card d] is the first element of the card list/deck [d]. *)
 val top_card: t ->card
 
 (**[is_valid card1 card2] is true if [card1] matches the color or 
-   number of [card2] *)
+   number of [card2]. *)
 val is_valid: card -> card -> bool
 
-(** [len d] is the number of cards in deck [d] *)
+(** [len d] is the number of cards in deck [d]. *)
 val len: t -> int
 
-(**[card_num c] is the number (i.e. int) of num_card [c] *)
-val card_num: card -> int
+(** [card_val c] is the number (i.e. int) of num_card [c]. *)
+val card_val: card -> int * power 
+
+(** [string_of_color c] is the string form of color c. *)
+val string_of_color : color -> string
+
+(** [string_of_power p] is the string form of power p. *)
+val string_of_power : power -> string
+
+(** [val_to_string c] is the string form of the value of card [c]. The value
+    of [c] is either it's power or number.*)
+val val_to_string : card -> string
 
 (**[card_col c] is the color of card [c] *)
 val card_col: card -> string

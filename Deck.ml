@@ -12,6 +12,7 @@ type power =
   | Draw_Two
   | Draw_Four
   | Wild
+  | No_Power
 
 type number_card = {number : int; color: color}
 type power_card = {power : power; color: color}
@@ -95,6 +96,8 @@ let string_of_power p =
   |Skip ->  "skip"
   |Reverse -> "reverse"
   |Wild -> "wild"
+  |No_Power -> "no power"
+
 let rec riffle 
     (d:t) 
     (acc_a:t)
@@ -146,12 +149,12 @@ let is_valid  card1 card2 =
 let len d = List.length d
 
 let card_val (c:card) = 
-  match c with
-  | Num_Card n-> string_of_int n.number
-  | Power_Card p -> string_of_power p.power
+match c with
+| Num_Card n -> (n.number, No_Power)
+| Power_Card p -> (-1, p.power)
 
-(**[color_to_string c] is the string form of color c *)
-let color_to_string (c:color) = 
+
+let string_of_color (c:color) = 
   match c with
   |Red -> "red"
   |Yellow -> "yellow"
@@ -159,10 +162,25 @@ let color_to_string (c:color) =
   |Blue -> "blue"
   |Wild -> "wild"
 
+let string_of_power (p:power) =
+  match p with
+  | Reverse -> "reverse"
+  | Skip -> "skip"
+  | Draw_Two -> "draw two"
+  | Draw_Four -> "draw four"
+  | Wild -> "wild"
+  | No_Power -> "no power"
+
+let val_to_string c = 
+  match (card_val c) with
+  |(num, No_Power ) -> string_of_int num
+  |(-1, pow) -> string_of_power pow 
+  | _ -> failwith "invalid card"
+
 let card_col (c:card) =
   match c with
-  |Power_Card p -> color_to_string p.color
-  |Num_Card n -> color_to_string n.color
+  |Power_Card p -> string_of_color p.color
+  |Num_Card n -> string_of_color n.color
 
 let list_card (c:card) = 
   match c with
