@@ -124,3 +124,5 @@ let get_valid_card c (d:t) =
     |h::t -> if is_valid h c then Some h else valid' c2 t
 
   in valid' c d
+
+let merge_decks (d1:t) (d2:t) = d1@d2
