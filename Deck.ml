@@ -113,11 +113,6 @@ let top_card d =
   match d with 
   |[] -> failwith "No Cards in Deck"
   |h::t -> h
-<<<<<<< HEAD
-(**TODO *)
-(let is_valid  card1 card2 = 
-  card1.color = card2.color || if (card:num_card)card1)
-=======
 
 let is_valid  card1 card2 = 
   match (card1,card2) with
@@ -125,7 +120,6 @@ let is_valid  card1 card2 =
   |(Power_Card p1, Power_Card p2) -> p1.power=p2.power ||p1.color=p2.color
   |(Num_Card n1,Power_Card p1) -> n1.color= p1.color 
   |(Power_Card p1, Num_Card n1) -> n1.color= p1.color 
->>>>>>> 17050cdcaa94d1b797eee0aa76295c14aff99304
 
 let len d = List.length d
 
