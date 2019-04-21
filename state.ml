@@ -68,7 +68,7 @@ let draw (st:t) s =
 (* When wild card is played: 
       Change color of wild card to the intended color and add to playing_deck
 
-  Next card played after wild card:
+   Next card played after wild card:
       If card c is_valid and top card of playing_deck has power = "wild" then
       change color of top card back to wild and then add c to playing_deck *)
 let put c (st:t) s = 
@@ -80,18 +80,63 @@ let put c (st:t) s =
                          playing_deck= add_card c st.playing_deck; 
                          turn = false} 
     |Power_Card p -> match p.power with
-      |"draw two" -> draw (draw st "ai") "ai"
-      |"draw four" -> draw (draw(draw (draw st "ai") "ai") "ai") "ai"
-      |"skip" -> {st with current_card = c;
+      |Draw_Two -> ANSITerminal.(print_string [cyan] 
+                                   ("\nThe AI has been dealt 2 cards"));
+        draw (draw st "ai") "ai"
+      |Draw_Four -> let st2 = draw (draw(draw (draw st "ai") "ai") "ai") "ai" in
+        ANSITerminal.(print_string [cyan] ("\nThe AI has been dealt 4 cards.
+      \nWhat color do you choose?\n"));
+        ANSITerminal.(print_string [white] "> ");
+        match read_line() with 
+        |"red" -> let temp = change_wild_color c Red in 
+          {st2 with current_card = temp;
+                    players_hand= remove_card c st.players_hand;  
+                    playing_deck= add_card c st.playing_deck; 
+                    turn = false}
+        |"blue" -> let temp = change_wild_color c Blue in 
+          {st2 with current_card = temp;
+                    players_hand = remove_card c st.players_hand;  
+                    playing_deck= add_card c st.playing_deck; 
+                    turn = false}
+        |"green" -> let temp = change_wild_color c Green in 
+          {st2 with current_card = temp;
+                    players_hand = remove_card c st.players_hand;  
+                    playing_deck= add_card c st.playing_deck; 
+                    turn = false}
+        |"yellow" -> let temp = change_wild_color c Yellow in 
+          {st2 with current_card = temp;
+                    players_hand = remove_card c st.players_hand;  
+                    playing_deck= add_card c st.playing_deck; 
+                    turn = false}
+        |_ -> raise Invalid_Move
+        |Skip -> {st with current_card = c;
                           players_hand = remove_card c st.players_hand;  
                           playing_deck= add_card c st.playing_deck; 
                           turn = true} 
-      |"reverse" ->{st with current_card = c;
+        |Reverse ->{st with current_card = c;
                             players_hand = remove_card c st.players_hand;  
                             playing_deck= add_card c st.playing_deck; 
                             turn = true} 
-      |"wild" -> failwith "Unimplemented"
-      |_ -> raise Invalid_Move
+        |Wild -> ANSITerminal.(print_string [cyan] ("\nWhat color do you choose?\n"));
+          ANSITerminal.(print_string [white] "> ");
+          match read_line() with 
+          |"red" -> let temp = change_wild_color c Red in {st with current_card = temp;
+                                                                   players_hand= remove_card c st.players_hand;  
+                                                                   playing_deck= add_card c st.playing_deck; 
+                                                                   turn = false}
+          |"blue" -> let temp = change_wild_color c Blue in {st with current_card = temp;
+                                                                     players_hand = remove_card c st.players_hand;  
+                                                                     playing_deck= add_card c st.playing_deck; 
+                                                                     turn = false}
+          |"green" -> let temp = change_wild_color c Green in {st with current_card = temp;
+                                                                       players_hand = remove_card c st.players_hand;  
+                                                                       playing_deck= add_card c st.playing_deck; 
+                                                                       turn = false}
+          |"yellow" -> let temp = change_wild_color c Yellow in {st with current_card = temp;
+                                                                         players_hand = remove_card c st.players_hand;  
+                                                                         playing_deck= add_card c st.playing_deck; 
+                                                                         turn = false}
+          |_ -> raise Invalid_Move
   else if (is_valid c st.current_card && s="ai"&& deck_contains c st.ai_hand)
   then match c with 
     |Num_Card ->{st with current_card = c;
@@ -99,19 +144,26 @@ let put c (st:t) s =
                          playing_deck= add_card c st.playing_deck; 
                          turn = false} 
     |Power_Card p -> match p.power with
-      |"draw two" -> draw (draw st "player") "player"
-      |"draw four" -> draw (draw(draw (draw st "player") "player") "player") "player"
-      |"skip" -> {st with current_card = c;
+      |Draw_Two -> draw (draw st "player") "player"
+      |Draw_Four -> draw (draw(draw (draw st "player") "player") "player") "player"
+      |Skip -> {st with current_card = c;
+                        ai_hand = remove_card c st.ai_hand;  
+                        playing_deck= add_card c st.playing_deck; 
+                        turn = false} 
+      |Reverse ->{st with current_card = c;
                           ai_hand = remove_card c st.ai_hand;  
                           playing_deck= add_card c st.playing_deck; 
                           turn = false} 
-      |"reverse" ->{st with current_card = c;
-                            ai_hand = remove_card c st.ai_hand;  
-                            playing_deck= add_card c st.playing_deck; 
-                            turn = false} 
 
-      |"wild" -> failwith "Unimplemented"
-      |_ -> raise Invalid_Move
+      |Wild -> let col = random_color in 
+        let temp = change_wild_color c col in 
+        {st with current_card = temp;
+                 ai_hand = remove_card c st.ai_hand;  
+                 playing_deck= add_card c st.playing_deck; 
+                 turn = true}
+          ANSITerminal.(print_string [cyan]("\n AI changes the color to "
+                                            ^ (color_to_string col));
+
 
   else raise Invalid_Move
 

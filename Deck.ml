@@ -25,7 +25,7 @@ type card =
 type t = card list
 
 let create_num_card col num : card = 
- match col with
+  match col with
   | "red" -> Num_Card {number = num; color = Red}
   | "yellow" -> Num_Card {number = num; color = Yellow}
   | "green" -> Num_Card {number = num; color = Green}
@@ -34,13 +34,13 @@ let create_num_card col num : card =
 
 let create_pow_card col pow : card =
   let p = 
-   ( match pow with 
-    | "reverse" -> Reverse
-    | "skip" -> Skip 
-    | "draw two" -> Draw_Two
-    | "draw four" -> Draw_Four
-    | "wild" -> Wild
-    | _ -> failwith "invalid card" )
+    ( match pow with 
+      | "reverse" -> Reverse
+      | "skip" -> Skip 
+      | "draw two" -> Draw_Two
+      | "draw four" -> Draw_Four
+      | "wild" -> Wild
+      | _ -> failwith "invalid card" )
   in
   match col with
   | "red" -> Power_Card {power = p; color = Red}
@@ -88,8 +88,14 @@ let load_deck =
   (load_pow_color powers "green") @
   (load_pow_color powers "blue" ) @
   (load_pow_color wild_powers "wild")
-  
 
+let string_of_power p =
+  match p with
+  |Draw_Four -> "draw four"
+  |Draw_Two -> "draw two"
+  |Skip ->  "skip"
+  |Reverse -> "reverse"
+  |Wild -> "wild"
 let rec riffle 
     (d:t) 
     (acc_a:t)
@@ -141,9 +147,15 @@ let is_valid  card1 card2 =
 let len d = List.length d
 
 let card_val (c:card) = 
+<<<<<<< HEAD
 match c with
 | Num_Card n -> (n.number, No_Power)
 | Power_Card p -> (-1, p.power)
+=======
+  match c with
+  | Num_Card n-> string_of_int n.number
+  | Power_Card p -> string_of_power p.power
+>>>>>>> 101d0a0d2da7c45df2c3cfbbd94236ed40c4d244
 
 
 let string_of_color (c:color) = 
@@ -192,3 +204,13 @@ let get_valid_card c (d:t) =
   in valid' c d
 
 let merge_decks (d1:t) (d2:t) = d1@d2
+
+let change_wild_color c  col= 
+  Power_Card {power = c.power; color = col}
+let random_color = Random.self_init(); 
+  match Random.int 4 with
+  |0 -> Red
+  |1 -> Blue
+  |2 -> Green
+  |3 -> Yellow
+  |_ -> failwith "Impossible"

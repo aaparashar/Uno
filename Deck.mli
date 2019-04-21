@@ -5,17 +5,24 @@
    the rooms and exits.  It handles loading of that data from JSON as well
    as querying the data.
 *)
+<<<<<<< HEAD
 type color
 
 type power
 
+=======
+
+type color 
+type power
+>>>>>>> 101d0a0d2da7c45df2c3cfbbd94236ed40c4d244
 (** The abstract type of values representing power cards. *)
 type power_card
 (** The abstract type of values representing number cards. *)
 type number_card
 (** The abstract type of values representing cards. *)
 type card
-
+(** The abstract type of values representing special card's powers. *)
+type power
 (** The abstract type of values representing a deck. *)
 type t
 
