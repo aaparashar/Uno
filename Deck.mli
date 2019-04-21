@@ -87,22 +87,29 @@ val val_to_string : card -> string
 val card_col: card -> string
 
 (** [list_card c] is a tuple that stores the color of card [c] and 
-    its number or power *)
+    its number or power. *)
 val list_card: card -> string*string
 
-(** [to_list t] is a list of tuples that contains the cards of deck [t] *)
+(** [to_list t] is a list of tuples that contains the cards of deck [t]. *)
 val to_list: t -> (string*string) list
 
-(** [deck_contains c d] is true if card [c] is in deck [d] *)
+(** [deck_contains c d] is true if card [c] is in deck [d]. *)
 val deck_contains: card -> t -> bool
 
 (** [get_valid_card c d] is the first card in deck [d] that is a valid
-    match to card [c] or is None if there is no valid match *)
+    match to card [c] or is None if there is no valid match. *)
 val get_valid_card: card ->t -> card option
 
 (** [merge_decks c d] puts all the cards in  deck [d] and deck [c] in a single 
-    deck. It maintains duplicates *)
+    deck. It maintains duplicates. *)
 val merge_decks: t ->t -> t
 
-(**[get_power p] returns the power of card p *)
+(** [get_power p] returns the power of card p. *)
 val get_power: power_card -> power
+
+(** [change_wild_color c col] is power card [c] with it's color changed to color 
+    [col]. *)
+val change_wild_color : power_card -> color -> card
+
+(** [random_color] is a random color. *)
+val random_color : color

@@ -204,10 +204,13 @@ let get_valid_card c (d:t) =
   in valid' c d
 
 let merge_decks (d1:t) (d2:t) = d1@d2
+
 let get_power p = 
   p.power
-let change_wild_color c  col= 
+
+let change_wild_color c col = 
   Power_Card {power = c.power; color = col}
+
 let random_color = Random.self_init(); 
   match Random.int 4 with
   |0 -> Red
