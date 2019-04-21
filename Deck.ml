@@ -5,8 +5,16 @@ type color =
   |Green
   |Blue
   |Wild
+
+type power = 
+  | Reverse
+  | Skip
+  | Draw_Two
+  | Draw_Four
+  | Wild
+
 type number_card = {number : int; color: color}
-type power_card = {power : string; color: color}
+type power_card = {power : power; color: color}
 
 type card = 
   |Num_Card of number_card
@@ -24,12 +32,21 @@ let create_num_card col num : card =
   | _ -> failwith "invalid card"
 
 let create_pow_card col pow : card =
+  let p = 
+    ( match pow with 
+      | "reverse" -> Reverse
+      | "skip" -> Skip 
+      | "draw two" -> Draw_Two
+      | "draw four" -> Draw_Four
+      | "wild" -> Wild
+      | _ -> failwith "invalid card" )
+  in
   match col with
-  | "red" -> Power_Card {power = pow; color = Red}
-  | "yellow" -> Power_Card {power = pow; color = Yellow}
-  | "green" -> Power_Card {power = pow;  color = Green}
-  | "blue" -> Power_Card {power = pow;  color = Blue}
-  | "wild" -> Power_Card {power = pow; color = Wild}
+  | "red" -> Power_Card {power = p; color = Red}
+  | "yellow" -> Power_Card {power = p; color = Yellow}
+  | "green" -> Power_Card {power = p;  color = Green}
+  | "blue" -> Power_Card {power = p;  color = Blue}
+  | "wild" -> Power_Card {power = p; color = Wild}
   | _ -> failwith "invalid card"
 
 (*let create_card c =
@@ -70,7 +87,6 @@ let load_deck =
    (load_pow_color powers "green") @
    (load_pow_color powers "blue" ) @
    (load_pow_color wild_powers "wild")
-
 
    let rec riffle 
        (d:t) 
@@ -122,7 +138,10 @@ let load_deck =
 
    let len d = List.length d
 
-   let card_num (c:number_card) = c.number
+   let card_val (c:card) = 
+     match c with
+     | number_card -> c.number
+     | power_card -> c.power
 
    (**[color_to_string c] is the string form of color c *)
    let color_to_string (c:color) = 
