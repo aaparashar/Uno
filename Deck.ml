@@ -71,9 +71,6 @@ let load_deck =
   (load_pow_color powers Green) @
   (load_pow_color powers Blue) @
   (load_pow_color wild_powers Wild)
-
-  (*List.fold_left create_card [] num_cards @
-  List.fold_left create_card [] pow_cards *)
   
 
 let rec riffle 
