@@ -81,3 +81,7 @@ val deck_contains: card -> t -> bool
 (** [get_valid_card c d] is the first card in deck [d] that is a valid
     match to card [c] or is None if there is no valid match *)
 val get_valid_card: card ->t -> card option
+
+(** [merge_decks c d] puts all the cards in  deck [d] and deck [c] in a single 
+    deck. It maintains duplicates *)
+val merge_decks: t ->t -> t

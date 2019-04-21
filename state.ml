@@ -18,6 +18,10 @@ let create_state curr_c pl_h ai_h draw_d pl_d is_turn =
    playing_deck = pl_d;
    turn = is_turn}
 
+let find_top c acc d= 
+  match c with 
+  |Num_Card n -> (n, merge_decks d acc)
+  |Power_Card p ->  check_top (top_card d) (add_card p acc) remove_card p d
 let init_state  = 
   let deck = shuffle(load_deck) in 
   let players = fst (deal deck) in 
@@ -25,7 +29,11 @@ let init_state  =
   let remaining = snd (deal (snd (deal deck))) in 
   let playing = add_card (top_card remaining) Deck.empty_deck in
   let remaining2 = remove_card (top_card remaining) remaining in
-  {current_card = top_card playing; players_hand = players; ai_hand= ai_deck; 
+  let top = fst(find_top (top_card playing) empty_deck playing) in 
+  let playing = snd (find_top (top_card playing) empty_deck playing) in 
+
+
+  {current_card = top; players_hand = players; ai_hand= ai_deck; 
    draw_deck=remaining2; playing_deck= playing; turn = true}
 
 let get_current_card (st:t) = st.current_card
@@ -36,7 +44,7 @@ let get_playing_deck st = st.playing_deck
 let has_won st = Deck.len st.players_hand = 0 || Deck.len st.ai_hand = 0
 (* let get_current_score = None *)
 let get_turn st = st.turn
-
+    `
 let put c (st:t) s = 
   if ((is_valid st.current_card c )&& (s="player") && (deck_contains c st.players_hand)) 
   then {st with current_card = c;
