@@ -18,11 +18,11 @@ let create_state curr_c pl_h ai_h draw_d pl_d is_turn =
    playing_deck = pl_d;
    turn = is_turn}
 (** [find_top c acc d ] checks if the top card c is a number card if it is not 
-    it recurses through the rest of deck [d] untill it finds the firts number card*)
-let find_top c acc d= 
+    it recurses through the rest of deck [d] until it finds the firts number card*)
+let rec find_top c acc d= 
   match c with 
   |Num_Card n -> (n, merge_decks d acc)
-  |Power_Card p ->  check_top (top_card d) (add_card p acc) remove_card p d
+  |Power_Card p ->  find_top (top_card d) (add_card p acc) remove_card p d
 
 let init_state  = 
   let deck = shuffle(load_deck) in 
@@ -173,7 +173,7 @@ let put c (st:t) s =
                  playing_deck= add_card c st.playing_deck; 
                  turn = true}
           ANSITerminal.(print_string [cyan]("\n AI changes the color to "
-                                            ^ (color_to_string col));
+                                            ^ (color_to_string col)));
 
 
   else raise Invalid_Move
