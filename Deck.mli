@@ -13,7 +13,8 @@ type power_card
 type number_card
 (** The abstract type of values representing cards. *)
 type card
-
+(** The abstract type of values representing special card's powers. *)
+type power
 (** The abstract type of values representing a deck. *)
 type t
 
