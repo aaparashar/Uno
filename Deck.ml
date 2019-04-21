@@ -4,12 +4,18 @@ type color =
   |Yellow
   |Green
   |Blue
+  |Wild
+type number_card = {number : int; color: color}
+type power_card = {power : string; color: color}
 
-type card = {number : int; color: color}
+type card = 
+  |Num_Card of number_card
+  |Power_Card of power_card
+
 
 type t = card list
 
-let create_card (color:string) (num:int) = 
+let create_num_card (color:string) (num:int) = 
   match color with
   | "red" -> {number = num; color = Red}
   | "yellow" -> {number = num; color = Yellow}
@@ -22,6 +28,7 @@ let rec load_num_color (numbers:int list) col =
   List.fold_left load_helper [] numbers
 
 let empty_deck: t = []
+(**TODO *)
 let load_deck = 
   let numbers = [0;1;2;3;4;5;6;7;8;9] in 
   let no_zero = [1;2;3;4;5;6;7;8;9] in
@@ -75,21 +82,23 @@ let top_card d =
   match d with 
   |[] -> failwith "No Cards in Deck"
   |h::t -> h
+(**TODO *)
 let is_valid  card1 card2 = 
-  card1.color = card2.color ||card1.number=card2.number
+  card1.color = card2.color || if (card:num_card)card1
 
 let len d = List.length d
 
-let card_num c = c.number
+let card_num (c:number_card) = c.number
 
-let card_col c =
+let card_col (c:card) =
   match c.color with
   |Red -> "red"
   |Yellow -> "yellow"
   |Green -> "green"
   |Blue -> "blue"
+  |Wild -> "wild"
 
-let list_card c = (c.number, card_col c)
+let list_num_card (c:number_card) = (c.number, card_col c)
 
 let to_list t = t |> List.map list_card
 
