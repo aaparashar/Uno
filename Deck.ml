@@ -82,23 +82,37 @@ let top_card d =
   match d with 
   |[] -> failwith "No Cards in Deck"
   |h::t -> h
-(**TODO *)
+
 let is_valid  card1 card2 = 
-  card1.color = card2.color || if (card:num_card)card1
+  match (card1,card2) with
+  |(Num_Card n1,Num_Card n2) -> n1.color= n2.color || n1.number = n2.number
+  |(Power_Card p1, Power_Card p2) -> p1.power=p2.power ||p1.color=p2.color
+  |(Num_Card n1,Power_Card p1) -> n1.color= p1.color 
+  |(Power_Card p1, Num_Card n1) -> n1.color= p1.color 
 
 let len d = List.length d
 
 let card_num (c:number_card) = c.number
 
-let card_col (c:card) =
-  match c.color with
+(**[color_to_string c] is the string form of color c *)
+let color_to_string (c:color) = 
+  match c with
   |Red -> "red"
   |Yellow -> "yellow"
   |Green -> "green"
   |Blue -> "blue"
   |Wild -> "wild"
 
-let list_num_card (c:number_card) = (c.number, card_col c)
+let card_col (c:card) =
+  match c with
+  |Power_Card p -> color_to_string p.color
+  |Num_Card n -> color_to_string n.color
+
+let list_card (c:card) = 
+  match c with
+  |Power_Card p -> (p.power, card_col c)
+  |Num_Card n -> (string_of_int (n.number), card_col c)
+
 
 let to_list t = t |> List.map list_card
 
