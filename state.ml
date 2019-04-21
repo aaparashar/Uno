@@ -65,7 +65,12 @@ let draw (st:t) s =
     {st with players_hand = (add_card (top_card st.draw_deck) st.players_hand); 
              draw_deck = remove_card (top_card st.draw_deck) st.draw_deck;turn=false;}
 
+(* When wild card is played: 
+      Change color of wild card to the intended color and add to playing_deck
 
+  Next card played after wild card:
+      If card c is_valid and top card of playing_deck has power = "wild" then
+      change color of top card back to wild and then add c to playing_deck *)
 let put c (st:t) s = 
   if ((is_valid st.current_card c )&& (s="player") && (deck_contains c st.players_hand)) 
   then 
