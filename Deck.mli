@@ -67,6 +67,9 @@ val is_valid: card -> card -> bool
 (** [len d] is the number of cards in deck [d]. *)
 val len: t -> int
 
+(** [is_powercard c] is true if card [c] is a power card. *)
+val is_powercard: card -> bool
+
 (** [card_val c] is the number (i.e. int) of num_card [c]. *)
 val card_val: card -> int * power 
 
