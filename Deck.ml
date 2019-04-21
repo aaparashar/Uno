@@ -96,6 +96,8 @@ let string_of_power p =
   |Skip ->  "skip"
   |Reverse -> "reverse"
   |Wild -> "wild"
+  |No_Power -> "no power"
+
 let rec riffle 
     (d:t) 
     (acc_a:t)
@@ -147,15 +149,9 @@ let is_valid  card1 card2 =
 let len d = List.length d
 
 let card_val (c:card) = 
-<<<<<<< HEAD
 match c with
 | Num_Card n -> (n.number, No_Power)
 | Power_Card p -> (-1, p.power)
-=======
-  match c with
-  | Num_Card n-> string_of_int n.number
-  | Power_Card p -> string_of_power p.power
->>>>>>> 101d0a0d2da7c45df2c3cfbbd94236ed40c4d244
 
 
 let string_of_color (c:color) = 
