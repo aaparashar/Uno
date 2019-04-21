@@ -114,6 +114,9 @@ let deck_diff fmt (a,b) =
 
 
 (*************    Deck Tests    *************)
+
+(*TODO: edit types on test functions to include power and number cards *)
+
 (** [test_empty_deck name] constructs an OUnit test named [name] that 
     asserts the quality of [[]]] with [Deck.to_list empty_deck]. *)  
 let test_empty_deck
@@ -220,11 +223,16 @@ let initial_deck = load_deck in
 let my_deck = fst (deal initial_deck) in
 let ai_deck = fst (deal (snd (deal initial_deck))) in
 let remaining = snd (deal (snd (deal initial_deck))) in
-let y3 = Deck.create_card "yellow" 3 in
-let y4 = Deck.create_card "yellow" 4 in
-let r9 = Deck.create_card "red" 9 in
-let b9 = Deck.create_card "blue" 9 in
-let g5 = Deck.create_card "green" 5 in
+let y3 = Deck.create_num_card "yellow" 3 in
+let y4 = Deck.create_num_card "yellow" 4 in
+let r9 = Deck.create_num_card "red" 9 in
+let b9 = Deck.create_num_card "blue" 9 in
+let g5 = Deck.create_num_card "green" 5 in
+let yrev = Deck.create_pow_card "yellow" "reverse" in 
+let bskip = Deck.create_pow_card "blue" "skip" in 
+let rd2 = Deck.create_pow_card "red" "draw two" in
+let w = Deck.create_pow_card "wild" "wild" in 
+let wd4 = Deck.create_pow_card "wild" "draw four" in 
 let d1 = Deck.add_card y3 Deck.empty_deck in
 let d2 = Deck.add_card b9 d1 in
 let d3 = Deck.add_card g5 d2 in

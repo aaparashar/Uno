@@ -15,23 +15,22 @@ type card =
 
 type t = card list
 
-let create_num_card (col:color) (num:int) : card = 
-  Num_Card {number = num; color = col}
- (* match color with
-  | "red" -> {number = num; color = Red}
-  | "yellow" -> {number = num; color = Yellow}
-  | "green" -> {number = num; color = Green}
-  | "blue" -> {number = num; color = Blue}
-  | _ -> failwith "invalid card"*)
+let create_num_card col num : card = 
+ match col with
+  | "red" -> Num_Card {number = num; color = Red}
+  | "yellow" -> Num_Card {number = num; color = Yellow}
+  | "green" -> Num_Card {number = num; color = Green}
+  | "blue" -> Num_Card {number = num; color = Blue}
+  | _ -> failwith "invalid card"
 
-let create_pow_card col pow : card = 
-  Power_Card {power = pow; color = col}
-  (* match color with
-  | "red" -> {number = num; color = Red}
-  | "yellow" -> {number = num; color = Yellow}
-  | "green" -> {number = num; color = Green}
-  | "blue" -> {number = num; color = Blue}
-  | _ -> failwith "invalid card"*)
+let create_pow_card col pow : card =
+  match col with
+  | "red" -> Power_Card {power = pow; color = Red}
+  | "yellow" -> Power_Card {power = pow; color = Yellow}
+  | "green" -> Power_Card {power = pow;  color = Green}
+  | "blue" -> Power_Card {power = pow;  color = Blue}
+  | "wild" -> Power_Card {power = pow; color = Wild}
+  | _ -> failwith "invalid card"
 
 (*let create_card c =
   match c with 
@@ -54,23 +53,23 @@ let load_deck =
   let powers = ["skip"; "reverse"; "draw two"] in
   let wild_powers = ["wild"; "draw four"] in
 
-  (load_num_color numbers Red) @
-  (load_num_color numbers Yellow) @ 
-  (load_num_color numbers Green) @
-  (load_num_color numbers Blue) @ 
-  (load_num_color no_zero Red) @
-  (load_num_color no_zero Yellow) @ 
-  (load_num_color no_zero Green) @
-  (load_num_color no_zero Blue) @
-  (load_pow_color powers Red) @
-  (load_pow_color powers Yellow) @
-  (load_pow_color powers Green) @
-  (load_pow_color powers Blue) @
-  (load_pow_color powers Red) @
-  (load_pow_color powers Yellow) @
-  (load_pow_color powers Green) @
-  (load_pow_color powers Blue) @
-  (load_pow_color wild_powers Wild)
+  (load_num_color numbers "red") @
+  (load_num_color numbers "yellow" @ 
+  (load_num_color numbers "green") @
+  (load_num_color numbers "blue" ) @ 
+  (load_num_color no_zero "red") @
+  (load_num_color no_zero "yellow") @ 
+  (load_num_color no_zero "green") @
+  (load_num_color no_zero "blue" ) @
+  (load_pow_color powers "red") @
+  (load_pow_color powers "yellow") @
+  (load_pow_color powers "green") @
+  (load_pow_color powers "blue" ) @
+  (load_pow_color powers "red") @
+  (load_pow_color powers "yellow") @
+  (load_pow_color powers "green") @
+  (load_pow_color powers "blue" ) @
+  (load_pow_color wild_powers "wild")
   
 
 let rec riffle 
