@@ -17,11 +17,13 @@ let create_state curr_c pl_h ai_h draw_d pl_d is_turn =
    draw_deck = draw_d;
    playing_deck = pl_d;
    turn = is_turn}
-
+(** [find_top c acc d ] checks if the top card c is a number card if it is not 
+    it recurses through the rest of deck [d] untill it finds the firts number card*)
 let find_top c acc d= 
   match c with 
   |Num_Card n -> (n, merge_decks d acc)
   |Power_Card p ->  check_top (top_card d) (add_card p acc) remove_card p d
+
 let init_state  = 
   let deck = shuffle(load_deck) in 
   let players = fst (deal deck) in 
@@ -44,22 +46,6 @@ let get_playing_deck st = st.playing_deck
 let has_won st = Deck.len st.players_hand = 0 || Deck.len st.ai_hand = 0
 (* let get_current_score = None *)
 let get_turn st = st.turn
-    `
-let put c (st:t) s = 
-  if ((is_valid st.current_card c )&& (s="player") && (deck_contains c st.players_hand)) 
-  then {st with current_card = c;
-                players_hand = remove_card c st.players_hand;  
-                playing_deck= add_card c st.playing_deck; 
-                turn = false} 
-  else if (is_valid c st.current_card && s="ai"&& deck_contains c st.ai_hand)
-  then {current_card = c;
-        players_hand = st.players_hand;
-        ai_hand= remove_card c st.ai_hand; 
-        draw_deck=st.draw_deck; 
-        playing_deck= add_card c st.playing_deck; turn = true;} 
-  else raise Invalid_Move
-
-
 
 let draw (st:t) s = 
   if (st.draw_deck = empty_deck && s= "player") then 
@@ -78,6 +64,54 @@ let draw (st:t) s =
   else 
     {st with players_hand = (add_card (top_card st.draw_deck) st.players_hand); 
              draw_deck = remove_card (top_card st.draw_deck) st.draw_deck;turn=false;}
+
+
+let put c (st:t) s = 
+  if ((is_valid st.current_card c )&& (s="player") && (deck_contains c st.players_hand)) 
+  then 
+    match c with 
+    |Num_Card ->{st with current_card = c;
+                         players_hand = remove_card c st.players_hand;  
+                         playing_deck= add_card c st.playing_deck; 
+                         turn = false} 
+    |Power_Card p -> match p.power with
+      |"draw two" -> draw (draw st "ai") "ai"
+      |"draw four" -> draw (draw(draw (draw st "ai") "ai") "ai") "ai"
+      |"skip" -> {st with current_card = c;
+                          players_hand = remove_card c st.players_hand;  
+                          playing_deck= add_card c st.playing_deck; 
+                          turn = true} 
+      |"reverse" ->{st with current_card = c;
+                            players_hand = remove_card c st.players_hand;  
+                            playing_deck= add_card c st.playing_deck; 
+                            turn = true} 
+      |"wild" -> failwith "Unimplemented"
+      |_ -> raise Invalid_Move
+  else if (is_valid c st.current_card && s="ai"&& deck_contains c st.ai_hand)
+  then match c with 
+    |Num_Card ->{st with current_card = c;
+                         ai_hand = remove_card c st.ai_hand;  
+                         playing_deck= add_card c st.playing_deck; 
+                         turn = false} 
+    |Power_Card p -> match p.power with
+      |"draw two" -> draw (draw st "player") "player"
+      |"draw four" -> draw (draw(draw (draw st "player") "player") "player") "player"
+      |"skip" -> {st with current_card = c;
+                          ai_hand = remove_card c st.ai_hand;  
+                          playing_deck= add_card c st.playing_deck; 
+                          turn = false} 
+      |"reverse" ->{st with current_card = c;
+                            ai_hand = remove_card c st.ai_hand;  
+                            playing_deck= add_card c st.playing_deck; 
+                            turn = false} 
+
+      |"wild" -> failwith "Unimplemented"
+      |_ -> raise Invalid_Move
+
+  else raise Invalid_Move
+
+
+
 
 let ai_turn st = 
   match (get_valid_card st.current_card st.ai_hand) with
