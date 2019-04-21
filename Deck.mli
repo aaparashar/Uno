@@ -7,13 +7,17 @@
 *)
 
 type color
-
+(** The abstract type of values representing power cards. *)
+type power_card
+(** The abstract type of values representing number cards. *)
+type number_card
 (** The abstract type of values representing cards. *)
 type card
 
 (** The abstract type of values representing a deck. *)
 type t
 
+<<<<<<< HEAD
 val create_num_card : color -> int -> card
 
 val create_pow_card: color -> string -> card
@@ -21,6 +25,11 @@ val create_pow_card: color -> string -> card
 val load_num_color : int list -> color -> card list
 
 val load_pow_color : string list -> color -> card list
+=======
+(** [create_num_card card color number] is a card with color [color] and number 
+    [number]. *)
+val create_num_card : string -> int -> card 
+>>>>>>> 17050cdcaa94d1b797eee0aa76295c14aff99304
 
 (** [empty_deck] is an empty deck. *)
 val empty_deck : t
@@ -59,21 +68,22 @@ val is_valid: card -> card -> bool
 (** [len d] is the number of cards in deck [d] *)
 val len: t -> int
 
-(**[card_num c] is the number (i.e. int) of card [c] *)
+(**[card_num c] is the number (i.e. int) of num_card [c] *)
 val card_num: card -> int
 
 (**[card_col c] is the color of card [c] *)
 val card_col: card -> string
 
-(** [list_card c] is a tuple that stores the color of card [c] and its number *)
-val list_card: card -> int*string
+(** [list_card c] is a tuple that stores the color of card [c] and 
+    its number or power *)
+val list_card: card -> string*string
 
 (** [to_list t] is a list of tuples that contains the cards of deck [t] *)
-val to_list: t -> (int*string) list
+val to_list: t -> (string*string) list
 
 (** [deck_contains c d] is true if card [c] is in deck [d] *)
 val deck_contains: card -> t -> bool
 
 (** [get_valid_card c d] is the first card in deck [d] that is a valid
-   match to card [c] or is None if there is no valid match *)
+    match to card [c] or is None if there is no valid match *)
 val get_valid_card: card ->t -> card option
