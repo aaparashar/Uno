@@ -145,7 +145,18 @@ let put c (st:t) s =
                          turn = false} 
     |Power_Card p -> match p.power with
       |Draw_Two -> draw (draw st "player") "player"
-      |Draw_Four -> draw (draw(draw (draw st "player") "player") "player") "player"
+      |Draw_Four -> let st2 = 
+                      draw (draw(draw (draw st "player") "player") "player") "player" in 
+        ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
+        let col = random_color in 
+        let temp = change_wild_color c col in 
+        {st2 with current_card = temp;
+                  ai_hand = remove_card c st.ai_hand;  
+                  playing_deck= add_card c st.playing_deck; 
+                  turn = true}
+          ANSITerminal.(print_string [cyan]("\n AI changes the color to "
+                                            ^ (color_to_string col)));
+
       |Skip -> {st with current_card = c;
                         ai_hand = remove_card c st.ai_hand;  
                         playing_deck= add_card c st.playing_deck; 
