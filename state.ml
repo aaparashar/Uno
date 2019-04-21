@@ -22,7 +22,7 @@ let create_state curr_c pl_h ai_h draw_d pl_d is_turn =
 let rec find_top c acc d= 
   match c with 
   |Num_Card n -> (n, merge_decks d acc)
-  |Power_Card p ->  find_top (top_card d) (add_card p acc) remove_card p d
+  |Power_Card p ->  find_top (top_card d) (add_card p acc) (remove_card p d)
 
 let init_state  = 
   let deck = shuffle(load_deck) in 
@@ -79,7 +79,7 @@ let put c (st:t) s =
                          players_hand = remove_card c st.players_hand;  
                          playing_deck= add_card c st.playing_deck; 
                          turn = false} 
-    |Power_Card p -> match get_power p with
+    |Power_Card p -> match p.power with
       |Draw_Two -> ANSITerminal.(print_string [cyan] 
                                    ("\nThe AI has been dealt 2 cards"));
         draw (draw st "ai") "ai"
@@ -143,7 +143,7 @@ let put c (st:t) s =
                          ai_hand = remove_card c st.ai_hand;  
                          playing_deck= add_card c st.playing_deck; 
                          turn = false} 
-    |Power_Card p -> match get_power p with
+    |Power_Card p -> match p.power with
       |Draw_Two -> draw (draw st "player") "player"
       |Draw_Four -> let st2 = 
                       draw (draw(draw (draw st "player") "player") "player") "player" in 
