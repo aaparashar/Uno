@@ -61,16 +61,26 @@ let rec do_play_game (st: State.t) =
     in
     match cmd with
     | "Put" -> 
-      (let is_card n c = n >= 0 && n <= 9 && 
-                         List.mem c ["red"; "yellow"; "blue"; "green"]
+      (let is_num_card n c = n >= 0 && n <= 9 && 
+                         List.mem c ["red"; "yellow"; "blue"; "green"] in
+       let is_pow_card p c = List.mem p ["reverse"; "skip"; "draw two"; "draw four"; "wild"] 
        in
+       let is_card s c = 
+        try 
+          is_num_card (int_of_string s) c
+        with Failure "int_of_string" ->
+          is_pow_card s c
        let card_comp = String.split_on_char ',' out_string in
        if List.length card_comp = 2 && 
-          is_card (int_of_string (List.nth card_comp 1)) (List.nth card_comp 0) then
+          is_card (List.nth card_comp 1) (List.nth card_comp 0) then
          begin
-           let num = int_of_string (List.nth card_comp 1) in 
-           let col = List.nth card_comp 0 in 
-           let c = Deck.create_card col num in
+          let col = List.nth card_comp 0 in 
+          let c = 
+          try
+            Deck.create_num_card col (int_of_string (List.nth card_comp 1)) 
+          with Failure "int_of_string" ->
+            Deck.create_pow_card col (List.nth car_comp 1)
+          in
            match State.put c st "player" with
            | newState -> 
              (ANSITerminal.(print_string [cyan]("\nYou played:\t"^print_card c));
