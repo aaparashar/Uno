@@ -54,7 +54,7 @@ val draw: t -> string -> t
 (**[ai_turn st] is a state after the ai makes a move. Currently the ai has no
    strategy and picks the first valid card if it has a valid card  otherwise it 
    draws a card*)
-val ai_turn: t -> t
+val dumb_ai_turn: t -> t
 
 (** [get_turn st] is a boolean that indicates whose turn it is. if it is true 
     then it is the players turn. If it is false, the it is the ai's turn*)

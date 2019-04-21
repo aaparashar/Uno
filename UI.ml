@@ -27,7 +27,7 @@ let rec print_hand (d:Deck.t) =
     ANSITerminal.(print_string [white]("\n"));
     print_hand (Deck.remove_card c d)
 
-let rec do_play_game (st: State.t) =
+let rec do_play_game (st: State.t) (mode:string) =
   if State.has_won st then 
     begin
       ANSITerminal.(print_string [cyan]("\n You "));
@@ -62,57 +62,58 @@ let rec do_play_game (st: State.t) =
     match cmd with
     | "Put" -> 
       (let is_num_card n c = n >= 0 && n <= 9 && 
-                         List.mem c ["red"; "yellow"; "blue"; "green"] in
+                             List.mem c ["red"; "yellow"; "blue"; "green"] in
        let is_pow_card p c = List.mem p ["reverse"; "skip"; "draw two"; "draw four"; "wild"] 
        in
        let is_card s c = 
-        try 
-          is_num_card (int_of_string s) c
-        with Failure "int_of_string" ->
-          is_pow_card s c
+         try 
+           is_num_card (int_of_string s) c
+         with Failure "int_of_string" ->
+           is_pow_card s c
        let card_comp = String.split_on_char ',' out_string in
        if List.length card_comp = 2 && 
           is_card (List.nth card_comp 1) (List.nth card_comp 0) then
          begin
-          let col = List.nth card_comp 0 in 
-          let c = 
-          try
-            Deck.create_num_card col (int_of_string (List.nth card_comp 1)) 
-          with Failure "int_of_string" ->
-            Deck.create_pow_card col (List.nth car_comp 1)
-          in
+           let col = List.nth card_comp 0 in 
+           let c = 
+             try
+               Deck.create_num_card col (int_of_string (List.nth card_comp 1)) 
+             with Failure "int_of_string" ->
+               Deck.create_pow_card col (List.nth car_comp 1)
+           in
            match State.put c st "player" with
            | newState -> 
              (ANSITerminal.(print_string [cyan]("\nYou played:\t"^print_card c));
-              do_play_game newState)
+              do_play_game newState mode)
            | exception(Invalid_Move) -> 
              (ANSITerminal.(print_string [magenta]"\n Can't put that there\n");
-              do_play_game st )
+              do_play_game st mode)
          end
        else 
          begin
            ANSITerminal.(print_string [magenta]"\n That's not a card\n");
-           do_play_game st
+           do_play_game st mode
          end
       )
-    | "Draw" -> do_play_game (State.draw st "player")
+    | "Draw" -> do_play_game (State.draw st "player") mode
     | "Quit" -> let () = ANSITerminal.(print_string[cyan] out_string) in  exit 0;
     | "Hand" -> ANSITerminal.(print_string[cyan] out_string);
       print_hand(State.get_players_hand st);
-      do_play_game st;
+      do_play_game st mode;
     | _ -> ANSITerminal.(print_string[cyan] out_string);
-      do_play_game st
+      do_play_game st mode
   end
   else 
     ANSITerminal.(print_string[white] "\nAI is playing\n");
-  do_play_game (State.ai_turn st)
+  (*if s = "easy"  then*))
+do_play_game (State.dumb_ai_turn st) mode
 
 
 
-let play_game p = 
+let play_game p m = 
   ANSITerminal.(print_string [cyan] ("Welcome, "^p^" to the Uno Casino."));
   ANSITerminal.(print_string [cyan] "\nLet's deal you in");  
-  do_play_game (State.init_state)
+  do_play_game (State.init_state) m
 
 
 
@@ -124,8 +125,17 @@ let rec main () =
   represented as lowercase with a color then a number i.e. Put blue 8.\n";
   print_endline "Please enter your player name:\n";
   ANSITerminal.(print_string [white]  "> ");
-  match read_line () with
-  | "" -> main ()
-  | pname -> play_game pname 
+  let pname =read_line()
+      print_endline "\nPlease enter whether you would like easy or hard mode:\n";
+    ANSITerminal.(print_string [white]  "> ");
+    match (pname, read_line ()) with
+    | ("",_) -> print_endline "\nYou must enter something for 
+  both your name and the level"; main ()
+    |(_,"") -> "\nYou must enter something for 
+  both your name and the level"; main ()
+    |("","")-> "\nYou must enter something for 
+  both your name and the level"; main ()
+    | (name, mode) -> if (mode="easy"||mode="hard") then play_game pname mode
+      else "Invalid mode try again!\nHint: type in either 'easy' or 'hard'"; main();
 
-let () = main ()
+      let () = main ()

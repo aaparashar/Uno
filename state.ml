@@ -189,7 +189,7 @@ let put c (st:t) s =
 
 
 
-let ai_turn st = 
+let dumb_ai_turn st = 
   match (get_valid_card st.current_card st.ai_hand) with
   |None -> draw st "ai"
   |Some x -> put x st "ai"
