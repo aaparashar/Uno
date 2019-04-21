@@ -12,6 +12,7 @@ type power =
   | Draw_Two
   | Draw_Four
   | Wild
+  | No_Power
 
 type number_card = {number : int; color: color}
 type power_card = {power : power; color: color}
@@ -71,7 +72,7 @@ let load_deck =
   let wild_powers = ["wild"; "draw four"] in
 
   (load_num_color numbers "red") @
-  (load_num_color numbers "yellow" @ 
+  (load_num_color numbers "yellow") @ 
   (load_num_color numbers "green") @
   (load_num_color numbers "blue" ) @ 
   (load_num_color no_zero "red") @
@@ -141,11 +142,11 @@ let len d = List.length d
 
 let card_val (c:card) = 
 match c with
-| number_card -> c.number
-| power_card -> c.power
+| Num_Card n -> (n.number, No_Power)
+| Power_Card p -> (-1, p.power)
 
-(**[color_to_string c] is the string form of color c *)
-let color_to_string (c:color) = 
+
+let string_of_color (c:color) = 
   match c with
   |Red -> "red"
   |Yellow -> "yellow"
@@ -153,14 +154,29 @@ let color_to_string (c:color) =
   |Blue -> "blue"
   |Wild -> "wild"
 
+let string_of_power (p:power) =
+  match p with
+  | Reverse -> "reverse"
+  | Skip -> "skip"
+  | Draw_Two -> "draw two"
+  | Draw_Four -> "draw four"
+  | Wild -> "wild"
+  | No_Power -> "no power"
+
+let val_to_string c = 
+  match (card_val c) with
+  |(num, No_Power ) -> string_of_int num
+  |(-1, pow) -> string_of_power pow 
+  | _ -> failwith "invalid card"
+
 let card_col (c:card) =
   match c with
-  |Power_Card p -> color_to_string p.color
-  |Num_Card n -> color_to_string n.color
+  |Power_Card p -> string_of_color p.color
+  |Num_Card n -> string_of_color n.color
 
 let list_card (c:card) = 
   match c with
-  |Power_Card p -> (p.power, card_col c)
+  |Power_Card p -> (string_of_power (p.power), card_col c)
   |Num_Card n -> (string_of_int (n.number), card_col c)
 
 
