@@ -223,3 +223,19 @@ let random_color = let () = Random.self_init() in
   |2 -> Green
   |3 -> Yellow
   |_ -> failwith "Impossible"
+
+(** TODO finish majority color for smart ai*)
+
+(* type tally = {red :int; blue:int; green:int ; yellow:int} 
+   let majority_color d = 
+   let l ={red=0;yellow=0;green=0;blue=0;} in 
+   majority_color' d l
+
+   let  rec majority_color'  (d:t) l = 
+   match d with
+   |[] -> l
+   |h::t -> match card_col h with
+          |Red -> majority_color t {l with red = l.red + 1}
+          |Yellow ->majority_color t {l with yellow = l.yellow + 1}
+          |Green -> majority_color t {l with green = l.green+ 1}
+          |Blue -> majority_color t {l with blue = l.blue + 1} *)
