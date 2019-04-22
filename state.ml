@@ -87,12 +87,50 @@ let put c (st:t) s =
       |"draw two" -> ANSITerminal.(print_string [cyan] 
                                    ("\nThe AI has been dealt 2 cards"));
         draw (draw st "ai") "ai"
+
+      (*********************AMBITIOUS REFACTORING EFFORT***********************)
+
       |"draw four" -> let st2 = draw (draw(draw (draw st "ai") "ai") "ai") "ai" in
         ANSITerminal.(print_string [cyan] ("\nThe AI has been dealt 4 cards.
       \nWhat color do you choose?\n"));
         ANSITerminal.(print_string [white] "> ");
-        match read_line() with 
-        |"red" -> let temp = change_wild_color c Red in 
+        let wildcol = read_line() in
+        try 
+          let temp = change_wild_color c wildcol in
+          {st2 with current_card = temp;
+           players_hand= remove_card c st.players_hand;  
+           playing_deck= add_card c st.playing_deck; 
+           turn = false}
+        with 
+          | Deck.Invalid_Color malCol ->
+        try 
+          match wildcol with
+          |"skip" -> {st with current_card = c;
+                      players_hand = remove_card c st.players_hand;  
+                      playing_deck= add_card c st.playing_deck; 
+                      turn = true} 
+          |"reverse" -> {st with current_card = c;
+                        players_hand = remove_card c st.players_hand;  
+                        playing_deck= add_card c st.playing_deck; 
+                        turn = true} 
+          |"wild" -> ANSITerminal.(print_string [cyan] ("\nWhat color do you choose?\n"));
+                     ANSITerminal.(print_string [white] "> ");
+                let wildcol = read_line() in
+                try
+                  let temp = change_wild_color c wildcol in
+                  {st with current_card = temp;
+                   players_hand= remove_card c st.players_hand;  
+                   playing_deck= add_card c st.playing_deck; 
+                   turn = false}
+                with
+                | Deck.Invalid_Color malcol -> raise (Invalid_Color malCol)
+        with 
+          | _ -> raise Invalid_Move
+
+      (************************************************************************)  
+        
+        (* match read_line() with 
+        |"red" -> let temp = change_wild_color c "red" in 
           {st2 with current_card = temp;
            players_hand= remove_card c st.players_hand;  
            playing_deck= add_card c st.playing_deck; 
@@ -112,7 +150,7 @@ let put c (st:t) s =
            players_hand = remove_card c st.players_hand;  
            playing_deck= add_card c st.playing_deck; 
            turn = false}
-        |_ -> raise Invalid_Move
+        |_ -> raise Invalid_Move *)
       |"skip" -> {st with current_card = c;
                   players_hand = remove_card c st.players_hand;  
                   playing_deck= add_card c st.playing_deck; 
