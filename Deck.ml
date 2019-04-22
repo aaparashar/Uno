@@ -24,31 +24,43 @@ type card =
 
 type t = card list
 
+exception Invalid_Color of string
+
+exception Invalid_Power of string
+
+exception Malformed_Card
+
+let color_of_string str = 
+  match str with
+  | "red" -> Red
+  | "yellow" -> Yellow
+  | "green" -> Green
+  | "blue" -> Blue
+  | "wild" -> Wild
+  | _ -> raise (Invalid_Color str)
+
+let power_of_string str = 
+  match str with
+  | "reverse" -> Reverse
+  | "skip" -> Skip 
+  | "draw two" -> Draw_Two
+  | "draw four" -> Draw_Four
+  | "wild" -> Wild
+  | _ -> raise (Invalid_Power str)
+
 let create_num_card col num : card = 
-  match col with
-  | "red" -> Num_Card {number = num; color = Red}
-  | "yellow" -> Num_Card {number = num; color = Yellow}
-  | "green" -> Num_Card {number = num; color = Green}
-  | "blue" -> Num_Card {number = num; color = Blue}
-  | _ -> failwith "invalid card"
+  try 
+    Num_Card {number = num; color = (color_of_string col)}
+  with
+    | Invalid_Color malCol -> failwith (malCol ^ " is not a valid color.")
 
 let create_pow_card col pow : card =
-  let p = 
-    ( match pow with 
-      | "reverse" -> Reverse
-      | "skip" -> Skip 
-      | "draw two" -> Draw_Two
-      | "draw four" -> Draw_Four
-      | "wild" -> Wild
-      | _ -> failwith "invalid card" )
-  in
-  match col with
-  | "red" -> Power_Card {power = p; color = Red}
-  | "yellow" -> Power_Card {power = p; color = Yellow}
-  | "green" -> Power_Card {power = p;  color = Green}
-  | "blue" -> Power_Card {power = p;  color = Blue}
-  | "wild" -> Power_Card {power = p; color = Wild}
-  | _ -> failwith "invalid card"
+  try
+    Power_Card {power = (power_of_string pow); color = (color_of_string col)}
+  with
+    | Invalid_Color malCol -> failwith (malCol ^ " is not a valid color.")
+    | Invalid_Power malPow -> failwith (malPow ^ " is not a valid power.")
+ 
 
 (*let create_card c =
   match c with 
@@ -210,7 +222,7 @@ let get_power p =
 
 let change_wild_color c col = 
   match c with 
-  |Power_Card p -> Power_Card{power = p.power; color = col}
+  |Power_Card p -> Power_Card{power = p.power; color = (color_of_string col)}
   |_ -> c
 
 let random_color = let () = Random.self_init() in
@@ -220,3 +232,5 @@ let random_color = let () = Random.self_init() in
   |2 -> Green
   |3 -> Yellow
   |_ -> failwith "Impossible"
+
+

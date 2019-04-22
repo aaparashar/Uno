@@ -22,6 +22,25 @@ type card
 (** The abstract type of values representing a deck. *)
 type t
 
+(** Raised when an invalid color is parsed. *)
+exception Invalid_Color of string
+
+(** Raised when an invalid color is parsed. *)
+exception Invalid_Power of string
+
+(** Raied when there is an attempt to make a malformed card. *)
+exception Malformed_Card
+
+(** [color_of_string s] is the color indicated by string [s].
+    Raises [Invalid_Color s] if the string does not represent a valid color. *)
+val color_of_string : string -> color
+
+(** [power_of_string s] is the power indicated by string [s].
+    Raises [Invalid_Power s] if the string does not represent a valid power. *)
+val power_of_string : string -> power
+
+(** [create_num_card s n] is the number card with number [n] and the color 
+    represented by string [s]. *)
 val create_num_card : string -> int -> card
 
 val create_pow_card: string -> string -> card
@@ -109,7 +128,7 @@ val get_power: power_card -> power
 
 (** [change_wild_color c col] is power card [c] with it's color changed to color 
     [col]. *)
-val change_wild_color : power_card -> color -> card
+val change_wild_color : card -> string -> card
 
 (** [random_color] is a random color. *)
 val random_color : color
