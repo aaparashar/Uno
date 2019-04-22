@@ -105,11 +105,11 @@ val get_valid_card: card ->t -> card option
 val merge_decks: t ->t -> t
 
 (** [get_power p] returns the power of card p. *)
-val get_power: power_card -> power
+val get_power: card -> power
 
 (** [change_wild_color c col] is power card [c] with it's color changed to color 
     [col]. *)
-val change_wild_color : power_card -> color -> card
+val change_wild_color : card -> color -> card
 
 (** [random_color] is a random color. *)
 val random_color : color

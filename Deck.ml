@@ -206,7 +206,10 @@ let get_valid_card c (d:t) =
 let merge_decks (d1:t) (d2:t) = d1@d2
 
 let get_power p = 
-  p.power
+  match p with 
+  |Power_Card c -> c.power
+  |_ -> failwith "Not a Power Card"
+
 
 let change_wild_color c col = 
   match c with 
