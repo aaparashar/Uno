@@ -209,9 +209,11 @@ let get_power p =
   p.power
 
 let change_wild_color c col = 
-  Power_Card {power = c.power; color = col}
+  match c with 
+  |Power_Card p -> Power_Card{power = p.power; color = col}
+  |_ -> c
 
-let random_color = Random.self_init(); 
+let random_color = let () = Random.self_init() in
   match Random.int 4 with
   |0 -> Red
   |1 -> Blue
