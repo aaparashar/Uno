@@ -218,7 +218,6 @@ let get_valid_card c (d:t) =
 let merge_decks (d1:t) (d2:t) = d1@d2
 
 let get_power p = 
-
   match p with 
   |Power_Card c -> c.power
   |_ -> failwith "Not a Power Card"

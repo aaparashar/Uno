@@ -128,11 +128,7 @@ val get_power: card -> power
 
 (** [change_wild_color c col] is power card [c] with it's color changed to color 
     [col]. *)
-<<<<<<< HEAD
-val change_wild_color : card -> color -> card
-=======
 val change_wild_color : card -> string -> card
->>>>>>> 250e0436c9c06cf5ee2511f874e85b142bb41871
 
 (** [random_color] is a random color. *)
 val random_color : color

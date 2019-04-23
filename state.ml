@@ -79,15 +79,16 @@ let put c (st:t) s =
 
     if not (is_powercard c) then  
       {st with current_card = c;
-               players_hand = remove_card c st.players_hand;  
-               playing_deck= add_card c st.playing_deck; 
-               turn = false} 
+       players_hand = remove_card c st.players_hand;  
+       playing_deck= add_card c st.playing_deck; 
+       turn = false} 
     else
-      match (get_power c) with
-      |Draw_Two -> ANSITerminal.(print_string [cyan] 
+      match (val_to_string c) with
+      |"draw two" -> ANSITerminal.(print_string [cyan] 
                                    ("\nThe AI has been dealt 2 cards"));
         draw (draw st "ai") "ai"
-      |Draw_Four -> let st2 = draw (draw(draw (draw st "ai") "ai") "ai") "ai" in
+      |"draw four" -> begin 
+        let st2 = draw (draw(draw (draw st "ai") "ai") "ai") "ai" in
 
         (*********************AMBITIOUS REFACTORING EFFORT***********************)
         ANSITerminal.(print_string [cyan] ("\nThe AI has been dealt 4 cards.
@@ -112,7 +113,8 @@ let put c (st:t) s =
                                    players_hand = remove_card c st.players_hand;  
                                    playing_deck= add_card c st.playing_deck; 
                                    turn = true} 
-            |"wild" -> ANSITerminal.(print_string [cyan] ("\nWhat color do you choose?\n"));
+            |"wild" -> begin 
+              ANSITerminal.(print_string [cyan] ("\nWhat color do you choose?\n"));
               ANSITerminal.(print_string [white] "> ");
               let wildcol = read_line() in
               try
@@ -122,9 +124,13 @@ let put c (st:t) s =
                          playing_deck= add_card c st.playing_deck; 
                          turn = false}
               with
-              | Deck.Invalid_Color malcol -> raise (Invalid_Color malCol)
+                | Deck.Invalid_Color malcol -> raise (Invalid_Color malCol)
+              end
+              | _ -> raise (Invalid_Color wildcol)
           with 
           | _ -> raise Invalid_Move
+      end
+      | _ -> raise Invalid_Move
 
           (************************************************************************)  
 
@@ -182,7 +188,7 @@ let put c (st:t) s =
              playing_deck= add_card c st.playing_deck; 
              turn = false}
              |_ -> raise Invalid_Move *)
-          |"skip" -> {st with current_card = c;
+          (* |"skip" -> {st with current_card = c;
                               players_hand = remove_card c st.players_hand;  
                               playing_deck= add_card c st.playing_deck; 
                               turn = true} 
@@ -190,46 +196,45 @@ let put c (st:t) s =
                                  players_hand = remove_card c st.players_hand;  
                                  playing_deck= add_card c st.playing_deck; 
                                  turn = false}
-          |_ -> raise Invalid_Move
+          |_ -> raise Invalid_Move *)
   else if (is_valid c st.current_card && s="ai"&& deck_contains c st.ai_hand)
-  then match c with 
-    |Num_Card ->{st with current_card = c;
-                         ai_hand = remove_card c st.ai_hand;  
-                         playing_deck= add_card c st.playing_deck; 
-                         turn = false} 
-    |Power_Card p -> match p.power with
-      |Draw_Two -> draw (draw st "player") "player"
-      |Draw_Four -> let st2 = 
-                      draw (draw(draw (draw st "player") "player") "player") "player" in 
+  then 
+    if not (is_powercard c) then
+      {st with current_card = c;
+       ai_hand = remove_card c st.ai_hand;  
+       playing_deck= add_card c st.playing_deck; 
+       turn = false} 
+    else match (val_to_string c) with
+      |"draw two" -> draw (draw st "player") "player"
+      |"draw four" -> begin
+        let st2 =
+          draw (draw (draw (draw st "player") "player") "player") "player" in 
         ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
-        let col = random_color in 
+        let col = string_of_color random_color in
         let temp = change_wild_color c col in 
+        ANSITerminal.(print_string [cyan]("\n AI changes the color to " ^ col));
         {st2 with current_card = temp;
+         ai_hand = remove_card c st.ai_hand;  
+         playing_deck= add_card c st.playing_deck; 
+         turn = true}
+      end
+      |"skip" -> {st with current_card = c;
                   ai_hand = remove_card c st.ai_hand;  
                   playing_deck= add_card c st.playing_deck; 
-                  turn = true}
-          ANSITerminal.(print_string [cyan]("\n AI changes the color to "
-                                            ^ (color_to_string col)));
+                  turn = false} 
+      |"reverse" ->{st with current_card = c;
+                    ai_hand = remove_card c st.ai_hand;  
+                    playing_deck= add_card c st.playing_deck; 
+                    turn = false} 
 
-      |Skip -> {st with current_card = c;
-                        ai_hand = remove_card c st.ai_hand;  
-                        playing_deck= add_card c st.playing_deck; 
-                        turn = false} 
-      |Reverse ->{st with current_card = c;
-                          ai_hand = remove_card c st.ai_hand;  
-                          playing_deck= add_card c st.playing_deck; 
-                          turn = false} 
-
-      |Wild -> let col = random_color in 
+      |"wild"-> let col = string_of_color random_color in 
         let temp = change_wild_color c col in 
+        ANSITerminal.(print_string [cyan]("\n AI changes the color to " ^ col));
         {st with current_card = temp;
-                 ai_hand = remove_card c st.ai_hand;  
-                 playing_deck= add_card c st.playing_deck; 
-                 turn = true}
-          ANSITerminal.(print_string [cyan]("\n AI changes the color to "
-                                            ^ (color_to_string col)));
-
-
+         ai_hand = remove_card c st.ai_hand;  
+         playing_deck= add_card c st.playing_deck; 
+         turn = true}
+         
   else raise Invalid_Move
 
 (**TODO change random_color to color that AI has most of *)
