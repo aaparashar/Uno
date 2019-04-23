@@ -255,8 +255,8 @@ let put c (st:t) s =
   else raise Invalid_Move
 
 (**TODO change random_color to color that AI has most of *)
-(* let put_smart_ai c st =
-   if (is_valid c st.current_card && deck_contains c st.ai_hand)
+ let put_medium_ai c st =
+   if (is_valid c st.current_card && Deck.deck_contains c st.ai_hand)
    then match c with 
     |Num_Card ->{st with current_card = c;
                          ai_hand = remove_card c st.ai_hand;  
@@ -268,8 +268,8 @@ let put c (st:t) s =
                       draw (draw(draw (draw st "player") "player") "player") "player" in 
         ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
 
-        let col = majority_color ai_hand in 
-        let temp = change_wild_color c col in 
+        let col = Deck.majority_color ai_hand in 
+        let temp = Deck.change_wild_color c col in 
         {st2 with current_card = temp;
                   ai_hand = remove_card c st.ai_hand;  
                   playing_deck= add_card c st.playing_deck; 
@@ -286,8 +286,8 @@ let put c (st:t) s =
                           playing_deck= add_card c st.playing_deck; 
                           turn = false} 
 
-      |Wild -> let col = random_color in 
-        let temp = change_wild_color c col in 
+      |Wild -> let col = Deck.random_color in 
+        let temp = Deck.change_wild_color c col in 
         {st with current_card = temp;
                  ai_hand = remove_card c st.ai_hand;  
                  playing_deck= add_card c st.playing_deck; 
@@ -297,7 +297,7 @@ let put c (st:t) s =
 
 
    else raise Invalid_Move
-*)
+
 
 
 let dumb_ai_turn st = 
@@ -307,10 +307,10 @@ let dumb_ai_turn st =
 
 (**TODO change get valid card to get a card strategically  make another
    method in deck and then replace it here*)
-let smart_ai_turn st = 
-  match (get_valid_card st.current_card st.ai_hand) with
+let medium_ai_turn st = 
+  match (Deck.get_medium_card st.current_card st.ai_hand) with
   |None -> draw st "ai"
-  |Some x -> put_smart_ai x st 
+  |Some x -> put_medium_ai x st 
 
 
 

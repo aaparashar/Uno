@@ -238,16 +238,53 @@ let random_color = let () = Random.self_init() in
 
 (** TODO finish majority color for smart ai*)
 
-(* type tally = {red :int; blue:int; green:int ; yellow:int} 
-   let majority_color d = 
-   let l ={red=0;yellow=0;green=0;blue=0;} in 
-   majority_color' d l
+let majority_color (d:t) = 
+  let rec count_color acc c (dk:t) = 
+    match dk with
+    | [] -> acc
+    | Power_Card p::t -> if p.color = c then count_color (acc+1) c t else count_color acc c t
+    | Num_Card n :: t -> if n.color = c then count_color (acc+1) c t else count_color acc c t
+  in 
+  let r = count_color 0 Red d in 
+  let y = count_color 0 Yellow d in 
+  let g = count_color 0 Green d in 
+  let b = count_color 0 Blue d in 
+  let max1 = if r > y then Red else Yellow in 
+  let max2 = if g > (max r y ) then Green else max1 in 
+  if b >( max g (max r y)) then Blue else max2
 
-   let  rec majority_color'  (d:t) l = 
-   match d with
-   |[] -> l
-   |h::t -> match card_col h with
-          |Red -> majority_color t {l with red = l.red + 1}
-          |Yellow ->majority_color t {l with yellow = l.yellow + 1}
-          |Green -> majority_color t {l with green = l.green+ 1}
-          |Blue -> majority_color t {l with blue = l.blue + 1} *)
+(*let rec difference d c = match d with
+    | [] -> []
+    | h :: t -> 
+        if (h = c) then difference t c
+        else h :: difference t c
+
+let rec deck_diff d1 d2 = match d2 with
+    | [] -> d1
+    | h :: t -> deck_diff (difference d1 h) t*)
+
+let get_medium_card c (d:t)  = 
+  let rec remove_wilds acc (dk:t) : t = 
+    match dk with 
+    | [] -> acc
+    | Power_Card p::t -> if p.color = Wild then remove_wilds acc t 
+                        else remove_wilds (Power_Card p::acc) t
+    | Num_Card n :: t -> remove_wilds acc t 
+  in 
+  
+  let rec remove_powers acc (dk:t) : t = 
+    match dk with 
+    | [] -> acc
+    | Power_Card p::t -> remove_powers acc t
+    | Num_Card n ::t -> remove_powers (Num_Card n::acc) t
+  in 
+
+  let wildless = remove_wilds [] d in
+  match wildless with
+  | [] -> get_valid_card c d
+  | _ ->
+
+  let powerless = remove_powers [] wildless in 
+  match powerless with 
+  | [] -> get_valid_card c wildless
+  | _ -> get_valid_card c powerless
