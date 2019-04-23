@@ -39,6 +39,8 @@ val color_of_string : string -> color
     Raises [Invalid_Power s] if the string does not represent a valid power. *)
 val power_of_string : string -> power
 
+val type_to_string : card -> string
+
 (** [create_num_card s n] is the number card with number [n] and the color 
     represented by string [s]. *)
 val create_num_card : string -> int -> card

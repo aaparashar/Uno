@@ -48,6 +48,11 @@ let power_of_string str =
   | "wild" -> Wild
   | _ -> raise (Invalid_Power str)
 
+let type_to_string c = 
+  match c with
+  |Num_Card n -> "number card"
+  |Power_Card p -> "power card"
+
 let create_num_card col num : card = 
   try 
     Num_Card {number = num; color = (color_of_string col)}
@@ -177,15 +182,6 @@ let string_of_color (c:color) =
   |Green -> "green"
   |Blue -> "blue"
   |Wild -> "wild"
-
-let string_of_power (p:power) =
-  match p with
-  | Reverse -> "reverse"
-  | Skip -> "skip"
-  | Draw_Two -> "draw two"
-  | Draw_Four -> "draw four"
-  | Wild -> "wild"
-  | No_Power -> "no power"
 
 let val_to_string c = 
   match (card_val c) with

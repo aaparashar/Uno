@@ -251,42 +251,43 @@ let put c (st:t) s =
                  playing_deck= add_card c st.playing_deck;
                  ai_played = add_card temp st.ai_played;  
                  turn = true}
+      | _ -> raise Invalid_Move
 
   else raise Invalid_Move
 
 (**TODO change random_color to color that AI has most of *)
 let put_medium_ai c st =
   if (is_valid c st.current_card && Deck.deck_contains c st.ai_hand)
-  then match c with 
-    |Num_Card ->{st with current_card = c;
+  then match (Deck.type_to_string c )with 
+    |"number card" ->{st with current_card = c;
                          ai_hand = remove_card c st.ai_hand;  
                          playing_deck= add_card c st.playing_deck; 
                          turn = false} 
-    |Power_Card p -> match p.power with
-      |Draw_Two -> draw (draw st "player") "player"
-      |Draw_Four -> let st2 = 
+    |"power card" -> ( match Deck.string_of_power (Deck.get_power c) with
+      |"draw two" -> draw (draw st "player") "player"
+      |"draw four" -> let st2 = 
                       draw (draw(draw (draw st "player") "player") "player") "player" in 
         ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
 
-        let col = Deck.majority_color ai_hand in 
+        let col = Deck.string_of_color (Deck.majority_color st.ai_hand) in 
         let temp = Deck.change_wild_color c col in 
         {st2 with current_card = temp;
-                  ai_hand = remove_card c st.ai_hand;  
-                  playing_deck= add_card c st.playing_deck; 
+                  ai_hand = (remove_card c st.ai_hand);  
+                  playing_deck= (add_card c st.playing_deck); 
                   turn = true}
           ANSITerminal.(print_string [cyan]("\n AI changes the color to "
-                                            ^ (color_to_string col)));
+                                            ^ col));
 
-      |Skip -> {st with current_card = c;
+      |"skip" -> {st with current_card = c;
                         ai_hand = remove_card c st.ai_hand;  
                         playing_deck= add_card c st.playing_deck; 
                         turn = false} 
-      |Reverse ->{st with current_card = c;
+      |"reverse" ->{st with current_card = c;
                           ai_hand = remove_card c st.ai_hand;  
                           playing_deck= add_card c st.playing_deck; 
                           turn = false} 
 
-      |Wild -> let col = Deck.random_color in 
+      |"wild" -> let col = Deck.random_color in 
         let temp = Deck.change_wild_color c col in 
         {st with current_card = temp;
                  ai_hand = remove_card c st.ai_hand;  
@@ -294,7 +295,8 @@ let put_medium_ai c st =
                  turn = true}
           ANSITerminal.(print_string [cyan]("\n AI changes the color to "
                                             ^ (color_to_string col)));
-
+        | _ -> raise Invalid_Move)
+    | _ -> raise Invalid_Move
 
   else raise Invalid_Move
 
@@ -312,10 +314,4 @@ let medium_ai_turn st =
   |Some x -> put_medium_ai x st 
 
 (**TODO: counting cards mode *)
-let smart_ai_turn st =
-
-
-
-
-
-
+(*let smart_ai_turn st =*)
