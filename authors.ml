@@ -1,3 +1,3 @@
 (* TODO: set the value below *)
 (* Aarushi, Christina, Aaron, Fausto*)
-let hours_worked = [10; 10; 10; 2]
+let hours_worked = [10; 10; 10; 10]
