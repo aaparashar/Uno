@@ -19,6 +19,31 @@ let pp_card (c:card) =
 let print_card c =
   (Deck.card_col c )^" "^(string_of_int (Deck.card_num c))
 
+let num_card_art c =
+  let sty = style_color (Deck.card_col c) in
+  ANSITerminal.(print_string sty
+                  (" -——\n"^
+                   "|   |\n"^
+                   "| " ^ (string_of_int (Deck.card_num c))^ " |"^
+                   "|   |"^
+                   " -——"))
+let rec generate_art str s =
+  match s with
+  |1-> str 
+  |x ->str ^ generate_art str (s-1) 
+
+let power_card_art c = 
+  let sty = style_color (Deck.card_col c) in
+  ANSITerminal.(print_string sty 
+                  (generate_art "-" ((String.length (Deck.val_to_string c) +2)
+                                     ^"\n|" ^generate_art " " ((String.length (Deck.val_to_string c) +2))^"|\n"^ 
+                                     "|"^ (Deck.val_to_string c)^"|"
+                                     ^"\n|" ^generate_art " " ((String.length (Deck.val_to_string c) +2))^"|\n"^ 
+                                     generate_art "-" ((String.length (Deck.val_to_string c) +2)))))
+
+
+
+
 let rec print_hand (d:Deck.t) =
   if Deck.len d = 0 then ANSITerminal.(print_string[white]"\n")
   else let c = Deck.top_card d in 
@@ -107,7 +132,7 @@ let rec do_play_game (st: State.t) (mode:string) =
     ANSITerminal.(print_string[white] "\nAI is playing\n");
   if s = "easy" then
     do_play_game (State.dumb_ai_turn st) mode
-  else if s="hard"  then do_play_game (State.medium_ai_turn st) mode
+  else if s="medium"  then do_play_game (State.medium_ai_turn st) mode
   else do_play_game (State.smart_ai_turn st) mode 
 
 
