@@ -12,7 +12,7 @@ type t = {
 
 exception Invalid_Move
 
-let create_state curr_c pl_h ai_h draw_d pl_d pl_pl ai_pl is_turn =
+let create_state curr_c pl_h ai_h draw_d pl_d pl_pl ai_pl is_turn : t =
   {current_card = curr_c; 
    players_hand = pl_h; 
    ai_hand = ai_h;
@@ -30,7 +30,7 @@ let rec find_top c acc d=
 (* |Num_Card n -> (n, merge_decks d acc)
    |Power_Card p ->  find_top (top_card d) (add_card p acc) (remove_card p d) *)
 
-let init_state  = 
+let init_state : t = 
   let deck = shuffle(load_deck) in 
   let players = fst (deal deck) in 
   let ai_deck = fst (deal (snd (deal deck))) in 
@@ -54,7 +54,7 @@ let has_won st = Deck.len st.players_hand = 0 || Deck.len st.ai_hand = 0
 (* let get_current_score = None *)
 let get_turn st = st.turn
 
-let draw (st:t) s = 
+let draw (st:t) s : t = 
   if (st.draw_deck = empty_deck && s= "player") then 
     let reset = {st with draw_deck=shuffle (remove_card st.current_card st.playing_deck); 
                          playing_deck = add_card st.current_card empty_deck} in 
@@ -78,7 +78,7 @@ let draw (st:t) s =
    Next card played after wild card:
       If card c is_valid and top card of playing_deck has power = "wild" then
       change color of top card back to wild and then add c to playing_deck *)
-let put c (st:t) s = 
+let put c (st:t) s : t = 
   if ((is_valid st.current_card c )&& (s="player") 
       && (deck_contains c st.players_hand)) then
 
@@ -256,7 +256,7 @@ let put c (st:t) s =
   else raise Invalid_Move
 
 (**TODO change random_color to color that AI has most of *)
-let put_medium_ai c st =
+let put_medium_ai c st : t =
   if (is_valid c st.current_card && Deck.deck_contains c st.ai_hand)
   then match (Deck.type_to_string c )with 
     |"number card" ->{st with current_card = c;
@@ -271,12 +271,12 @@ let put_medium_ai c st =
 
         let col = Deck.string_of_color (Deck.majority_color st.ai_hand) in 
         let temp = Deck.change_wild_color c col in 
+        ANSITerminal.(print_string [cyan]("\n AI changes the color to "
+                                            ^ col));
         {st2 with current_card = temp;
                   ai_hand = (remove_card c st.ai_hand);  
                   playing_deck= (add_card c st.playing_deck); 
-                  turn = true}
-          ANSITerminal.(print_string [cyan]("\n AI changes the color to "
-                                            ^ col));
+                  turn = true};
 
       |"skip" -> {st with current_card = c;
                         ai_hand = remove_card c st.ai_hand;  
@@ -287,14 +287,14 @@ let put_medium_ai c st =
                           playing_deck= add_card c st.playing_deck; 
                           turn = false} 
 
-      |"wild" -> let col = Deck.random_color in 
+      |"wild" -> let col = Deck.string_of_color ( Deck.random_color) in 
         let temp = Deck.change_wild_color c col in 
+        ANSITerminal.(print_string [cyan]("\n AI changes the color to "
+                                            ^ (col)));
         {st with current_card = temp;
                  ai_hand = remove_card c st.ai_hand;  
                  playing_deck= add_card c st.playing_deck; 
-                 turn = true}
-          ANSITerminal.(print_string [cyan]("\n AI changes the color to "
-                                            ^ (color_to_string col)));
+                 turn = true};
         | _ -> raise Invalid_Move)
     | _ -> raise Invalid_Move
 
@@ -302,13 +302,13 @@ let put_medium_ai c st =
 
 
 
-let dumb_ai_turn st = 
+let dumb_ai_turn st : t= 
   match (get_valid_card st.current_card st.ai_hand) with
   |None -> draw st "ai"
   |Some x -> put x st "ai"
 
 
-let medium_ai_turn st = 
+let medium_ai_turn st : t = 
   match (Deck.get_medium_card st.current_card st.ai_hand) with
   |None -> draw st "ai"
   |Some x -> put_medium_ai x st 

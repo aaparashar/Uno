@@ -95,6 +95,7 @@ let rec do_play_game (st: State.t) (mode:string) =
            is_num_card (int_of_string s) c
          with Failure "int_of_string" ->
            is_pow_card s c
+        in
        let card_comp = String.split_on_char ',' out_string in
        if List.length card_comp = 2 && 
           is_card (List.nth card_comp 1) (List.nth card_comp 0) then
@@ -144,11 +145,11 @@ let play_game p m =
                   (".----------------. .-----------------..----------------.\n" ^
                    "| .--------------. | .--------------. | .--------------. |\n"^
                    "| | _____  _____ | | | ____  _____  | | |     ____     | |\n"^
-                   "| ||_   _||_   _|| | ||_   \|_   _| | | |   .'    `.   | |\n"^
-                   "| |  | |    | |  | | |  |   \ | |   | | |  /  .--.  \  | |\n"^
-                   "| |  | '    ' |  | | |  | |\ \| |   | | |  | |    | |  | |\n"^
-                   "| |   \ `--' /   | | | _| |_\   |_  | | |  \  `--'  /  | |\n"^
-                   "| |    `.__.'    | | ||_____|\____| | | |   `.____.'   | |\n"^
+                   "| ||_   _||_   _|| | ||_   \\|_   _| | | |   .'    `.   | |\n"^
+                   "| |  | |    | |  | | |  |   \\ | |   | | |  /  .--.  \\  | |\n"^
+                   "| |  | '    ' |  | | |  | |\\ \\| |   | | |  | |    | |  | |\n"^
+                   "| |   \\ `--' /   | | | _| |_\\   |_  | | |  \  `--'  /  | |\n"^
+                   "| |    `.__.'    | | ||_____|\\____| | | |   `.____.'   | |\n"^
                    "| |              | | |              | | |              | |\n"^
                    "| '--------------' | '--------------' | '--------------' |\n"^
                    "'----------------' '----------------' '----------------' \n"));
@@ -166,7 +167,7 @@ let rec main () =
   represented as lowercase with a color then a number i.e. Put blue 8.\n";
   print_endline "Please enter your player name:\n";
   ANSITerminal.(print_string [white]  "> ");
-  let pname =read_line()
+  let pname =read_line() in
       print_endline "\nPlease enter whether you would like easy medium 
       or hard mode:\n";
     ANSITerminal.(print_string [white]  "> ");
@@ -182,5 +183,3 @@ let rec main () =
         print_endline "Invalid mode try again!"^
         "\nHint: type in either 'easy','medium' or 'hard'"; 
       main();
-
-      let () = main ()
