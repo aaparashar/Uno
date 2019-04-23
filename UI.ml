@@ -105,8 +105,10 @@ let rec do_play_game (st: State.t) (mode:string) =
   end
   else 
     ANSITerminal.(print_string[white] "\nAI is playing\n");
-  (*if s = "easy"  then*))
-do_play_game (State.dumb_ai_turn st) mode
+  (*if s = "easy"  then*)
+  do_play_game (State.dumb_ai_turn st) mode
+(* else if s="hard"  then do_play_game (State.medium_ai_turn st) mode
+   else do_play_game (State.smart_ai_turn st) mode *)
 
 
 
@@ -126,7 +128,8 @@ let rec main () =
   print_endline "Please enter your player name:\n";
   ANSITerminal.(print_string [white]  "> ");
   let pname =read_line()
-      print_endline "\nPlease enter whether you would like easy or hard mode:\n";
+      print_endline "\nPlease enter whether you would like easy medium 
+      or hard mode:\n";
     ANSITerminal.(print_string [white]  "> ");
     match (pname, read_line ()) with
     | ("",_) -> print_endline "\nYou must enter something for 
@@ -135,7 +138,7 @@ let rec main () =
   both your name and the level"; main ()
     |("","")-> "\nYou must enter something for 
   both your name and the level"; main ()
-    | (name, mode) -> if (mode="easy"||mode="hard") then play_game pname mode
-      else "Invalid mode try again!\nHint: type in either 'easy' or 'hard'"; main();
+    | (name, mode) -> if (mode="easy"||mode="hard"||mode="medium") then play_game pname mode
+      else "Invalid mode try again!\nHint: type in either 'easy' , 'medium' or  'hard'"; main();
 
       let () = main ()
