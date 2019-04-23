@@ -105,10 +105,10 @@ let rec do_play_game (st: State.t) (mode:string) =
   end
   else 
     ANSITerminal.(print_string[white] "\nAI is playing\n");
-  (*if s = "easy"  then*)
-  do_play_game (State.dumb_ai_turn st) mode
-(* else if s="hard"  then do_play_game (State.medium_ai_turn st) mode
-   else do_play_game (State.smart_ai_turn st) mode *)
+  if s = "easy" then
+    do_play_game (State.dumb_ai_turn st) mode
+  else if s="hard"  then do_play_game (State.medium_ai_turn st) mode
+  else do_play_game (State.smart_ai_turn st) mode 
 
 
 
