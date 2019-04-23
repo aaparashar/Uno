@@ -22,11 +22,25 @@ let print_card c =
 let num_card_art c =
   let sty = style_color (Deck.card_col c) in
   ANSITerminal.(print_string sty
-                  (" -——"^
-                   "|   |"^
+                  (" -——\n"^
+                   "|   |\n"^
                    "| " ^ (string_of_int (Deck.card_num c))^ " |"^
                    "|   |"^
                    " -——"))
+let rec generate_art str s =
+  match s with
+  |1-> str 
+  |x ->str ^ generate_art str (s-1) 
+
+let power_card_art c = 
+  let sty = style_color (Deck.card_col c) in
+  ANSITerminal.(print_string sty 
+                  (generate_art "-" ((String.length (Deck.val_to_string c) +2)
+                                     ^"\n|" ^generate_art " " ((String.length (Deck.val_to_string c) +2))^"|\n"^ 
+                                     "|"^ (Deck.val_to_string c)^"|"
+                                     ^"\n|" ^generate_art " " ((String.length (Deck.val_to_string c) +2))^"|\n"^ 
+                                     generate_art "-" ((String.length (Deck.val_to_string c) +2)))))
+
 
 
 
