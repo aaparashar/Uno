@@ -16,8 +16,9 @@ type t
 exception Invalid_Move
 
 (** [create_state c pl_h a_h d_d pl_d turn] is a state defined by the values
-    [c], [pl_h], [a_h], [d_d], [pl_d] [turn]. For testing purposes. *)
-val create_state : Deck.card -> Deck.t -> Deck.t -> Deck.t -> Deck.t -> bool -> t
+    [c], [pl_h], [a_h], [d_d], [pl_d] [pl_pl] [ai_pl] [turn]. For testing 
+    purposes. *)
+val create_state : Deck.card -> Deck.t -> Deck.t -> Deck.t -> Deck.t -> Deck.t -> Deck.t -> bool -> t
 
 (** [init_state d] is the initial state of the game when given a deck [d].
     In that state, the deck is shuffled and each player is dealt seven cards *)
@@ -40,6 +41,14 @@ val get_draw_deck: t -> Deck.t
 (** [get_playing_deck st] is a deck at state [st] that contains all the cards 
     that have been played so far. *)
 val get_playing_deck: t -> Deck.t
+
+(** [get_player_played st] is a deck at state [st] that contains all the cards
+    played by the player so far. *)
+val get_player_played: t -> Deck.t
+
+(** [get_ai_played st] is a deck at state [st] that contains all the cards
+    played by the ai so far. *)
+val get_ai_played: t -> Deck.t
 
 (** [put  c st str] is a state after a card c has been put down on to the 
     playing deck by str.
