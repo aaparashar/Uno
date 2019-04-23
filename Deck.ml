@@ -236,7 +236,7 @@ let random_color = let () = Random.self_init() in
   |3 -> Yellow
   |_ -> failwith "Impossible"
 
-(** TODO finish majority color for smart ai*)
+(** MEDIUM AI *)
 
 let majority_color (d:t) = 
   let rec count_color acc c (dk:t) = 
@@ -252,16 +252,6 @@ let majority_color (d:t) =
   let max1 = if r > y then Red else Yellow in 
   let max2 = if g > (max r y ) then Green else max1 in 
   if b >( max g (max r y)) then Blue else max2
-
-(*let rec difference d c = match d with
-    | [] -> []
-    | h :: t -> 
-        if (h = c) then difference t c
-        else h :: difference t c
-
-let rec deck_diff d1 d2 = match d2 with
-    | [] -> d1
-    | h :: t -> deck_diff (difference d1 h) t*)
 
 let get_medium_card c (d:t)  = 
   let rec remove_wilds acc (dk:t) : t = 
