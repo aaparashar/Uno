@@ -113,7 +113,21 @@ let rec do_play_game (st: State.t) (mode:string) =
 
 
 let play_game p m = 
-  ANSITerminal.(print_string [cyan] ("Welcome, "^p^" to the Uno Casino."));
+  ANSITerminal.(print_string [cyan] ("Welcome, "^p^" to "));
+
+  ANSITerminal.(print_string [red]
+                  (".----------------. .-----------------..----------------.\n" ^
+                   "| .--------------. | .--------------. | .--------------. |\n"^
+                   "| | _____  _____ | | | ____  _____  | | |     ____     | |\n"^
+                   "| ||_   _||_   _|| | ||_   \|_   _| | | |   .'    `.   | |\n"^
+                   "| |  | |    | |  | | |  |   \ | |   | | |  /  .--.  \  | |\n"^
+                   "| |  | '    ' |  | | |  | |\ \| |   | | |  | |    | |  | |\n"^
+                   "| |   \ `--' /   | | | _| |_\   |_  | | |  \  `--'  /  | |\n"^
+                   "| |    `.__.'    | | ||_____|\____| | | |   `.____.'   | |\n"^
+                   "| |              | | |              | | |              | |\n"^
+                   "| '--------------' | '--------------' | '--------------' |\n"^
+                   "'----------------' '----------------' '----------------' \n"));
+
   ANSITerminal.(print_string [cyan] "\nLet's deal you in");  
   do_play_game (State.init_state) m
 
@@ -134,11 +148,14 @@ let rec main () =
     match (pname, read_line ()) with
     | ("",_) -> print_endline "\nYou must enter something for 
   both your name and the level"; main ()
-    |(_,"") -> "\nYou must enter something for 
+    |(_,"") -> print_endline "\nYou must enter something for 
   both your name and the level"; main ()
-    |("","")-> "\nYou must enter something for 
+    |("","")-> print_endline "\nYou must enter something for 
   both your name and the level"; main ()
     | (name, mode) -> if (mode="easy"||mode="hard"||mode="medium") then play_game pname mode
-      else "Invalid mode try again!\nHint: type in either 'easy' , 'medium' or  'hard'"; main();
+      else 
+        print_endline "Invalid mode try again!"^
+        "\nHint: type in either 'easy','medium' or 'hard'"; 
+      main();
 
       let () = main ()
