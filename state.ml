@@ -361,7 +361,7 @@ let dumb_ai_turn st : t=
 
 let medium_ai_turn st : t = 
   match Deck.get_medium_card st.current_card st.ai_hand with
-  |None -> draw st "ai"
+  |None ->draw st "ai"
   |Some x -> put_medium_ai x st 
 
 let supreme_ai_turn st : t = 

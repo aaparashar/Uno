@@ -177,8 +177,10 @@ let rec main () =
   both your name and the level"; main ()
   |(_,"") -> print_endline "\nYou must enter something for 
   both your name and the level"; main ()
-  | (name, mode) -> if (mode="easy"||mode="hard"||mode="medium") then play_game pname mode
+  | (name, mode) ->( if (mode="easy"||mode="hard"||mode="medium") then play_game pname mode
     else 
       print_endline ("Invalid mode try again!"^
                      "\nHint: type in either 'easy','medium' or 'hard'"); 
-    main();
+    main();)
+
+let () = main ()
