@@ -138,6 +138,6 @@ val change_wild_color : card -> string -> card
 (** [random_color] is a random color. *)
 val random_color : color
 
-val majority_color : t -> color
+val majority_color : t -> color list
 
 val get_medium_card : card -> t -> card option

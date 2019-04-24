@@ -161,9 +161,14 @@ let top_card d =
 let is_valid  card1 card2 = 
   match (card1,card2) with
   |(Num_Card n1,Num_Card n2) -> n1.color= n2.color || n1.number = n2.number
-  |(Power_Card p1, Power_Card p2) -> p1.power=p2.power ||p1.color=p2.color
+  |(Power_Card p1, Power_Card p2) -> p1.power=p2.power || p1.color=p2.color 
+                                  || p1.power = Wild || p1.power = Draw_Four
+                                  || p2.power = Wild || p2.power = Draw_Four  
   |(Num_Card n1,Power_Card p1) -> n1.color= p1.color 
+                                  || p1.power = Wild || p1.power = Draw_Four 
   |(Power_Card p1, Num_Card n1) -> n1.color= p1.color 
+                                   || p1.power = Wild || p1.power = Draw_Four 
+  |_ -> false
 
 let len d = List.length d
 
@@ -254,9 +259,26 @@ let majority_color (d:t) =
   let y = count_color 0 Yellow d in 
   let g = count_color 0 Green d in 
   let b = count_color 0 Blue d in 
-  let max1 = if r > y then Red else Yellow in 
-  let max2 = if g > (max r y ) then Green else max1 in 
-  if b >( max g (max r y)) then Blue else max2
+
+  let color_list = [(Red, r); (Yellow, y); (Green, g); (Blue, b)] in
+  let color_order = color_list |> List.sort 
+                   (fun (_, num1) (_, num2) -> num1 - num2) |> List.rev in 
+  let majority_colors = color_order |> List.split |> fst 
+  (* let max1 = if r > y then Red 
+             else if r = y then match Random.int 1 with 
+             | 0 -> Red
+             | 1 -> Blue 
+             else Yellow in 
+  let max2 = if g > (max r y ) then Green 
+             else if g = (max r y) then match Random.int 1 with 
+             | 0 -> Green
+             | 1 -> max1
+             else max1 in 
+  let max1 = if b >( max g (max r y)) then Blue 
+             else if b = (max g (max r y)) then match Random.int 1 with 
+             | 0 -> Blue
+             | 1 -> max2 
+            else max2 *)
 
 let get_medium_card c (d:t)  = 
   let rec remove_wilds acc (dk:t) : t = 
@@ -281,8 +303,15 @@ let get_medium_card c (d:t)  =
 
   let powerless = remove_powers [] wildless in 
   match powerless with 
-  | [] -> get_valid_card c wildless
+  | [] -> match wildless with
+          | [] -> get_valid_card c d
+          | _ -> get_valid_card c wildless
   | _ -> get_valid_card c powerless
+
+(* Helper function for [get_supreme_card. *)
+(** [remove_color col d] is deck d with all cards of color [col] removed. *)
+let remove_color col d =
+  List.filter (fun c -> card_col c <> col) d
 
 (* Helper function for [get_supreme_card]. *)
 (** [top_consecutive_color d] is a tuple containing the color of the top card
@@ -303,7 +332,6 @@ let top_consecutive_color (d:t) =
   match tcol with
   |Wild -> (tcol, 0)
   |_ -> (tcol, (consecutive_helper tcol 0 d))
-
 
 let get_supreme_card c (ai_hand:t) (p_hand:t) (g_played:t) 
                     (p_played:t) (ai_played:t) =
@@ -329,7 +357,18 @@ let get_supreme_card c (ai_hand:t) (p_hand:t) (g_played:t)
   try
     let best_card = List.find
       (fun cc -> match cc with
-      |Power_Card p when p.power Draw_Four && (is_valid cc c) -> true)
+      |Power_Card p when p.power Draw_Four -> true
+      |_ -> false) d in
+    let colorls1 = d |> majority_color in
+    let bestcolor1 = colorls |> List.hd in
+    let colorls2 = colorls1 |> List.tl in
+    let bestcolor2 = colorls2 |> List.hd in
+    let colorls3 = colorls2 |> List.tl
+    let bestcolor3 = colorls3 |> List.hd in
+    let bestcolor4 = colorls3 |> List.tl in
+    if (bestcolor1 <> p_played |> top_card |> card col) then
+      Some (best_card, bestcolor1)
+    else if ()
   end
   end
   end

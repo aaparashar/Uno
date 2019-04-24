@@ -269,7 +269,7 @@ let put_medium_ai c st : t =
                       draw (draw(draw (draw st "player") "player") "player") "player" in 
         ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
 
-        let col = Deck.string_of_color (Deck.majority_color st.ai_hand) in 
+        let col = Deck.string_of_color (List.hd (Deck.majority_color st.ai_hand)) in 
         let temp = Deck.change_wild_color c col in 
         ANSITerminal.(print_string [cyan]("\n AI changes the color to "
                                             ^ col));
