@@ -21,7 +21,7 @@ let create_state curr_c pl_h ai_h draw_d pl_d pl_pl ai_pl action is_turn : t =
    playing_deck = pl_d;
    player_played = pl_pl;
    ai_played = ai_pl;
-   lastp_action = action
+   lastp_action = action;
    turn = is_turn}
 
 (** [find_top c acc d ] checks if the top card c is a number card if it is not 
@@ -43,7 +43,7 @@ let init_state : t =
   let playing = snd (find_top (top_card playing) empty_deck playing) in 
   {current_card = top; players_hand = players; ai_hand= ai_deck; 
    draw_deck=remaining2; playing_deck= playing; player_played = empty_deck; 
-   ai_played = empty_deck; lastp_action = "None" turn = true}
+   ai_played = empty_deck; lastp_action = "None"; turn = true}
 
 let get_current_card (st:t) = st.current_card
 let get_players_hand st = st.players_hand

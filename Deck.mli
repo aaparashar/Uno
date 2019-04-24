@@ -75,6 +75,13 @@ val deal : t -> t*t
 (**[card_col c] is the color of card [c] *)
 val card_col: card -> string
 
+(** [card_val c] is the number (i.e. int) of num_card [c]. *)
+val card_val: card -> int * power 
+
+(** [val_to_string c] is the string form of the value of card [c]. The value
+    of [c] is either it's power or number.*)
+val val_to_string : card -> string
+
 (** [card_equals c1 c2] is true if and only if c1 and c2 are equivalent cards.*)
 val card_equals: card -> card -> bool
 
@@ -97,18 +104,11 @@ val len: t -> int
 (** [is_powercard c] is true if card [c] is a power card. *)
 val is_powercard: card -> bool
 
-(** [card_val c] is the number (i.e. int) of num_card [c]. *)
-val card_val: card -> int * power 
-
 (** [string_of_color c] is the string form of color c. *)
 val string_of_color : color -> string
 
 (** [string_of_power p] is the string form of power p. *)
 val string_of_power : power -> string
-
-(** [val_to_string c] is the string form of the value of card [c]. The value
-    of [c] is either it's power or number.*)
-val val_to_string : card -> string
 
 (** [list_card c] is a tuple that stores the color of card [c] and 
     its number or power. *)
@@ -142,4 +142,4 @@ val majority_color : t -> color list
 
 val get_medium_card : card -> t -> card option
 
-val get_supreme_card : card -> t -> t -> t -> t -> t -> string -> card * color option
+val get_supreme_card : card -> t -> t -> t -> t -> t -> string -> (card option * color) option
