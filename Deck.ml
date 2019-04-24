@@ -175,8 +175,8 @@ let card_equals c1 c2 =
   |(Power_Card p1, Power_Card p2) -> ((val_to_string c1) = (val_to_string c2)) && (p1.color = p2.color)
   |(Num_Card n1,Power_Card p1) -> ((val_to_string c1) = (val_to_string c2)) && (n1.color = p1.color)
   |(Power_Card p1, Num_Card n1) -> ((val_to_string c1) = (val_to_string c2)) && (p1.color = n1.color)
-  |_ -> false
-  
+
+
 
 let add_card (c:card) (d:t) :t = c::d
 
@@ -196,13 +196,13 @@ let is_valid  card1 card2 =
   match (card1,card2) with
   |(Num_Card n1,Num_Card n2) -> n1.color= n2.color || n1.number = n2.number
   |(Power_Card p1, Power_Card p2) -> p1.power=p2.power || p1.color=p2.color 
-                                  || p1.power = Wild || p1.power = Draw_Four
-                                  || p2.power = Wild || p2.power = Draw_Four  
+                                     || p1.power = Wild || p1.power = Draw_Four
+                                     || p2.power = Wild || p2.power = Draw_Four  
   |(Num_Card n1,Power_Card p1) -> n1.color= p1.color 
                                   || p1.power = Wild || p1.power = Draw_Four 
   |(Power_Card p1, Num_Card n1) -> n1.color= p1.color 
                                    || p1.power = Wild || p1.power = Draw_Four 
-  |_ -> false
+
 
 let len d = List.length d
 
@@ -268,32 +268,32 @@ let majority_color (d:t) =
 
   let color_list = [(Red, r); (Yellow, y); (Green, g); (Blue, b)] in
   let color_order = color_list |> List.sort 
-                   (fun (_, num1) (_, num2) -> num1 - num2) |> List.rev in 
-    color_order |> List.split |> fst 
-  (* let max1 = if r > y then Red 
-             else if r = y then match Random.int 1 with 
-             | 0 -> Red
-             | 1 -> Blue 
-             else Yellow in 
-  let max2 = if g > (max r y ) then Green 
-             else if g = (max r y) then match Random.int 1 with 
-             | 0 -> Green
-             | 1 -> max1
-             else max1 in 
-  let max1 = if b >( max g (max r y)) then Blue 
-             else if b = (max g (max r y)) then match Random.int 1 with 
-             | 0 -> Blue
-             | 1 -> max2 
-            else max2 *)
+                      (fun (_, num1) (_, num2) -> num1 - num2) |> List.rev in 
+  color_order |> List.split |> fst 
+(* let max1 = if r > y then Red 
+           else if r = y then match Random.int 1 with 
+           | 0 -> Red
+           | 1 -> Blue 
+           else Yellow in 
+   let max2 = if g > (max r y ) then Green 
+           else if g = (max r y) then match Random.int 1 with 
+           | 0 -> Green
+           | 1 -> max1
+           else max1 in 
+   let max1 = if b >( max g (max r y)) then Blue 
+           else if b = (max g (max r y)) then match Random.int 1 with 
+           | 0 -> Blue
+           | 1 -> max2 
+          else max2 *)
 
 
 (* Helper function for [get_medium_card] and [get_supreme_card]. *)
 let sort_card_num d =
   d |> List.sort (fun x y -> match x,y with 
-    |(Num_Card n1,Num_Card n2) -> n2.number - n1.number
-    |(Power_Card p1, Power_Card p2) -> 0
-    |(Num_Card n1,Power_Card p1) -> 1
-    |(Power_Card p1, Num_Card n1) -> -1
+      |(Num_Card n1,Num_Card n2) -> n2.number - n1.number
+      |(Power_Card p1, Power_Card p2) -> 0
+      |(Num_Card n1,Power_Card p1) -> 1
+      |(Power_Card p1, Num_Card n1) -> -1
     )
 
 (* Helper function for [get_medium_card] and [get_supreme_card]. *)
@@ -301,7 +301,7 @@ let rec remove_wilds acc (dk:t) : t =
   match dk with 
   | [] -> acc
   | Power_Card p::t -> if p.color = Wild then remove_wilds acc t 
-                       else remove_wilds (Power_Card p::acc) t
+    else remove_wilds (Power_Card p::acc) t
   | Num_Card n :: t -> remove_wilds acc t 
 
 (* Helper function for [get_medium_card] and [get_supreme_card]. *)
@@ -316,12 +316,12 @@ let get_medium_card c (d:t)  =
   match wildless with
   | [] -> get_valid_card c d
   | _ ->
-  begin
-  let powerless = remove_powers [] wildless in 
-  match powerless with 
-  | [] -> get_valid_card c d
-  | _ -> powerless |> sort_card_num |> get_valid_card c
-  end 
+    begin
+      let powerless = remove_powers [] wildless in 
+      match powerless with 
+      | [] -> get_valid_card c d
+      | _ -> powerless |> sort_card_num |> get_valid_card c
+    end 
 
 (* Helper function for [get_supreme_card]. *)
 (** [remove_color col d] is deck d with all cards of color [col] removed. *)
@@ -334,15 +334,15 @@ let rec contains_color (col:color) d : bool =
   match d with
   | [] -> false
   | h::t -> if (card_col h) = (string_of_color col) then true 
-            else contains_color col t
+    else contains_color col t
 
 (* Helper function for [get_supreme_card]. *)
 (** [find_color col d] returns a card option containing a card in deck [d]
     with color [col] or [Wild], or [None] if no such card exist. *)
 let find_color (col:color) d : card option =
-    List.find_opt (fun c -> match c with 
+  List.find_opt (fun c -> match c with 
       | Power_Card p -> (p.color = col) || (p.color = Wild) 
-      | Num_Card n -> (n.color = col) | _ -> failwith "how even?") d
+      | Num_Card n -> (n.color = col) ) d
 
 (** Helper function for [get_supreme_card]. *)
 let get_best_color h d : color =
@@ -356,13 +356,13 @@ let get_best_color h d : color =
   let best_color4 = colorls3 |> List.hd in
   let pcol = d |> top_card |> card_col |> color_of_string in
   if (best_color1 <> pcol && (contains_color best_color1 h))
-    then best_color1
+  then best_color1
   else if (best_color2 <> pcol  && (contains_color best_color2 h))
-    then best_color2
+  then best_color2
   else if (best_color3 <> pcol && (contains_color best_color3 h)) 
-    then best_color1
+  then best_color1
   else if (contains_color best_color4 h)
-    then best_color1
+  then best_color1
   else 
     List.find (fun clr -> clr <> pcol) colorls1
 
@@ -373,7 +373,7 @@ let get_best_color h d : color =
     the streak is 0. *)
 let top_consecutive_color (d:t) = 
   let rec consecutive_helper col acc dk =
-  match dk with
+    match dk with
     | [] -> acc
     | h::t when (card_col h) <> col -> acc
     | h::t when (card_col h) = "wild" -> acc + 1
@@ -388,67 +388,67 @@ let top_consecutive_color (d:t) =
 
 let get_supreme_card c (ai_hand:t) (p_hand:t) (p_played:t) lastp_action =
   let tconsc = top_consecutive_color p_played in
-  let scol = fst tconsc in
+
   let streak = snd tconsc in
   if len (p_hand) = 1 then begin
-  try
-    let best_card = List.find
-      (fun cc -> match cc with
-      |Power_Card p when p.power = Draw_Four -> true
-      |_ -> false) ai_hand in
-    let colorls1 = ai_hand |> majority_color in
-    let best_color1 = colorls1 |> List.hd in
-    let colorls2 = colorls1 |> List.tl in
-    let best_color2 = colorls2 |> List.hd in
-    let colorls3 = colorls2 |> List.tl in
-    let best_color3 = colorls3 |> List.hd in
-    let best_color4 = colorls3 |> List.hd in
-    let pcol = p_played |> top_card |> card_col |> color_of_string in
-    if (best_color1 <> pcol && (contains_color best_color1 ai_hand)) then
-      (Some best_card, best_color1)
-    else if (best_color2 <> pcol && (contains_color best_color2 ai_hand)) then
-      (Some best_card, best_color2)
-    else if (best_color3 <> pcol && (contains_color best_color3 ai_hand)) then
-      (Some best_card, best_color3)
-    else if (contains_color best_color4 ai_hand) then
-      (Some best_card, best_color4)
-    else 
-      (Some best_card, (List.find (fun clr -> clr <> pcol ) colorls1))
+    try
+      let best_card = List.find
+          (fun cc -> match cc with
+             |Power_Card p when p.power = Draw_Four -> true
+             |_ -> false) ai_hand in
+      let colorls1 = ai_hand |> majority_color in
+      let best_color1 = colorls1 |> List.hd in
+      let colorls2 = colorls1 |> List.tl in
+      let best_color2 = colorls2 |> List.hd in
+      let colorls3 = colorls2 |> List.tl in
+      let best_color3 = colorls3 |> List.hd in
+      let best_color4 = colorls3 |> List.hd in
+      let pcol = p_played |> top_card |> card_col |> color_of_string in
+      if (best_color1 <> pcol && (contains_color best_color1 ai_hand)) then
+        (Some best_card, best_color1)
+      else if (best_color2 <> pcol && (contains_color best_color2 ai_hand)) then
+        (Some best_card, best_color2)
+      else if (best_color3 <> pcol && (contains_color best_color3 ai_hand)) then
+        (Some best_card, best_color3)
+      else if (contains_color best_color4 ai_hand) then
+        (Some best_card, best_color4)
+      else 
+        (Some best_card, (List.find (fun clr -> clr <> pcol ) colorls1))
     with
     | _ -> begin
-  try 
-    let best_card = List.find
-        (fun cc -> match cc with
-        |Power_Card p when p.power = Draw_Two && (is_valid cc c) -> true
-        |_ -> false) ai_hand in
-        (Some best_card, c |> card_col |> color_of_string)
-  with
-  | _ -> begin
-  try
-    let best_card = List.find 
-        (fun cc ->  match cc with 
-        |Power_Card p when p.power = Skip && (is_valid cc c) -> true
-        |Power_Card p when p.power = Reverse && (is_valid cc c) -> true
-        | _ -> false) ai_hand in
-        (Some best_card, c |> card_col |> color_of_string)
-  with 
-  | _ -> let bc_opt = get_medium_card c ai_hand in 
-        (bc_opt, c |> card_col |> color_of_string)
-  end
-  end
+        try 
+          let best_card = List.find
+              (fun cc -> match cc with
+                 |Power_Card p when p.power = Draw_Two && (is_valid cc c) -> true
+                 |_ -> false) ai_hand in
+          (Some best_card, c |> card_col |> color_of_string)
+        with
+        | _ -> begin
+            try
+              let best_card = List.find 
+                  (fun cc ->  match cc with 
+                     |Power_Card p when p.power = Skip && (is_valid cc c) -> true
+                     |Power_Card p when p.power = Reverse && (is_valid cc c) -> true
+                     | _ -> false) ai_hand in
+              (Some best_card, c |> card_col |> color_of_string)
+            with 
+            | _ -> let bc_opt = get_medium_card c ai_hand in 
+              (bc_opt, c |> card_col |> color_of_string)
+          end
+      end
   end
   else if (lastp_action = "draw") then begin
     let wildless = remove_wilds [] ai_hand in
     let bc_opt =
-    match wildless with
+      match wildless with
       | [] -> get_valid_card c ai_hand
       | _ ->
-    begin
-    let powerless = remove_powers [] wildless in 
-    match powerless with 
-    | [] -> get_valid_card c wildless 
-    | _ -> powerless |> sort_card_num |> find_color (c |> card_col |> color_of_string) 
-    end in
+        begin
+          let powerless = remove_powers [] wildless in 
+          match powerless with 
+          | [] -> get_valid_card c wildless 
+          | _ -> powerless |> sort_card_num |> find_color (c |> card_col |> color_of_string) 
+        end in
     match bc_opt with
     | None -> ((get_medium_card c ai_hand), c |> card_col |> color_of_string)
     | s -> (s, c |> card_col |> color_of_string)
@@ -458,14 +458,14 @@ let get_supreme_card c (ai_hand:t) (p_hand:t) (p_played:t) lastp_action =
     let powerless = remove_powers [] wildless in 
     let best_color = get_best_color powerless p_played in
     let bc_opt =
-    match wildless with
+      match wildless with
       | [] -> get_valid_card c ai_hand
       | _ -> 
-    begin
-    match powerless with 
-      | [] -> get_valid_card c wildless 
-      | _ -> powerless |> sort_card_num |> find_color best_color 
-    end in
+        begin
+          match powerless with 
+          | [] -> get_valid_card c wildless 
+          | _ -> powerless |> sort_card_num |> find_color best_color 
+        end in
     match bc_opt with
     | None -> ((get_medium_card c ai_hand), best_color)
     | s -> (s, best_color)
@@ -473,6 +473,6 @@ let get_supreme_card c (ai_hand:t) (p_hand:t) (p_played:t) lastp_action =
   else 
     let best_card = get_medium_card c ai_hand in 
     match best_card with
-      | None -> (best_card, Red)
-      | Some c -> (best_card, c |> card_col |> color_of_string)
-     
+    | None -> (best_card, Red)
+    | Some c -> (best_card, c |> card_col |> color_of_string)
+

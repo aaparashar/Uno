@@ -17,10 +17,10 @@ val print_hand : Deck.t -> unit
 val print_card : card -> string
 
 (** [do_play_game] executes the game engine *)
-val do_play_game : State.t -> unit
+val do_play_game : State.t -> string -> unit
 
 (** [play_game] calls [do_play_game]*)
-val play_game : string -> unit
+val play_game : string -> string-> unit
 
 (** [main] prompts the game to begin, and then calls [play_game] *)
 val main : unit -> unit

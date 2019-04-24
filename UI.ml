@@ -13,18 +13,18 @@ let style_color color =
 
 let pp_card (c:card) = 
   let sty = style_color (Deck.card_col c) in
-  ANSITerminal.(print_string sty ((Deck.card_col c)^" "^string_of_int(Deck.card_num c)))
+  ANSITerminal.(print_string sty ((Deck.card_col c)^" "^Deck.val_to_string c))
 
 (* string version*)
 let print_card c =
-  (Deck.card_col c )^" "^(string_of_int (Deck.card_num c))
+  (Deck.card_col c )^" "^(Deck.val_to_string c)
 
 let num_card_art c =
   let sty = style_color (Deck.card_col c) in
   ANSITerminal.(print_string sty
                   (" -——\n"^
                    "|   |\n"^
-                   "| " ^ (string_of_int (Deck.card_num c))^ " |"^
+                   "| " ^ (Deck.val_to_string c)^ " |"^
                    "|   |"^
                    " -——"))
 let rec generate_art str s =
@@ -35,11 +35,11 @@ let rec generate_art str s =
 let power_card_art c = 
   let sty = style_color (Deck.card_col c) in
   ANSITerminal.(print_string sty 
-                  (generate_art "-" ((String.length (Deck.val_to_string c) +2)
-                                     ^"\n|" ^generate_art " " ((String.length (Deck.val_to_string c) +2))^"|\n"^ 
-                                     "|"^ (Deck.val_to_string c)^"|"
-                                     ^"\n|" ^generate_art " " ((String.length (Deck.val_to_string c) +2))^"|\n"^ 
-                                     generate_art "-" ((String.length (Deck.val_to_string c) +2)))))
+                  (generate_art "-" ((String.length (Deck.val_to_string c) +2))
+                   ^"\n|" ^(generate_art " " ((String.length (Deck.val_to_string c) +2)))^"|\n"^ 
+                   "|"^ (Deck.val_to_string c)^"|"
+                   ^"\n|" ^(generate_art " " ((String.length (Deck.val_to_string c) +2)))^"|\n"^ 
+                   (generate_art "-" ((String.length (Deck.val_to_string c) +2)))))
 
 
 
@@ -95,7 +95,7 @@ let rec do_play_game (st: State.t) (mode:string) =
            is_num_card (int_of_string s) c
          with Failure "int_of_string" ->
            is_pow_card s c
-        in
+       in
        let card_comp = String.split_on_char ',' out_string in
        if List.length card_comp = 2 && 
           is_card (List.nth card_comp 1) (List.nth card_comp 0) then
@@ -105,7 +105,7 @@ let rec do_play_game (st: State.t) (mode:string) =
              try
                Deck.create_num_card col (int_of_string (List.nth card_comp 1)) 
              with Failure "int_of_string" ->
-               Deck.create_pow_card col (List.nth car_comp 1)
+               Deck.create_pow_card col (List.nth card_comp 1)
            in
            match State.put c st "player" with
            | newState -> 
@@ -131,10 +131,11 @@ let rec do_play_game (st: State.t) (mode:string) =
   end
   else 
     ANSITerminal.(print_string[white] "\nAI is playing\n");
-  if s = "easy" then
+  if mode = "easy" then
     do_play_game (State.dumb_ai_turn st) mode
-  else if s="medium"  then do_play_game (State.medium_ai_turn st) mode
-  else try do_play_game (State.supreme_ai_turn st) mode with | _ -> failwith "AI made illegal move!" 
+  else if mode="medium"  then do_play_game (State.medium_ai_turn st) mode
+  else try do_play_game (State.supreme_ai_turn st) mode 
+    with | _ -> failwith "AI made illegal move!" 
 
 
 
@@ -168,18 +169,16 @@ let rec main () =
   print_endline "Please enter your player name:\n";
   ANSITerminal.(print_string [white]  "> ");
   let pname =read_line() in
-      print_endline "\nPlease enter whether you would like easy medium 
+  print_endline "\nPlease enter whether you would like easy medium 
       or hard mode:\n";
-    ANSITerminal.(print_string [white]  "> ");
-    match (pname, read_line ()) with
-    | ("",_) -> print_endline "\nYou must enter something for 
+  ANSITerminal.(print_string [white]  "> ");
+  match (pname, read_line ()) with
+  | ("",_) -> print_endline "\nYou must enter something for 
   both your name and the level"; main ()
-    |(_,"") -> print_endline "\nYou must enter something for 
+  |(_,"") -> print_endline "\nYou must enter something for 
   both your name and the level"; main ()
-    |("","")-> print_endline "\nYou must enter something for 
-  both your name and the level"; main ()
-    | (name, mode) -> if (mode="easy"||mode="hard"||mode="medium") then play_game pname mode
-      else 
-        print_endline "Invalid mode try again!"^
-        "\nHint: type in either 'easy','medium' or 'hard'"; 
-      main();
+  | (name, mode) -> if (mode="easy"||mode="hard"||mode="medium") then play_game pname mode
+    else 
+      print_endline ("Invalid mode try again!"^
+                     "\nHint: type in either 'easy','medium' or 'hard'"); 
+    main();
