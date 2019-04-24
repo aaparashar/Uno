@@ -72,6 +72,12 @@ val shuffle : t -> t
 (** [deal d] is a hand of seven cards dealt from deck [d] *)
 val deal : t -> t*t
 
+(**[card_col c] is the color of card [c] *)
+val card_col: card -> string
+
+(** [card_equals c1 c2] is true if and only if c1 and c2 are equivalent cards.*)
+val card_equals: card -> card -> bool
+
 (** [add_card c d] is deck [d] with card [c] add to the top *)
 val add_card: card -> t -> t 
 
@@ -104,18 +110,12 @@ val string_of_power : power -> string
     of [c] is either it's power or number.*)
 val val_to_string : card -> string
 
-(**[card_col c] is the color of card [c] *)
-val card_col: card -> string
-
 (** [list_card c] is a tuple that stores the color of card [c] and 
     its number or power. *)
 val list_card: card -> string*string
 
 (** [to_list t] is a list of tuples that contains the cards of deck [t]. *)
 val to_list: t -> (string*string) list
-
-(** [card_equals c1 c2] is true if and only if c1 and c2 are equivalent cards.*)
-val card_equals: card -> card -> bool
 
 (** [deck_contains c d] is true if card [c] is in deck [d]. *)
 val deck_contains: card -> t -> bool
@@ -141,3 +141,5 @@ val random_color : color
 val majority_color : t -> color list
 
 val get_medium_card : card -> t -> card option
+
+val get_supreme_card : card -> t -> t -> t -> t -> t -> string -> card * color option

@@ -16,9 +16,9 @@ type t
 exception Invalid_Move
 
 (** [create_state c pl_h a_h d_d pl_d turn] is a state defined by the values
-    [c], [pl_h], [a_h], [d_d], [pl_d] [pl_pl] [ai_pl] [turn]. For testing 
+    [c], [pl_h], [a_h], [d_d], [pl_d] [pl_pl] [ai_pl] [action] [turn]. For testing 
     purposes. *)
-val create_state : Deck.card -> Deck.t -> Deck.t -> Deck.t -> Deck.t -> Deck.t -> Deck.t -> bool -> t
+val create_state : Deck.card -> Deck.t -> Deck.t -> Deck.t -> Deck.t -> Deck.t -> Deck.t -> string -> bool -> t
 
 (** [init_state d] is the initial state of the game when given a deck [d].
     In that state, the deck is shuffled and each player is dealt seven cards *)

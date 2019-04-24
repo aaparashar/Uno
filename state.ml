@@ -7,12 +7,13 @@ type t = {
   playing_deck : Deck.t;
   player_played : Deck.t;
   ai_played : Deck.t;
+  lastp_action: string;
   turn : bool;
 } 
 
 exception Invalid_Move
 
-let create_state curr_c pl_h ai_h draw_d pl_d pl_pl ai_pl is_turn : t =
+let create_state curr_c pl_h ai_h draw_d pl_d pl_pl ai_pl action is_turn : t =
   {current_card = curr_c; 
    players_hand = pl_h; 
    ai_hand = ai_h;
@@ -20,6 +21,7 @@ let create_state curr_c pl_h ai_h draw_d pl_d pl_pl ai_pl is_turn : t =
    playing_deck = pl_d;
    player_played = pl_pl;
    ai_played = ai_pl;
+   lastp_action = action
    turn = is_turn}
 
 (** [find_top c acc d ] checks if the top card c is a number card if it is not 
@@ -41,7 +43,7 @@ let init_state : t =
   let playing = snd (find_top (top_card playing) empty_deck playing) in 
   {current_card = top; players_hand = players; ai_hand= ai_deck; 
    draw_deck=remaining2; playing_deck= playing; player_played = empty_deck; 
-   ai_played = empty_deck; turn = true}
+   ai_played = empty_deck; lastp_action = "None" turn = true}
 
 let get_current_card (st:t) = st.current_card
 let get_players_hand st = st.players_hand
@@ -57,20 +59,23 @@ let get_turn st = st.turn
 let draw (st:t) s : t = 
   if (st.draw_deck = empty_deck && s= "player") then 
     let reset = {st with draw_deck=shuffle (remove_card st.current_card st.playing_deck); 
-                         playing_deck = add_card st.current_card empty_deck} in 
+                 playing_deck = add_card st.current_card empty_deck} in 
     {reset with players_hand = (add_card (top_card reset.draw_deck) reset.players_hand); 
-                draw_deck = remove_card (top_card reset.draw_deck) reset.draw_deck; turn = false;}
+     draw_deck = remove_card (top_card reset.draw_deck) reset.draw_deck; 
+     lastp_action = "draw"; turn = false;}
   else if (st.draw_deck = empty_deck && s= "ai") then 
     let reset = {st with draw_deck=shuffle (remove_card st.current_card st.playing_deck); 
-                         playing_deck = add_card st.current_card empty_deck} in 
+                 playing_deck = add_card st.current_card empty_deck} in 
     {reset with ai_hand = (add_card (top_card reset.draw_deck) reset.ai_hand); 
-                draw_deck = remove_card (top_card reset.draw_deck) reset.draw_deck;turn=true;}
+    draw_deck = remove_card (top_card reset.draw_deck) reset.draw_deck;
+    turn=true;}
   else if (s = "ai") then 
     {st with ai_hand = (add_card (top_card st.draw_deck) st.ai_hand); 
-             draw_deck = remove_card (top_card st.draw_deck) st.draw_deck;turn=true;}
+     draw_deck = remove_card (top_card st.draw_deck) st.draw_deck;turn=true;}
   else 
     {st with players_hand = (add_card (top_card st.draw_deck) st.players_hand); 
-             draw_deck = remove_card (top_card st.draw_deck) st.draw_deck;turn=false;}
+             draw_deck = remove_card (top_card st.draw_deck) st.draw_deck;
+             lastp_action = "draw"; turn=false;}
 
 (* When wild card is played: 
       Change color of wild card to the intended color and add to playing_deck
@@ -87,7 +92,7 @@ let put c (st:t) s : t =
                players_hand = remove_card c st.players_hand;  
                playing_deck= add_card c st.playing_deck; 
                player_played = add_card c st.player_played;
-               turn = false} 
+               lastp_action = "put"; turn = false} 
     else
       match (val_to_string c) with
       |"draw two" -> ANSITerminal.(print_string [cyan] 
@@ -108,7 +113,7 @@ let put c (st:t) s : t =
                       players_hand= remove_card c st.players_hand;  
                       playing_deck= add_card c st.playing_deck;
                       player_played = add_card temp st.player_played;
-                      turn = false}
+                      lastp_action = "put"; turn = false}
           with 
           | Deck.Invalid_Color malCol ->
             try 
@@ -117,12 +122,12 @@ let put c (st:t) s : t =
                                   players_hand = remove_card c st.players_hand;  
                                   playing_deck= add_card c st.playing_deck;
                                   player_played = add_card c st.player_played; 
-                                  turn = true} 
+                                  lastp_action = "put"; turn = true} 
               |"reverse" -> {st with current_card = c;
                                      players_hand = remove_card c st.players_hand;  
                                      playing_deck= add_card c st.playing_deck; 
                                      player_played = add_card c st.player_played; 
-                                     turn = true} 
+                                     lastp_action = "put"; turn = true} 
               |"wild" -> begin 
                   ANSITerminal.(print_string [cyan] ("\nWhat color do you choose?\n"));
                   ANSITerminal.(print_string [white] "> ");
@@ -133,7 +138,7 @@ let put c (st:t) s : t =
                              players_hand= remove_card c st.players_hand;  
                              playing_deck= add_card c st.playing_deck; 
                              player_played = add_card temp st.player_played; 
-                             turn = false}
+                             lastp_action = "put"; turn = false}
                   with
                   | Deck.Invalid_Color malcol -> raise (Invalid_Color malCol)
                 end
