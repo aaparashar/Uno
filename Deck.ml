@@ -386,8 +386,7 @@ let top_consecutive_color (d:t) =
   |"Wild" -> (tcol, 0)
   |_ -> (tcol, (consecutive_helper tcol 0 d))
 
-let get_supreme_card c (ai_hand:t) (p_hand:t) (g_played:t) 
-                    (p_played:t) (ai_played:t) lastp_action =
+let get_supreme_card c (ai_hand:t) (p_hand:t) (p_played:t) lastp_action =
   let tconsc = top_consecutive_color p_played in
   let scol = fst tconsc in
   let streak = snd tconsc in
@@ -406,15 +405,15 @@ let get_supreme_card c (ai_hand:t) (p_hand:t) (g_played:t)
     let best_color4 = colorls3 |> List.hd in
     let pcol = p_played |> top_card |> card_col |> color_of_string in
     if (best_color1 <> pcol && (contains_color best_color1 ai_hand)) then
-      Some (Some best_card, best_color1)
+      (Some best_card, best_color1)
     else if (best_color2 <> pcol && (contains_color best_color2 ai_hand)) then
-      Some (Some best_card, best_color2)
+      (Some best_card, best_color2)
     else if (best_color3 <> pcol && (contains_color best_color3 ai_hand)) then
-      Some (Some best_card, best_color3)
+      (Some best_card, best_color3)
     else if (contains_color best_color4 ai_hand) then
-      Some (Some best_card, best_color4)
+      (Some best_card, best_color4)
     else 
-      Some (Some best_card, (List.find (fun clr -> clr <> pcol ) colorls1))
+      (Some best_card, (List.find (fun clr -> clr <> pcol ) colorls1))
     with
     | _ -> begin
   try 
@@ -422,7 +421,7 @@ let get_supreme_card c (ai_hand:t) (p_hand:t) (g_played:t)
         (fun cc -> match cc with
         |Power_Card p when p.power = Draw_Two && (is_valid cc c) -> true
         |_ -> false) ai_hand in
-    Some (Some best_card, c |> card_col |> color_of_string)
+        (Some best_card, c |> card_col |> color_of_string)
   with
   | _ -> begin
   try
@@ -431,10 +430,10 @@ let get_supreme_card c (ai_hand:t) (p_hand:t) (g_played:t)
         |Power_Card p when p.power = Skip && (is_valid cc c) -> true
         |Power_Card p when p.power = Reverse && (is_valid cc c) -> true
         | _ -> false) ai_hand in
-    Some (Some best_card, c |> card_col |> color_of_string)
+        (Some best_card, c |> card_col |> color_of_string)
   with 
   | _ -> let bc_opt = get_medium_card c ai_hand in 
-        Some (bc_opt, c |> card_col |> color_of_string)
+        (bc_opt, c |> card_col |> color_of_string)
   end
   end
   end
@@ -451,8 +450,8 @@ let get_supreme_card c (ai_hand:t) (p_hand:t) (g_played:t)
     | _ -> powerless |> sort_card_num |> find_color (c |> card_col |> color_of_string) 
     end in
     match bc_opt with
-    | None -> Some ((get_medium_card c ai_hand), c |> card_col |> color_of_string)
-    | s -> Some (s, c |> card_col |> color_of_string)
+    | None -> ((get_medium_card c ai_hand), c |> card_col |> color_of_string)
+    | s -> (s, c |> card_col |> color_of_string)
   end
   else if (streak > 1) then begin
     let wildless = remove_wilds [] ai_hand in
@@ -468,12 +467,12 @@ let get_supreme_card c (ai_hand:t) (p_hand:t) (g_played:t)
       | _ -> powerless |> sort_card_num |> find_color best_color 
     end in
     match bc_opt with
-    | None -> Some ((get_medium_card c ai_hand), best_color)
-    | s -> Some (s, best_color)
+    | None -> ((get_medium_card c ai_hand), best_color)
+    | s -> (s, best_color)
   end
   else 
     let best_card = get_medium_card c ai_hand in 
     match best_card with
-      | None ->  Some (best_card, Red)
-      | Some c -> Some (best_card, c |> card_col |> color_of_string)
+      | None -> (best_card, Red)
+      | Some c -> (best_card, c |> card_col |> color_of_string)
      

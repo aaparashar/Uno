@@ -142,4 +142,4 @@ val majority_color : t -> color list
 
 val get_medium_card : card -> t -> card option
 
-val get_supreme_card : card -> t -> t -> t -> t -> t -> string -> (card option * color) option
+val get_supreme_card : card -> t -> t -> t -> string -> card option * color

@@ -305,7 +305,53 @@ let put_medium_ai c st : t =
 
   else raise Invalid_Move
 
+let put_supreme_ai c col st : t =
+  if (is_valid c st.current_card && Deck.deck_contains c st.ai_hand)
+  then match (Deck.type_to_string c )with 
+    |"number card" -> {st with current_card = c;
+                       ai_hand = remove_card c st.ai_hand;  
+                       playing_deck= add_card c st.playing_deck; 
+                       ai_played = add_card c st.ai_played; 
+                       turn = false} 
+    |"power card" -> ( match Deck.string_of_power (Deck.get_power c) with
+      |"draw two" -> draw (draw st "player") "player"
+      |"draw four" -> let st2 = 
+                      draw (draw(draw (draw st "player") "player") "player") "player" in 
+        ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
 
+        let temp = Deck.change_wild_color c col in 
+        ANSITerminal.(print_string [cyan]("\n AI changes the color to "
+                                            ^ col));
+        {st2 with current_card = temp;
+                  ai_hand = (remove_card c st.ai_hand);  
+                  playing_deck= (add_card c st.playing_deck); 
+                  ai_played = add_card temp st.ai_played; 
+                  turn = true};
+
+      |"skip" -> {st with current_card = c;
+                        ai_hand = remove_card c st.ai_hand;  
+                        playing_deck= add_card c st.playing_deck; 
+                        ai_played = add_card c st.ai_played; 
+                        turn = false} 
+      |"reverse" ->{st with current_card = c;
+                          ai_hand = remove_card c st.ai_hand;  
+                          playing_deck= add_card c st.playing_deck; 
+                          ai_played = add_card c st.ai_played; 
+                          turn = false} 
+
+      |"wild" ->  
+        let temp = Deck.change_wild_color c col in 
+        ANSITerminal.(print_string [cyan]("\n AI changes the color to "
+                                            ^ (col)));
+        {st with current_card = temp;
+                 ai_hand = remove_card c st.ai_hand;  
+                 playing_deck= add_card c st.playing_deck; 
+                 ai_played = add_card c st.ai_played; 
+                 turn = true};
+        | _ -> raise Invalid_Move)
+    | _ -> raise Invalid_Move
+
+  else raise Invalid_Move
 
 let dumb_ai_turn st : t= 
   match (get_valid_card st.current_card st.ai_hand) with
@@ -316,8 +362,13 @@ let dumb_ai_turn st : t=
 let medium_ai_turn st : t = 
   match Deck.get_medium_card st.current_card st.ai_hand with
   |None -> draw st "ai"
-  |Some x -> if (Deck.deck_contains x st.ai_hand) then put_medium_ai x st 
-             else raise Invalid_Move
+  |Some x -> put_medium_ai x st 
+
+let supreme_ai_turn st : t = 
+  match Deck.get_supreme_card st.current_card st.ai_hand st.players_hand 
+        st.player_played st.lastp_action with
+    |(None, col) -> draw st "ai"
+    |(Some c, col) -> put_supreme_ai c (string_of_color col) st
 
 (**TODO: counting cards mode *)
 (*let smart_ai_turn st =*)

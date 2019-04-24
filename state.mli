@@ -29,46 +29,59 @@ val init_state : t
 val get_current_card : t -> Deck.card
 
 (** [players_hand st] is the cards in the player's hand at state [st]*)
-val get_players_hand: t -> Deck.t
+val get_players_hand : t -> Deck.t
 
 (** [ai_hand st] is the cards in the AI's hand at state [st]*)
-val get_ai_hand: t -> Deck.t
+val get_ai_hand : t -> Deck.t
 
 (** [draw_deck st] is the remainder of the deck at state [st] from which
     players will draw cards*)
-val get_draw_deck: t -> Deck.t
+val get_draw_deck : t -> Deck.t
 
 (** [get_playing_deck st] is a deck at state [st] that contains all the cards 
     that have been played so far. *)
-val get_playing_deck: t -> Deck.t
+val get_playing_deck : t -> Deck.t
 
 (** [get_player_played st] is a deck at state [st] that contains all the cards
     played by the player so far. *)
-val get_player_played: t -> Deck.t
+val get_player_played : t -> Deck.t
 
 (** [get_ai_played st] is a deck at state [st] that contains all the cards
     played by the ai so far. *)
-val get_ai_played: t -> Deck.t
+val get_ai_played : t -> Deck.t
 
 (** [put  c st str] is a state after a card c has been put down on to the 
     playing deck by str.
     Raises: [Invalid_Move] if adding c violates one of the rules of Uno *)
-val put: Deck.card -> t ->  string -> t
+val put : Deck.card -> t ->  string -> t
 
 (** [draw st str] is a state after str picks a card from the drawing deck. 
     If the drawing deck was empty then the cards in the playing deck excluding 
     the current card get shuffled and put in the drawing deck. *)
-val draw: t -> string -> t
-
-(**[ai_turn st] is a state after the ai makes a move. Currently the ai has no
-   strategy and picks the first valid card if it has a valid card  otherwise it 
-   draws a card*)
-val dumb_ai_turn: t -> t
+val draw : t -> string -> t
 
 (** [get_turn st] is a boolean that indicates whose turn it is. if it is true 
     then it is the players turn. If it is false, the it is the ai's turn*)
-val get_turn: t ->bool
+val get_turn : t ->bool
 
 (** [has_won st] is true if either the player or the ai has won the game.
     Otherwise, it is false. *)
-val has_won: t -> bool
+val has_won : t -> bool
+
+(**[dumb_ai_turn st] is the state after the dumb ai makes a move. This ai has no
+   strategy and picks the first valid card if it has a valid card. Otherwise it 
+   draws a card*)
+val dumb_ai_turn : t -> t
+
+(**[medium_ai_turn st] is the state after the medium ai makes a move. The medium
+   ai uses a basic strategy. It picks the first valid number card. If there is
+   no valid number card in it's hand, it picks the the first valid power card.
+   If the ai puts down a Wild or Draw Four card, it will choose the color to 
+   change to based on what color of card it has the most of in it's hand. *)
+val medium_ai_turn : t -> t
+ 
+(** [supreme_ai turn] is the state after the supreme ai makes a move. The 
+    supreme ai employs various elite high iq undefeatable tactics against it's
+    unwitting fools. 
+    [@see < https://www.unorules.com/best-strategies-to-win-uno/ > {Explanation of strategies here.}] *)
+val supreme_ai_turn : t -> t 
