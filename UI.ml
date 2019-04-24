@@ -134,7 +134,7 @@ let rec do_play_game (st: State.t) (mode:string) =
   if s = "easy" then
     do_play_game (State.dumb_ai_turn st) mode
   else if s="medium"  then do_play_game (State.medium_ai_turn st) mode
-  else do_play_game (State.smart_ai_turn st) mode 
+  else try do_play_game (State.supreme_ai_turn st) mode with | _ -> failwith "AI made illegal move!" 
 
 
 
