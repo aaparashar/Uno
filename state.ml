@@ -314,9 +314,10 @@ let dumb_ai_turn st : t=
 
 
 let medium_ai_turn st : t = 
-  match (Deck.get_medium_card st.current_card st.ai_hand) with
+  match Deck.get_medium_card st.current_card st.ai_hand with
   |None -> draw st "ai"
-  |Some x -> put_medium_ai x st 
+  |Some x -> if (Deck.deck_contains x st.ai_hand) then put_medium_ai x st 
+             else raise Invalid_Move
 
 (**TODO: counting cards mode *)
 (*let smart_ai_turn st =*)
