@@ -114,6 +114,9 @@ val list_card: card -> string*string
 (** [to_list t] is a list of tuples that contains the cards of deck [t]. *)
 val to_list: t -> (string*string) list
 
+(** [card_equals c1 c2] is true if and only if c1 and c2 are equivalent cards.*)
+val card_equals: card -> card -> bool
+
 (** [deck_contains c d] is true if card [c] is in deck [d]. *)
 val deck_contains: card -> t -> bool
 

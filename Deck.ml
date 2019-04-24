@@ -145,12 +145,14 @@ let deal d =
   in deal' 7 d []
 
 let add_card (c:card) (d:t) :t = c::d
-let remove_card (c:card) (d:t) :t= 
+
+let remove_card (c:card) (d:t) :t = 
   let rec remove' (c2:card) d2 acc = 
     match d2 with
     |[] -> d
     |h::t -> if c2= h then acc@t else remove' c t (h::acc)
   in remove' c d []
+
 let top_card d = 
   match d with 
   |[] -> failwith "No Cards in Deck"
@@ -202,7 +204,14 @@ let list_card (c:card) =
 
 let to_list t = t |> List.map list_card
 
-let deck_contains (c:card) (d:t) = List.mem c d
+let card_equals c1 c2 =
+  (val_to_string h) = val_to_string c && (card_col h) = (card_col c)
+
+let rec deck_contains (c:card) (d:t) = 
+  match d with
+  | [] -> false
+  | h::t when (card_equals c h) -> true
+  | h::t -> deck_contains c t  
 
 let get_valid_card c (d:t) = 
   let rec valid' c2 = function 
@@ -274,3 +283,54 @@ let get_medium_card c (d:t)  =
   match powerless with 
   | [] -> get_valid_card c wildless
   | _ -> get_valid_card c powerless
+
+(* Helper function for [get_supreme_card]. *)
+(** [top_consecutive_color d] is a tuple containing the color of the top card
+    of deck [d] and an integer representing the number of consecutive cards of 
+    that color following the top card. If the color of the top card is wild,
+    the streak is 0. *)
+let top_consecutive_color (d:t) = 
+  let rec consecutive_helper col acc dk =
+  match dk with
+    | [] -> acc
+    | h::t when (card_col h) <> col -> acc
+    | h::t when (card_col h) = Wild -> acc + 1
+    | h::t -> consecutive_helper col (acc+1) t
+  in
+
+  let tc = top_card d in
+  let tcol = card_col tc in
+  match tcol with
+  |Wild -> (tcol, 0)
+  |_ -> (tcol, (consecutive_helper tcol 0 d))
+
+
+let get_supreme_card c (ai_hand:t) (p_hand:t) (g_played:t) 
+                    (p_played:t) (ai_played:t) =
+  
+  if len (p_hand) = 1 then begin
+  try
+    let best_card = List.find 
+        (fun cc ->  match cc with 
+        |Power_Card p when p.power = Skip && (is_valid cc c) -> true
+        |Power_Card p when p.power = Reverse && (is_valid cc c) -> true
+        | _ -> false) d in
+    Some (best_card, (d |> top_card |> card_col))
+  with 
+  | _ -> begin
+  try 
+    let best_card = List.find
+        (fun cc -> match cc with
+        |Power_Card p when p.power Draw_Two && (is_valid cc c) -> true)
+        |_ -> false) d in
+    Some (best_card, (d |> top_card |> card_col))
+  with
+  |_ -> begin
+  try
+    let best_card = List.find
+      (fun cc -> match cc with
+      |Power_Card p when p.power Draw_Four && (is_valid cc c) -> true)
+  end
+  end
+  end
+

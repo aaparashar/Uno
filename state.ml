@@ -259,10 +259,10 @@ let put c (st:t) s : t =
 let put_medium_ai c st : t =
   if (is_valid c st.current_card && Deck.deck_contains c st.ai_hand)
   then match (Deck.type_to_string c )with 
-    |"number card" ->{st with current_card = c;
-                         ai_hand = remove_card c st.ai_hand;  
-                         playing_deck= add_card c st.playing_deck; 
-                         turn = false} 
+    |"number card" -> {st with current_card = c;
+                       ai_hand = remove_card c st.ai_hand;  
+                       playing_deck= add_card c st.playing_deck; 
+                       turn = false} 
     |"power card" -> ( match Deck.string_of_power (Deck.get_power c) with
       |"draw two" -> draw (draw st "player") "player"
       |"draw four" -> let st2 = 
