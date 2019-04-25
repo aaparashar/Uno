@@ -86,7 +86,7 @@ let load_deck =
   let numbers = [0;1;2;3;4;5;6;7;8;9] in 
   let no_zero = [1;2;3;4;5;6;7;8;9] in
   let powers = ["skip"; "reverse"; "draw two"] in
-  let wild_powers = ["wild"; "draw four";"wild"; "draw four";"wild"; "draw four";"wild"; "draw four";"wild"; "draw four";"wild"; "draw four";"wild"; "draw four"] in
+  let wild_powers = ["wild"; "draw four"] in
   (load_num_color numbers "red") @
   (load_num_color numbers "yellow") @ 
   (load_num_color numbers "green") @
