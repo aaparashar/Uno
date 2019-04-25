@@ -272,10 +272,13 @@ let put c (st:t) s : t =
 let put_medium_ai c st : t =
   if (is_valid c st.current_card && Deck.deck_contains c st.ai_hand )
   then match (Deck.type_to_string c )with 
-    |"number card" -> {st with current_card = c;
+    |"number card" -> begin
+                  ANSITerminal.(print_string [cyan] ("\nThe AI has placed a number card"));
+                  {st with current_card = c;
                                ai_hand = remove_card c st.ai_hand;  
                                playing_deck= add_card c st.playing_deck; 
                                turn = true} 
+                    end 
     |"power card" -> ( match Deck.string_of_power (Deck.get_power c) with
         |"draw two" -> ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 2\n"));
         let st = draw (draw st "player") "player" in
@@ -320,13 +323,20 @@ let put_medium_ai c st : t =
 let put_supreme_ai c col st : t =
   if (is_valid c st.current_card && Deck.deck_contains c st.ai_hand)
   then match (Deck.type_to_string c )with 
-    |"number card" -> {st with current_card = c;
+    |"number card" ->  begin
+                      ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 2\n"));
+                      {st with current_card = c;
                                ai_hand = remove_card c st.ai_hand;  
                                playing_deck= add_card c st.playing_deck; 
                                ai_played = add_card c st.ai_played; 
-                               turn = false} 
+                               turn = true} 
+                               end
     |"power card" -> ( match Deck.string_of_power (Deck.get_power c) with
-        |"draw two" -> draw (draw st "player") "player"
+        |"draw two" -> begin
+        ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 2\n"));
+        let st = draw (draw st "player") "player" in
+        {st with ai_played = add_card c st.ai_played; turn = true}
+        end
         |"draw four" -> let st2 = 
                           draw (draw(draw (draw st "player") "player") "player") "player" in 
           ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
