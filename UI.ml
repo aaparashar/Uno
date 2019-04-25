@@ -130,12 +130,20 @@ let rec do_play_game (st: State.t) (mode:string) =
   end
   else begin
     ANSITerminal.(print_string[white] "\nAI is playing\n");
-    if mode = "easy" then
-      do_play_game (State.dumb_ai_turn st) mode
-    else if mode="medium"  then try do_play_game (State.medium_ai_turn st) mode
-      with | _ -> failwith "AI made illegal move!"
-    else try do_play_game (State.supreme_ai_turn st) mode 
-      with | _ -> failwith "AI made illegal move!" end
+    let next_state = 
+      if mode = "easy" then
+        State.dumb_ai_turn st
+      else if mode="medium"  then try State.medium_ai_turn st 
+        with | Invalid_Color t -> failwith "AI made invalid color!"
+             | Invalid_Power t -> failwith "AI made invalid power!"
+             | Invalid_Move -> failwith "AI made invalid move!"
+             | _ -> failwith "AI failed"
+      else try State.supreme_ai_turn st
+        with | _ -> failwith "AI made illegal move!" in 
+    ANSITerminal.(print_string [cyan]("\n AI played:\t"^(print_card (State.get_current_card next_state))));
+    try do_play_game next_state mode 
+    with | _ -> failwith "AI made illegal move" 
+  end
 
 
 

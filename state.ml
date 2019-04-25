@@ -100,7 +100,8 @@ let put c (st:t) s : t =
       |"draw two" -> ANSITerminal.(print_string [cyan] 
                                      ("\nThe AI has been dealt 2 cards"));
         let tempSt = draw (draw st "ai") "ai" in
-        {tempSt with players_hand = remove_card c st.players_hand;
+        {tempSt with current_card = c;
+                     players_hand = remove_card c st.players_hand;
                      player_played = add_card c st.player_played;}
       |"draw four" -> begin 
           let st2 = draw (draw(draw (draw st "ai") "ai") "ai") "ai" in
@@ -218,12 +219,15 @@ let put c (st:t) s : t =
                ai_hand = remove_card c st.ai_hand;  
                playing_deck= add_card c st.playing_deck; 
                ai_played = add_card c st.ai_played; 
-               turn = false} 
+               turn = true}
     else
       let pow = val_to_string c in 
       match pow with
       |"draw two" -> let st = draw (draw st "player") "player" in
-        {st with ai_played = add_card c st.ai_played}
+        {st with current_card = c;
+                 ai_played = add_card c st.ai_played;
+                 playing_deck = add_card c st.playing_deck;
+                 ai_hand = remove_card c st.ai_hand}
       |"draw four" -> begin
           let st2 =
             draw (draw (draw (draw st "player") "player") "player") "player" in 
@@ -235,7 +239,7 @@ let put c (st:t) s : t =
                     ai_hand = remove_card c st.ai_hand;  
                     playing_deck= add_card c st.playing_deck; 
                     ai_played = add_card temp st.ai_played; 
-                    turn = true}
+                    turn = false}
         end
       |"skip" -> {st with current_card = c;
                           ai_hand = remove_card c st.ai_hand;  
@@ -267,9 +271,13 @@ let put_medium_ai c st : t =
     |"number card" -> {st with current_card = c;
                                ai_hand = remove_card c st.ai_hand;  
                                playing_deck= add_card c st.playing_deck; 
-                               turn = false} 
+                               turn = true} 
     |"power card" -> ( match Deck.string_of_power (Deck.get_power c) with
-        |"draw two" -> draw (draw st "player") "player"
+        |"draw two" -> let st = draw (draw st "player") "player" in
+          {st with current_card = c;
+                   ai_hand = remove_card c st.ai_hand;
+                   playing_deck = add_card c st.playing_deck;
+                   turn = false}
         |"draw four" -> let st2 = 
                           draw (draw(draw (draw st "player") "player") "player") "player" in 
           ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
@@ -281,7 +289,7 @@ let put_medium_ai c st : t =
           {st2 with current_card = temp;
                     ai_hand = (remove_card c st.ai_hand);  
                     playing_deck= (add_card c st.playing_deck); 
-                    turn = true};
+                    turn = false};
 
         |"skip" -> {st with current_card = c;
                             ai_hand = remove_card c st.ai_hand;  
@@ -314,7 +322,11 @@ let put_supreme_ai c col st : t =
                                ai_played = add_card c st.ai_played; 
                                turn = false} 
     |"power card" -> ( match Deck.string_of_power (Deck.get_power c) with
-        |"draw two" -> draw (draw st "player") "player"
+        |"draw two" -> let st = draw (draw st "player") "player" in
+          {st with current_card = c;
+                   ai_hand = remove_card c st.ai_hand;
+                   playing_deck = add_card c st.playing_deck;
+                   turn = true}
         |"draw four" -> let st2 = 
                           draw (draw(draw (draw st "player") "player") "player") "player" in 
           ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
