@@ -220,9 +220,11 @@ let put c (st:t) s : t =
                ai_hand = remove_card c st.ai_hand;  
                playing_deck= add_card c st.playing_deck; 
                ai_played = add_card c st.ai_played; 
-               turn = false} 
+               turn = true} 
     else match (val_to_string c) with
-      |"draw two" -> let st = draw (draw st "player") "player" in
+      |"draw two" -> 
+        let st = draw (draw st "player") "player" in
+        ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 2\n"));
         {st with ai_played = add_card c st.ai_played}
       |"draw four" -> begin
           let st2 =
