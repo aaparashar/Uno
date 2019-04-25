@@ -128,13 +128,14 @@ let rec do_play_game (st: State.t) (mode:string) =
     | _ -> ANSITerminal.(print_string[cyan] out_string);
       do_play_game st mode
   end
-  else 
+  else begin
     ANSITerminal.(print_string[white] "\nAI is playing\n");
-  if mode = "easy" then
-    do_play_game (State.dumb_ai_turn st) mode
-  else if mode="medium"  then do_play_game (State.medium_ai_turn st) mode
-  else try do_play_game (State.supreme_ai_turn st) mode 
-    with | _ -> failwith "AI made illegal move!" 
+    if mode = "easy" then
+      do_play_game (State.dumb_ai_turn st) mode
+    else if mode="medium"  then try do_play_game (State.medium_ai_turn st) mode
+      with | _ -> failwith "AI made illegal move!"
+    else try do_play_game (State.supreme_ai_turn st) mode 
+      with | _ -> failwith "AI made illegal move!" end
 
 
 
