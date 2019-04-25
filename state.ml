@@ -100,10 +100,10 @@ let put c (st:t) s : t =
       |"draw two" -> ANSITerminal.(print_string [cyan] 
                                      ("\nThe AI has been dealt 2 cards"));
         let tempSt = draw (draw st "ai") "ai" in
-        {tempSt with player_played = add_card c st.player_played;}
+        {tempSt with players_hand = remove_card c st.players_hand;
+                     player_played = add_card c st.player_played;}
       |"draw four" -> begin 
           let st2 = draw (draw(draw (draw st "ai") "ai") "ai") "ai" in
-
           (*********************AMBITIOUS REFACTORING EFFORT***********************)
           ANSITerminal.(print_string [cyan] ("\nThe AI has been dealt 4 cards.
       \nWhat color do you choose?\n"));
@@ -117,38 +117,34 @@ let put c (st:t) s : t =
                       player_played = add_card temp st.player_played;
                       lastp_action = "put"; turn = false}
           with 
-          | Deck.Invalid_Color malCol ->
-            try 
-              match pow with
-              |"skip" -> {st with current_card = c;
-                                  players_hand = remove_card c st.players_hand;  
-                                  playing_deck= add_card c st.playing_deck;
-                                  player_played = add_card c st.player_played; 
-                                  lastp_action = "put"; turn = true} 
-              |"reverse" -> {st with current_card = c;
-                                     players_hand = remove_card c st.players_hand;  
-                                     playing_deck= add_card c st.playing_deck; 
-                                     player_played = add_card c st.player_played; 
-                                     lastp_action = "put"; turn = true} 
-              |"wild" -> begin 
-                  ANSITerminal.(print_string [cyan] ("\nWhat color do you choose?\n"));
-                  ANSITerminal.(print_string [white] "> ");
-                  let wildcol = read_line() in
-                  try
-                    let temp = change_wild_color c wildcol in
-                    {st with current_card = temp;
-                             players_hand= remove_card c st.players_hand;  
+          | Deck.Invalid_Color malCol -> raise Invalid_Move
+        end
+      |"skip" -> {st with current_card = c;
+                          players_hand = remove_card c st.players_hand;  
+                          playing_deck= add_card c st.playing_deck;
+                          player_played = add_card c st.player_played; 
+                          lastp_action = "put"; turn = true} 
+      |"reverse" -> {st with current_card = c;
+                             players_hand = remove_card c st.players_hand;  
                              playing_deck= add_card c st.playing_deck; 
-                             player_played = add_card temp st.player_played; 
-                             lastp_action = "put"; turn = false}
-                  with
-                  | Deck.Invalid_Color malcol -> raise (Invalid_Color malCol)
-                end
-              | _ -> raise (Invalid_Color wildcol)
-            with 
-            | _ -> raise Invalid_Move
+                             player_played = add_card c st.player_played; 
+                             lastp_action = "put"; turn = true} 
+      |"wild" -> begin 
+          ANSITerminal.(print_string [cyan] ("\nWhat color do you choose?\n"));
+          ANSITerminal.(print_string [white] "> ");
+          let wildcol = read_line() in
+          try
+            let temp = change_wild_color c wildcol in
+            {st with current_card = temp;
+                     players_hand= remove_card c st.players_hand;  
+                     playing_deck= add_card c st.playing_deck; 
+                     player_played = add_card temp st.player_played; 
+                     lastp_action = "put"; turn = false}
+          with
+          | Deck.Invalid_Color malcol -> raise (Invalid_Color malcol)
         end
       | _ -> raise Invalid_Move
+
 
   (************************************************************************)  
 

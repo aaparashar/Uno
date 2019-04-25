@@ -87,7 +87,6 @@ let load_deck =
   let no_zero = [1;2;3;4;5;6;7;8;9] in
   let powers = ["skip"; "reverse"; "draw two"] in
   let wild_powers = ["wild"; "draw four"] in
-
   (load_num_color numbers "red") @
   (load_num_color numbers "yellow") @ 
   (load_num_color numbers "green") @
@@ -240,9 +239,11 @@ let get_power p =
 
 
 let change_wild_color c col = 
-  match c with 
-  |Power_Card p -> Power_Card{power = p.power; color = (color_of_string col)}
-  |_ -> c
+  if (col = "wild") then raise (Invalid_Color "Invalid color change.")
+  else
+    match c with 
+    |Power_Card p -> Power_Card{power = p.power; color = (color_of_string col)}
+    |_ -> c
 
 let random_color = let () = Random.self_init() in
   match Random.int 4 with

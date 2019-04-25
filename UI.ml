@@ -9,6 +9,7 @@ let style_color color =
   | "yellow" -> [yellow]
   | "green" -> [green]
   | "blue" -> [blue]
+  | "wild" -> [magenta]
   | _ -> failwith "unimplemented color"
 
 let pp_card (c:card) = 
@@ -72,44 +73,42 @@ let rec do_play_game (st: State.t) (mode:string) =
       ANSITerminal.(print_string [cyan]("\n AI says:\t"^"\"UNO\"")); 
     ANSITerminal.(print_string [cyan] ("\nWhat's your next move?\n"));
     ANSITerminal.(print_string [white] "> ");
-    let (out_string,cmd) = 
+    let (out_string, col, cmd) = 
       match Command.parse (read_line()) with
-      | exception (Command.Empty) -> ("\nWhat's your next move?\n","");
-      | exception (Command.Malformed) -> ("\n\nCommand not recognized\n","");
-      | Quit -> (("\n\nSee ya next time!\n"),"Quit")
-      | Hand -> ("\n In Your Hand:\n","Hand")
-      | Draw -> ("\n You drew a card.","Draw")
+      | exception (Command.Empty) -> ("\nWhat's your next move?\n","","");
+      | exception (Command.Malformed) -> ("\n\nCommand not recognized\n","","");
+      | Quit -> (("\n\nSee ya next time!\n"),"","Quit")
+      | Hand -> ("\n In Your Hand:\n","","Hand")
+      | Draw -> ("\n You drew a card.","","Draw")
       | Put t-> 
         (match t with
-         | num::col::[] -> (num^","^col, "Put")
-         | _ -> ("", "Put") )
+         | col::v1::v2::[] -> (v1^" "^v2, col, "Put")
+         | col::v::[] -> (v, col, "Put")
+         | _ -> ("", "", "Put") )
     in
     match cmd with
     | "Put" -> 
       (let is_num_card n c = n >= 0 && n <= 9 && 
                              List.mem c ["red"; "yellow"; "blue"; "green"] in
-       let is_pow_card p c = List.mem p ["reverse"; "skip"; "draw two"; "draw four"; "wild"] 
-       in
+       let is_pow_card p c = List.mem p ["reverse"; "skip"; "draw two"; "draw four"; "wild"] &&
+                             List.mem c ["red"; "yellow"; "blue"; "green"; "wild"] in
        let is_card s c = 
          try 
            is_num_card (int_of_string s) c
          with Failure "int_of_string" ->
            is_pow_card s c
-       in
-       let card_comp = String.split_on_char ',' out_string in
-       if List.length card_comp = 2 && 
-          is_card (List.nth card_comp 1) (List.nth card_comp 0) then
+       in  
+       if col <> "" && out_string <> "" && is_card out_string col then
          begin
-           let col = List.nth card_comp 0 in 
-           let c = 
+           let cc = 
              try
-               Deck.create_num_card col (int_of_string (List.nth card_comp 1)) 
+               Deck.create_num_card col (int_of_string out_string) 
              with Failure "int_of_string" ->
-               Deck.create_pow_card col (List.nth card_comp 1)
+               Deck.create_pow_card col out_string
            in
-           match State.put c st "player" with
+           match State.put cc st "player" with
            | newState -> 
-             (ANSITerminal.(print_string [cyan]("\nYou played:\t"^print_card c));
+             (ANSITerminal.(print_string [cyan]("\nYou played:\t"^print_card (State.get_current_card newState)));
               do_play_game newState mode)
            | exception(Invalid_Move) -> 
              (ANSITerminal.(print_string [magenta]"\n Can't put that there\n");
