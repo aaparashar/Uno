@@ -143,13 +143,13 @@ let play_game p m =
   ANSITerminal.(print_string [cyan] ("Welcome, "^p^" to "));
 
   ANSITerminal.(print_string [red]
-                  (".----------------. .-----------------..----------------.\n" ^
+                  ("\n.----------------. .-----------------..----------------.\n" ^
                    "| .--------------. | .--------------. | .--------------. |\n"^
                    "| | _____  _____ | | | ____  _____  | | |     ____     | |\n"^
                    "| ||_   _||_   _|| | ||_   \\|_   _| | | |   .'    `.   | |\n"^
                    "| |  | |    | |  | | |  |   \\ | |   | | |  /  .--.  \\  | |\n"^
                    "| |  | '    ' |  | | |  | |\\ \\| |   | | |  | |    | |  | |\n"^
-                   "| |   \\ `--' /   | | | _| |_\\   |_  | | |  \  `--'  /  | |\n"^
+                   "| |   \\ `--' /   | | | _| |_\\   |_  | | |  \  `--'  /   | |\n"^
                    "| |    `.__.'    | | ||_____|\\____| | | |   `.____.'   | |\n"^
                    "| |              | | |              | | |              | |\n"^
                    "| '--------------' | '--------------' | '--------------' |\n"^
@@ -178,9 +178,9 @@ let rec main () =
   |(_,"") -> print_endline "\nYou must enter something for 
   both your name and the level"; main ()
   | (name, mode) ->( if (mode="easy"||mode="hard"||mode="medium") then play_game pname mode
-    else 
-      print_endline ("Invalid mode try again!"^
-                     "\nHint: type in either 'easy','medium' or 'hard'"); 
-    main();)
+                     else 
+                       print_endline ("Invalid mode try again!"^
+                                      "\nHint: type in either 'easy','medium' or 'hard'"); 
+                     main();)
 
 let () = main ()
