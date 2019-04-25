@@ -222,7 +222,8 @@ let put c (st:t) s : t =
     else
       let pow = val_to_string c in 
       match pow with
-      |"draw two" -> let st = draw (draw st "player") "player" in
+      |"draw two" -> ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 2\n"));
+        let st = draw (draw st "player") "player" in
         {st with ai_played = add_card c st.ai_played}
       |"draw four" -> begin
           let st2 =
@@ -262,14 +263,16 @@ let put c (st:t) s : t =
 
 (**TODO change random_color to color that AI has most of *)
 let put_medium_ai c st : t =
-  if (is_valid c st.current_card && Deck.deck_contains c st.ai_hand)
+  if (is_valid c st.current_card && Deck.deck_contains c st.ai_hand )
   then match (Deck.type_to_string c )with 
     |"number card" -> {st with current_card = c;
                                ai_hand = remove_card c st.ai_hand;  
                                playing_deck= add_card c st.playing_deck; 
-                               turn = false} 
+                               turn = true} 
     |"power card" -> ( match Deck.string_of_power (Deck.get_power c) with
-        |"draw two" -> draw (draw st "player") "player"
+        |"draw two" -> ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 2\n"));
+        let st = draw (draw st "player") "player" in
+        {st with ai_played = add_card c st.ai_played; turn = true}
         |"draw four" -> let st2 = 
                           draw (draw(draw (draw st "player") "player") "player") "player" in 
           ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
@@ -283,11 +286,13 @@ let put_medium_ai c st : t =
                     playing_deck= (add_card c st.playing_deck); 
                     turn = true};
 
-        |"skip" -> {st with current_card = c;
+        |"skip" -> ANSITerminal.(print_string [cyan]("\nThe AI hit you with a skip"));
+                  {st with current_card = c;
                             ai_hand = remove_card c st.ai_hand;  
                             playing_deck= add_card c st.playing_deck; 
-                            turn = false} 
-        |"reverse" ->{st with current_card = c;
+                            turn = false}; 
+        |"reverse" -> ANSITerminal.(print_string [cyan]("\nThe AI hit you with a reverse"));
+                      {st with current_card = c;
                               ai_hand = remove_card c st.ai_hand;  
                               playing_deck= add_card c st.playing_deck; 
                               turn = false} 
@@ -367,7 +372,7 @@ let medium_ai_turn st : t =
 let supreme_ai_turn st : t = 
   match Deck.get_supreme_card st.current_card st.ai_hand st.players_hand 
           st.player_played st.lastp_action with
-  |(None, col) -> draw st "ai"
+  |(None, col) -> draw st "ai" 
   |(Some c, col) -> put_supreme_ai c (string_of_color col) st
 
 (**TODO: counting cards mode *)
