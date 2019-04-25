@@ -25,7 +25,7 @@ let create_state curr_c pl_h ai_h draw_d pl_d pl_pl ai_pl action is_turn : t =
    turn = is_turn}
 
 (** [find_top c acc d ] checks if the top card c is a number card if it is not 
-    it recurses through the rest of deck [d] until it finds the firts number card*)
+    it recurses through the rest of deck [d] until it finds the first number card*)
 let rec find_top c acc d= 
   if is_powercard c then find_top (top_card d) (add_card c acc) (remove_card c d)
   else (c , merge_decks d acc)
@@ -37,8 +37,9 @@ let init_state : t =
   let players = fst (deal deck) in 
   let ai_deck = fst (deal (snd (deal deck))) in 
   let remaining = snd (deal (snd (deal deck))) in 
-  let playing = add_card (top_card remaining) Deck.empty_deck in
-  let remaining2 = remove_card (top_card remaining) remaining in
+  let first_num_deck = find_top (top_card remaining) Deck.empty_deck remaining in 
+  let playing = add_card (fst first_num_deck) Deck.empty_deck in
+  let remaining2 = remove_card (fst first_num_deck) remaining in
   let top = fst(find_top (top_card playing) empty_deck playing) in 
   let playing = snd (find_top (top_card playing) empty_deck playing) in 
   {current_card = top; players_hand = players; ai_hand= ai_deck; 
@@ -59,19 +60,19 @@ let get_turn st = st.turn
 let draw (st:t) s : t = 
   if (st.draw_deck = empty_deck && s= "player") then 
     let reset = {st with draw_deck=shuffle (remove_card st.current_card st.playing_deck); 
-                 playing_deck = add_card st.current_card empty_deck} in 
+                         playing_deck = add_card st.current_card empty_deck} in 
     {reset with players_hand = (add_card (top_card reset.draw_deck) reset.players_hand); 
-     draw_deck = remove_card (top_card reset.draw_deck) reset.draw_deck; 
-     lastp_action = "draw"; turn = false;}
+                draw_deck = remove_card (top_card reset.draw_deck) reset.draw_deck; 
+                lastp_action = "draw"; turn = false;}
   else if (st.draw_deck = empty_deck && s= "ai") then 
     let reset = {st with draw_deck=shuffle (remove_card st.current_card st.playing_deck); 
-                 playing_deck = add_card st.current_card empty_deck} in 
+                         playing_deck = add_card st.current_card empty_deck} in 
     {reset with ai_hand = (add_card (top_card reset.draw_deck) reset.ai_hand); 
-    draw_deck = remove_card (top_card reset.draw_deck) reset.draw_deck;
-    turn=true;}
+                draw_deck = remove_card (top_card reset.draw_deck) reset.draw_deck;
+                turn=true;}
   else if (s = "ai") then 
     {st with ai_hand = (add_card (top_card st.draw_deck) st.ai_hand); 
-     draw_deck = remove_card (top_card st.draw_deck) st.draw_deck;turn=true;}
+             draw_deck = remove_card (top_card st.draw_deck) st.draw_deck; turn=true;}
   else 
     {st with players_hand = (add_card (top_card st.draw_deck) st.players_hand); 
              draw_deck = remove_card (top_card st.draw_deck) st.draw_deck;
@@ -94,14 +95,15 @@ let put c (st:t) s : t =
                player_played = add_card c st.player_played;
                lastp_action = "put"; turn = false} 
     else
-      match (val_to_string c) with
+      let pow = val_to_string c in
+      match pow with
       |"draw two" -> ANSITerminal.(print_string [cyan] 
                                      ("\nThe AI has been dealt 2 cards"));
         let tempSt = draw (draw st "ai") "ai" in
-        {tempSt with player_played = add_card c st.player_played;}
+        {tempSt with players_hand = remove_card c st.players_hand;
+                     player_played = add_card c st.player_played;}
       |"draw four" -> begin 
           let st2 = draw (draw(draw (draw st "ai") "ai") "ai") "ai" in
-
           (*********************AMBITIOUS REFACTORING EFFORT***********************)
           ANSITerminal.(print_string [cyan] ("\nThe AI has been dealt 4 cards.
       \nWhat color do you choose?\n"));
@@ -115,38 +117,34 @@ let put c (st:t) s : t =
                       player_played = add_card temp st.player_played;
                       lastp_action = "put"; turn = false}
           with 
-          | Deck.Invalid_Color malCol ->
-            try 
-              match wildcol with
-              |"skip" -> {st with current_card = c;
-                                  players_hand = remove_card c st.players_hand;  
-                                  playing_deck= add_card c st.playing_deck;
-                                  player_played = add_card c st.player_played; 
-                                  lastp_action = "put"; turn = true} 
-              |"reverse" -> {st with current_card = c;
-                                     players_hand = remove_card c st.players_hand;  
-                                     playing_deck= add_card c st.playing_deck; 
-                                     player_played = add_card c st.player_played; 
-                                     lastp_action = "put"; turn = true} 
-              |"wild" -> begin 
-                  ANSITerminal.(print_string [cyan] ("\nWhat color do you choose?\n"));
-                  ANSITerminal.(print_string [white] "> ");
-                  let wildcol = read_line() in
-                  try
-                    let temp = change_wild_color c wildcol in
-                    {st with current_card = temp;
-                             players_hand= remove_card c st.players_hand;  
+          | Deck.Invalid_Color malCol -> raise Invalid_Move
+        end
+      |"skip" -> {st with current_card = c;
+                          players_hand = remove_card c st.players_hand;  
+                          playing_deck= add_card c st.playing_deck;
+                          player_played = add_card c st.player_played; 
+                          lastp_action = "put"; turn = true} 
+      |"reverse" -> {st with current_card = c;
+                             players_hand = remove_card c st.players_hand;  
                              playing_deck= add_card c st.playing_deck; 
-                             player_played = add_card temp st.player_played; 
-                             lastp_action = "put"; turn = false}
-                  with
-                  | Deck.Invalid_Color malcol -> raise (Invalid_Color malCol)
-                end
-              | _ -> raise (Invalid_Color wildcol)
-            with 
-            | _ -> raise Invalid_Move
+                             player_played = add_card c st.player_played; 
+                             lastp_action = "put"; turn = true} 
+      |"wild" -> begin 
+          ANSITerminal.(print_string [cyan] ("\nWhat color do you choose?\n"));
+          ANSITerminal.(print_string [white] "> ");
+          let wildcol = read_line() in
+          try
+            let temp = change_wild_color c wildcol in
+            {st with current_card = temp;
+                     players_hand= remove_card c st.players_hand;  
+                     playing_deck= add_card c st.playing_deck; 
+                     player_played = add_card temp st.player_played; 
+                     lastp_action = "put"; turn = false}
+          with
+          | Deck.Invalid_Color malcol -> raise (Invalid_Color malcol)
         end
       | _ -> raise Invalid_Move
+
 
   (************************************************************************)  
 
@@ -220,11 +218,11 @@ let put c (st:t) s : t =
                ai_hand = remove_card c st.ai_hand;  
                playing_deck= add_card c st.playing_deck; 
                ai_played = add_card c st.ai_played; 
-               turn = true} 
-    else match (val_to_string c) with
-      |"draw two" -> 
-        let st = draw (draw st "player") "player" in
-        ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 2\n"));
+               turn = false} 
+    else
+      let pow = val_to_string c in 
+      match pow with
+      |"draw two" -> let st = draw (draw st "player") "player" in
         {st with ai_played = add_card c st.ai_played}
       |"draw four" -> begin
           let st2 =
@@ -267,41 +265,41 @@ let put_medium_ai c st : t =
   if (is_valid c st.current_card && Deck.deck_contains c st.ai_hand)
   then match (Deck.type_to_string c )with 
     |"number card" -> {st with current_card = c;
-                       ai_hand = remove_card c st.ai_hand;  
-                       playing_deck= add_card c st.playing_deck; 
-                       turn = false} 
+                               ai_hand = remove_card c st.ai_hand;  
+                               playing_deck= add_card c st.playing_deck; 
+                               turn = false} 
     |"power card" -> ( match Deck.string_of_power (Deck.get_power c) with
-      |"draw two" -> draw (draw st "player") "player"
-      |"draw four" -> let st2 = 
-                      draw (draw(draw (draw st "player") "player") "player") "player" in 
-        ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
+        |"draw two" -> draw (draw st "player") "player"
+        |"draw four" -> let st2 = 
+                          draw (draw(draw (draw st "player") "player") "player") "player" in 
+          ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
 
-        let col = Deck.string_of_color (List.hd (Deck.majority_color st.ai_hand)) in 
-        let temp = Deck.change_wild_color c col in 
-        ANSITerminal.(print_string [cyan]("\n AI changes the color to "
+          let col = Deck.string_of_color (List.hd (Deck.majority_color st.ai_hand)) in 
+          let temp = Deck.change_wild_color c col in 
+          ANSITerminal.(print_string [cyan]("\n AI changes the color to "
                                             ^ col));
-        {st2 with current_card = temp;
-                  ai_hand = (remove_card c st.ai_hand);  
-                  playing_deck= (add_card c st.playing_deck); 
-                  turn = true};
+          {st2 with current_card = temp;
+                    ai_hand = (remove_card c st.ai_hand);  
+                    playing_deck= (add_card c st.playing_deck); 
+                    turn = true};
 
-      |"skip" -> {st with current_card = c;
-                        ai_hand = remove_card c st.ai_hand;  
-                        playing_deck= add_card c st.playing_deck; 
-                        turn = false} 
-      |"reverse" ->{st with current_card = c;
-                          ai_hand = remove_card c st.ai_hand;  
-                          playing_deck= add_card c st.playing_deck; 
-                          turn = false} 
+        |"skip" -> {st with current_card = c;
+                            ai_hand = remove_card c st.ai_hand;  
+                            playing_deck= add_card c st.playing_deck; 
+                            turn = false} 
+        |"reverse" ->{st with current_card = c;
+                              ai_hand = remove_card c st.ai_hand;  
+                              playing_deck= add_card c st.playing_deck; 
+                              turn = false} 
 
-      |"wild" -> let col = Deck.string_of_color ( Deck.random_color) in 
-        let temp = Deck.change_wild_color c col in 
-        ANSITerminal.(print_string [cyan]("\n AI changes the color to "
+        |"wild" -> let col = Deck.string_of_color ( Deck.random_color) in 
+          let temp = Deck.change_wild_color c col in 
+          ANSITerminal.(print_string [cyan]("\n AI changes the color to "
                                             ^ (col)));
-        {st with current_card = temp;
-                 ai_hand = remove_card c st.ai_hand;  
-                 playing_deck= add_card c st.playing_deck; 
-                 turn = true};
+          {st with current_card = temp;
+                   ai_hand = remove_card c st.ai_hand;  
+                   playing_deck= add_card c st.playing_deck; 
+                   turn = true};
         | _ -> raise Invalid_Move)
     | _ -> raise Invalid_Move
 
@@ -311,45 +309,45 @@ let put_supreme_ai c col st : t =
   if (is_valid c st.current_card && Deck.deck_contains c st.ai_hand)
   then match (Deck.type_to_string c )with 
     |"number card" -> {st with current_card = c;
-                       ai_hand = remove_card c st.ai_hand;  
-                       playing_deck= add_card c st.playing_deck; 
-                       ai_played = add_card c st.ai_played; 
-                       turn = false} 
+                               ai_hand = remove_card c st.ai_hand;  
+                               playing_deck= add_card c st.playing_deck; 
+                               ai_played = add_card c st.ai_played; 
+                               turn = false} 
     |"power card" -> ( match Deck.string_of_power (Deck.get_power c) with
-      |"draw two" -> draw (draw st "player") "player"
-      |"draw four" -> let st2 = 
-                      draw (draw(draw (draw st "player") "player") "player") "player" in 
-        ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
+        |"draw two" -> draw (draw st "player") "player"
+        |"draw four" -> let st2 = 
+                          draw (draw(draw (draw st "player") "player") "player") "player" in 
+          ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
 
-        let temp = Deck.change_wild_color c col in 
-        ANSITerminal.(print_string [cyan]("\n AI changes the color to "
+          let temp = Deck.change_wild_color c col in 
+          ANSITerminal.(print_string [cyan]("\n AI changes the color to "
                                             ^ col));
-        {st2 with current_card = temp;
-                  ai_hand = (remove_card c st.ai_hand);  
-                  playing_deck= (add_card c st.playing_deck); 
-                  ai_played = add_card temp st.ai_played; 
-                  turn = true};
+          {st2 with current_card = temp;
+                    ai_hand = (remove_card c st.ai_hand);  
+                    playing_deck= (add_card c st.playing_deck); 
+                    ai_played = add_card temp st.ai_played; 
+                    turn = true};
 
-      |"skip" -> {st with current_card = c;
-                        ai_hand = remove_card c st.ai_hand;  
-                        playing_deck= add_card c st.playing_deck; 
-                        ai_played = add_card c st.ai_played; 
-                        turn = false} 
-      |"reverse" ->{st with current_card = c;
-                          ai_hand = remove_card c st.ai_hand;  
-                          playing_deck= add_card c st.playing_deck; 
-                          ai_played = add_card c st.ai_played; 
-                          turn = false} 
+        |"skip" -> {st with current_card = c;
+                            ai_hand = remove_card c st.ai_hand;  
+                            playing_deck= add_card c st.playing_deck; 
+                            ai_played = add_card c st.ai_played; 
+                            turn = false} 
+        |"reverse" ->{st with current_card = c;
+                              ai_hand = remove_card c st.ai_hand;  
+                              playing_deck= add_card c st.playing_deck; 
+                              ai_played = add_card c st.ai_played; 
+                              turn = false} 
 
-      |"wild" ->  
-        let temp = Deck.change_wild_color c col in 
-        ANSITerminal.(print_string [cyan]("\n AI changes the color to "
+        |"wild" ->  
+          let temp = Deck.change_wild_color c col in 
+          ANSITerminal.(print_string [cyan]("\n AI changes the color to "
                                             ^ (col)));
-        {st with current_card = temp;
-                 ai_hand = remove_card c st.ai_hand;  
-                 playing_deck= add_card c st.playing_deck; 
-                 ai_played = add_card c st.ai_played; 
-                 turn = true};
+          {st with current_card = temp;
+                   ai_hand = remove_card c st.ai_hand;  
+                   playing_deck= add_card c st.playing_deck; 
+                   ai_played = add_card c st.ai_played; 
+                   turn = true};
         | _ -> raise Invalid_Move)
     | _ -> raise Invalid_Move
 
@@ -368,9 +366,9 @@ let medium_ai_turn st : t =
 
 let supreme_ai_turn st : t = 
   match Deck.get_supreme_card st.current_card st.ai_hand st.players_hand 
-        st.player_played st.lastp_action with
-    |(None, col) -> draw st "ai"
-    |(Some c, col) -> put_supreme_ai c (string_of_color col) st
+          st.player_played st.lastp_action with
+  |(None, col) -> draw st "ai"
+  |(Some c, col) -> put_supreme_ai c (string_of_color col) st
 
 (**TODO: counting cards mode *)
 (*let smart_ai_turn st =*)
