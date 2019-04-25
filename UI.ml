@@ -28,12 +28,19 @@ let rec generate_art str s =
 
 let card_art c = 
   let sty = style_color (Deck.card_col c) in
+  let value = match Deck.val_to_string c with 
+    |"draw two" -> "+2"
+    |"draw four" -> "+4"
+    |"skip"->"S"
+    |"reverse" -> "R"
+    |x ->  x in 
+
   ANSITerminal.(print_string sty 
-                  ("\n "^generate_art "-" ((String.length (Deck.val_to_string c) +2))
-                   ^"\n|" ^(generate_art " " ((String.length (Deck.val_to_string c) +2)))^"|\n"^ 
-                   "| "^ (Deck.val_to_string c)^" |"
-                   ^"\n|" ^(generate_art " " ((String.length (Deck.val_to_string c) +2)))^"|\n "^ 
-                   (generate_art "-" ((String.length (Deck.val_to_string c) +2)))))
+                  ("\n "^generate_art "-" ((String.length (value) +2))
+                   ^"\n|" ^(generate_art " " ((String.length (value) +2)))^"|\n"^ 
+                   "| "^ (value)^" |"
+                   ^"\n|" ^(generate_art " " ((String.length (value) +2)))^"|\n "^ 
+                   (generate_art "-" ((String.length (value) +2)))))
 
 
 
@@ -42,9 +49,7 @@ let rec print_hand (d:Deck.t) =
   if Deck.len d = 0 then ANSITerminal.(print_string[white]"\n")
   else let c = Deck.top_card d in 
     ANSITerminal.(print_string [white]("\t")); 
-    pp_card c;
-    (*card_art c; *)
-    ANSITerminal.(print_string [white]("\n"));
+    card_art c; 
     print_hand (Deck.remove_card c d)
 
 let rec do_play_game (st: State.t) (mode:string) =
