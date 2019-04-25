@@ -139,10 +139,16 @@ let rec do_play_game (st: State.t) (mode:string) =
              | _ -> failwith "AI failed"
       else try State.supreme_ai_turn st
         with | _ -> failwith "AI made illegal move!" in 
-    ANSITerminal.(print_string [cyan]("\n AI played:\t"^(print_card (State.get_current_card next_state))));
+    if (State.get_current_card next_state) <> (State.get_current_card st) then begin
+      ANSITerminal.(print_string [cyan]("\n AI played:\t"^(print_card (State.get_current_card next_state))));
+      card_art(State.get_current_card next_state); 
+      try do_play_game next_state mode 
+      with | _ -> failwith "AI made illegal move" end
+    else 
+      ANSITerminal.(print_string [cyan]("\n AI drew a card")); 
     try do_play_game next_state mode 
     with | _ -> failwith "AI made illegal move" 
-  end
+  end 
 
 
 

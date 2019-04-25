@@ -223,17 +223,11 @@ let put c (st:t) s : t =
     else
       let pow = val_to_string c in 
       match pow with
-<<<<<<< HEAD
       |"draw two" -> let st = draw (draw st "player") "player" in
         {st with current_card = c;
                  ai_played = add_card c st.ai_played;
                  playing_deck = add_card c st.playing_deck;
                  ai_hand = remove_card c st.ai_hand}
-=======
-      |"draw two" -> ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 2\n"));
-        let st = draw (draw st "player") "player" in
-        {st with ai_played = add_card c st.ai_played}
->>>>>>> d0a39b8afd2397f89e85a16ecb0604755c060262
       |"draw four" -> begin
           let st2 =
             draw (draw (draw (draw st "player") "player") "player") "player" in 
@@ -279,17 +273,11 @@ let put_medium_ai c st : t =
                                playing_deck= add_card c st.playing_deck; 
                                turn = true} 
     |"power card" -> ( match Deck.string_of_power (Deck.get_power c) with
-<<<<<<< HEAD
         |"draw two" -> let st = draw (draw st "player") "player" in
           {st with current_card = c;
                    ai_hand = remove_card c st.ai_hand;
                    playing_deck = add_card c st.playing_deck;
                    turn = false}
-=======
-        |"draw two" -> ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 2\n"));
-        let st = draw (draw st "player") "player" in
-        {st with ai_played = add_card c st.ai_played; turn = true}
->>>>>>> d0a39b8afd2397f89e85a16ecb0604755c060262
         |"draw four" -> let st2 = 
                           draw (draw(draw (draw st "player") "player") "player") "player" in 
           ANSITerminal.(print_string [cyan] ("\nThe AI hit you with a draw 4\n"));
@@ -304,15 +292,15 @@ let put_medium_ai c st : t =
                     turn = false};
 
         |"skip" -> ANSITerminal.(print_string [cyan]("\nThe AI hit you with a skip"));
-                  {st with current_card = c;
-                            ai_hand = remove_card c st.ai_hand;  
-                            playing_deck= add_card c st.playing_deck; 
-                            turn = false}; 
+          {st with current_card = c;
+                   ai_hand = remove_card c st.ai_hand;  
+                   playing_deck= add_card c st.playing_deck; 
+                   turn = false}; 
         |"reverse" -> ANSITerminal.(print_string [cyan]("\nThe AI hit you with a reverse"));
-                      {st with current_card = c;
-                              ai_hand = remove_card c st.ai_hand;  
-                              playing_deck= add_card c st.playing_deck; 
-                              turn = false} 
+          {st with current_card = c;
+                   ai_hand = remove_card c st.ai_hand;  
+                   playing_deck= add_card c st.playing_deck; 
+                   turn = false} 
 
         |"wild" -> let col = Deck.string_of_color ( Deck.random_color) in 
           let temp = Deck.change_wild_color c col in 
