@@ -20,26 +20,19 @@ let pp_card (c:card) =
 let print_card c =
   (Deck.card_col c )^" "^(Deck.val_to_string c)
 
-let num_card_art c =
-  let sty = style_color (Deck.card_col c) in
-  ANSITerminal.(print_string sty
-                  (" -——\n"^
-                   "|   |\n"^
-                   "| " ^ (Deck.val_to_string c)^ " |"^
-                   "|   |"^
-                   " -——"))
+
 let rec generate_art str s =
   match s with
   |1-> str 
   |x ->str ^ generate_art str (s-1) 
 
-let power_card_art c = 
+let card_art c = 
   let sty = style_color (Deck.card_col c) in
   ANSITerminal.(print_string sty 
-                  (generate_art "-" ((String.length (Deck.val_to_string c) +2))
+                  ("\n "^generate_art "-" ((String.length (Deck.val_to_string c) +2))
                    ^"\n|" ^(generate_art " " ((String.length (Deck.val_to_string c) +2)))^"|\n"^ 
-                   "|"^ (Deck.val_to_string c)^"|"
-                   ^"\n|" ^(generate_art " " ((String.length (Deck.val_to_string c) +2)))^"|\n"^ 
+                   "| "^ (Deck.val_to_string c)^" |"
+                   ^"\n|" ^(generate_art " " ((String.length (Deck.val_to_string c) +2)))^"|\n "^ 
                    (generate_art "-" ((String.length (Deck.val_to_string c) +2)))))
 
 
@@ -50,6 +43,7 @@ let rec print_hand (d:Deck.t) =
   else let c = Deck.top_card d in 
     ANSITerminal.(print_string [white]("\t")); 
     pp_card c;
+    (*card_art c; *)
     ANSITerminal.(print_string [white]("\n"));
     print_hand (Deck.remove_card c d)
 
@@ -66,7 +60,7 @@ let rec do_play_game (st: State.t) (mode:string) =
     end
   else if State.get_turn st then begin
     ANSITerminal.(print_string [cyan]("\nLast Card:\t"));
-    ANSITerminal.(print_string [white] (print_card(State.get_current_card st)));
+    card_art(State.get_current_card st);
     ANSITerminal.(print_string [cyan]("\n In Your Hand:\n"));
     print_hand(State.get_players_hand st);
     if Deck.len(State.get_ai_hand st) = 1 then 
