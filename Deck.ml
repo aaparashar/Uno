@@ -175,8 +175,6 @@ let card_equals c1 c2 =
   |(Num_Card n1,Power_Card p1) -> ((val_to_string c1) = (val_to_string c2)) && (n1.color = p1.color)
   |(Power_Card p1, Num_Card n1) -> ((val_to_string c1) = (val_to_string c2)) && (p1.color = n1.color)
 
-
-
 let add_card (c:card) (d:t) :t = c::d
 
 let remove_card (c:card) (d:t) :t = 
@@ -296,6 +294,7 @@ let sort_card_num d =
     )
 
 (* Helper function for [get_medium_card] and [get_supreme_card]. *)
+(** [remove_wilds acc dk] is deck [dk] with wild cards removed. *)
 let rec remove_wilds acc (dk:t) : t = 
   match dk with 
   | [] -> acc
@@ -304,6 +303,7 @@ let rec remove_wilds acc (dk:t) : t =
   | Num_Card n :: t -> remove_wilds acc t 
 
 (* Helper function for [get_medium_card] and [get_supreme_card]. *)
+(** [remove_powers acc dk] is deck [dk] with power cards removed. *)
 let rec remove_powers acc (dk:t) : t = 
   match dk with 
   | [] -> acc
@@ -344,6 +344,8 @@ let find_color (col:color) d : card option =
       | Num_Card n -> (n.color = col) ) d
 
 (** Helper function for [get_supreme_card]. *)
+(** [get_best_color h d] is the best color that the possesor of hand [h] can
+    play given his/her/its opponent has played the cards in deck [d]. *)
 let get_best_color h d : color =
   let cardls = h |> sort_card_num in 
   let colorls1 = cardls |> majority_color in

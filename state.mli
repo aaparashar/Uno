@@ -50,6 +50,13 @@ val get_player_played : t -> Deck.t
     played by the ai so far. *)
 val get_ai_played : t -> Deck.t
 
+(** [get_lastp_action st] is the most recent action of the player. *)
+val get_lastp_action : t -> string
+
+(** [get_turn st] is a boolean that indicates whose turn it is. if it is true 
+    then it is the players turn. If it is false, the it is the ai's turn*)
+val get_turn : t ->bool
+
 (** [put  c st str] is a state after a card c has been put down on to the 
     playing deck by str.
     Raises: [Invalid_Move] if adding c violates one of the rules of Uno *)
@@ -59,10 +66,6 @@ val put : Deck.card -> t ->  string -> t
     If the drawing deck was empty then the cards in the playing deck excluding 
     the current card get shuffled and put in the drawing deck. *)
 val draw : t -> string -> t
-
-(** [get_turn st] is a boolean that indicates whose turn it is. if it is true 
-    then it is the players turn. If it is false, the it is the ai's turn*)
-val get_turn : t ->bool
 
 (** [has_won st] is true if either the player or the ai has won the game.
     Otherwise, it is false. *)

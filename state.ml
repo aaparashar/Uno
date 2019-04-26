@@ -53,6 +53,7 @@ let get_draw_deck st = st.draw_deck
 let get_playing_deck st = st.playing_deck
 let get_player_played st = st.player_played
 let get_ai_played st = st.ai_played
+let get_lastp_action st = st.lastp_action
 let has_won st = Deck.len st.players_hand = 0 || Deck.len st.ai_hand = 0
 (* let get_current_score = None *)
 let get_turn st = st.turn
