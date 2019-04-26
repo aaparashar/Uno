@@ -151,7 +151,7 @@ let put c (st:t) s : t =
   else if (is_valid c st.current_card && s="ai"&& deck_contains c st.ai_hand)
   then 
     if not (is_powercard c) then begin
-      ANSITerminal.(print_string [cyan] ("\nThe AI has placed a number card"));
+      ANSITerminal.(print_string [cyan] ("\nThe AI has placed a number card\n"));
       {st with current_card = c;
                ai_hand = remove_card c st.ai_hand;  
                playing_deck= add_card c st.playing_deck; 
@@ -209,7 +209,7 @@ let put_medium_ai c st : t =
   if (is_valid c st.current_card && Deck.deck_contains c st.ai_hand )
   then match (Deck.type_to_string c )with 
     |"number card" -> begin
-        ANSITerminal.(print_string [cyan] ("\nThe AI has placed a number card"));
+        ANSITerminal.(print_string [cyan] ("\nThe AI has placed a number card\n"));
         {st with current_card = c;
                  ai_hand = remove_card c st.ai_hand;  
                  playing_deck= add_card c st.playing_deck; 
@@ -262,7 +262,7 @@ let put_supreme_ai c col st : t =
   if (is_valid c st.current_card && Deck.deck_contains c st.ai_hand)
   then match (Deck.type_to_string c )with 
     |"number card" ->  begin
-        ANSITerminal.(print_string [cyan] ("\nThe AI has placed a number card"));
+        ANSITerminal.(print_string [cyan] ("\nThe AI has placed a number card\n"));
         {st with current_card = c;
                  ai_hand = remove_card c st.ai_hand;  
                  playing_deck= add_card c st.playing_deck; 
@@ -331,8 +331,7 @@ let supreme_ai_turn st : t =
   match Deck.get_supreme_card st.current_card st.ai_hand st.players_hand 
           st.player_played st.lastp_action with
   |(None, col) -> draw st "ai" 
-  |(Some c, col) -> ANSITerminal.(print_string [cyan]("\n Supreme AI chooses: "^(card_col c) ^ " " ^ (val_to_string c)));
-    put_supreme_ai c (string_of_color col) st
+  |(Some c, col) -> put_supreme_ai c (string_of_color col) st
 
 (**TODO: counting cards mode *)
 (*let smart_ai_turn st =*)
