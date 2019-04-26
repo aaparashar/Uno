@@ -79,9 +79,10 @@ val dumb_ai_turn : t -> t
    If the ai puts down a Wild or Draw Four card, it will choose the color to 
    change to based on what color of card it has the most of in it's hand. *)
 val medium_ai_turn : t -> t
- 
+
 (** [supreme_ai turn] is the state after the supreme ai makes a move. The 
     supreme ai employs various elite high iq undefeatable tactics against it's
     unwitting fools. 
-    [@see < https://www.unorules.com/best-strategies-to-win-uno/ > {Explanation of strategies here.}] *)
+    [@see < https://www.unorules.com/best-strategies-to-win-uno/ > 
+    {Explanation of strategies here.}] *)
 val supreme_ai_turn : t -> t 

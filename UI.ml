@@ -3,6 +3,7 @@ open State
 open Command
 open ANSITerminal
 
+(*[style_color color] returns the ANSI Terminal corresponding [color] to a card*) 
 let style_color color = 
   match color with 
   | "red" -> [red]
@@ -12,20 +13,23 @@ let style_color color =
   | "wild" -> [magenta]
   | _ -> failwith "unimplemented color"
 
+(*[pp_card c] pretty prints card [c]*) 
 let pp_card (c:card) = 
   let sty = style_color (Deck.card_col c) in
   ANSITerminal.(print_string sty ((Deck.card_col c)^" "^Deck.val_to_string c))
 
-(* string version*)
+(* [print_card c] prints the color and value of card [c]*)
 let print_card c =
   (Deck.card_col c )^" "^(Deck.val_to_string c)
 
 
+(* [generate_art str s] repeats the string [str] [s] times*)
 let rec generate_art str s =
   match s with
   |1-> str 
   |x ->str ^ generate_art str (s-1) 
 
+(* [card_art str c] makes ASCII card art for card [c]*)
 let card_art c = 
   let sty = style_color (Deck.card_col c) in
   let value = match Deck.val_to_string c with 
@@ -44,14 +48,15 @@ let card_art c =
 
 
 
-
+(* [print_hand d] prints all the ASCII art for cards*)
 let rec print_hand (d:Deck.t) =
   if Deck.len d = 0 then ANSITerminal.(print_string[white]"\n")
   else let c = Deck.top_card d in 
     ANSITerminal.(print_string [white]("\t")); 
     card_art c; 
     print_hand (Deck.remove_card c d)
-
+(* [do_play_gane st mode] facilitates the game in state [st] and maintains mode
+   [mode]*)
 let rec do_play_game (st: State.t) (mode:string) =
   if State.has_won st then 
     begin
@@ -148,7 +153,7 @@ let rec do_play_game (st: State.t) (mode:string) =
   end 
 
 
-
+(** [play_game p m] begins game with player name [p] and mode [m]*)
 let play_game p m = 
   ANSITerminal.(print_string [cyan] ("Welcome, "^p^" to "));
 
@@ -169,7 +174,7 @@ let play_game p m =
   do_play_game (State.init_state) m
 
 
-
+(** [main] collects player name and mode and excutes game*)
 let rec main () = 
   ANSITerminal.(print_string [cyan]
                   "\n\nWelcome to the Uno Game Engine\n"); 

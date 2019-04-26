@@ -39,16 +39,24 @@ val color_of_string : string -> color
     Raises [Invalid_Power s] if the string does not represent a valid power. *)
 val power_of_string : string -> power
 
+(** [type_to_string c] indicates whether card c is a Number Card or a 
+    Power Card.*)
 val type_to_string : card -> string
 
 (** [create_num_card s n] is the number card with number [n] and the color 
     represented by string [s]. *)
 val create_num_card : string -> int -> card
 
+(** [create_pow_card s p] is the power card with power [p] and the color 
+    represented by string [s]. *)
 val create_pow_card: string -> string -> card
 
+(** [load_num_color numbers col] loads cards with the numbers in  [numbers] and
+    color [col]*)
 val load_num_color : int list -> string -> card list
 
+(** [load_pow_color powers col] loads cards with the powers in  [powers] and
+    color [col]*)
 val load_pow_color : string list -> string -> card list
 
 (** [empty_deck] is an empty deck. *)
@@ -138,8 +146,20 @@ val change_wild_color : card -> string -> card
 (** [random_color] is a random color. *)
 val random_color : color
 
+(**[majority_color d] counts the number of cards per each color in deck [d] *) 
 val majority_color : t -> color list
 
+(**[get_medium_card c d] is the best card given a hand [d] based on what
+   matches card [c], prioritizing number cards, and then power cards, saving
+   wild cards for last *) 
 val get_medium_card : card -> t -> card option
 
+(**[get_supreme_card c d p pp a] is some card to play on top of last card [c]
+   given the players hand [p], what the player has played [pp] to see if the player
+   has any streaks (consecutive cards of the same color) as well as the ai's hand
+   [c]
+   Example: if the player has played a lot of one color the ai will try to change 
+   the color rather than playing number cards of the same color
+   Example: if the ai has a wild card it will change the color to the card it has 
+   most of but the player has played least of *) 
 val get_supreme_card : card -> t -> t -> t -> string -> card option * color
