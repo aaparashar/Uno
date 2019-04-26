@@ -156,7 +156,7 @@ let rec do_play_game (st: State.t) (mode:string) =
 
 (** [play_game p m] begins game with player name [p] and mode [m]*)
 let play_game p m = 
-  ANSITerminal.(print_string [cyan] ("Welcome, "^p^" to "));
+  ANSITerminal.(print_string [cyan] ("Welcome, "^p^", to "));
 
   ANSITerminal.(print_string [red]
                   ("\n.----------------. .-----------------..----------------.\n" ^
@@ -180,8 +180,11 @@ let rec main () =
   ANSITerminal.(print_string [cyan]
                   "\n\nWelcome to the Uno Game Engine\n"); 
   print_endline 
-    "Reminder that all commands start with an uppercase letter and a card is 
-  represented as lowercase with a color then a number i.e. Put blue 8.\n";
+    "Reminder that all commands start with an uppercase letter. A card is  
+represented as lowercase sequence of phrases: a color then a number or a 
+power. The available commands are \"Put\", \"Draw\", \"Quit\" and \"Hand\". 
+Example Put commands: \nPut blue 8\nPut wild wild\nPut wild draw four
+Put red draw two\nPut yellow skip\n";
   print_endline "Please enter your player name:\n";
   ANSITerminal.(print_string [white]  "> ");
   let pname =read_line() in
