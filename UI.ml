@@ -142,13 +142,14 @@ let rec do_play_game (st: State.t) (mode:string) =
              | Invalid_Power t -> failwith "AI made invalid power!"
              | Invalid_Move -> failwith "AI made invalid move!"
              | _ -> failwith "AI failed"
-      else State.supreme_ai_turn st in 
+      else State.supreme_ai_turn st in
+    ANSITerminal.(print_string[white] "\nAI chose a next state without crashing");
     if (State.get_current_card next_state) <> (State.get_current_card st) then begin
-      ANSITerminal.(print_string [cyan]("\n AI played:\t"^(print_card (State.get_current_card next_state))));
+      ANSITerminal.(print_string [cyan]("\n AI played:\t"^(print_card (State.get_current_card next_state))^"\n"));
       card_art(State.get_current_card next_state); 
       do_play_game next_state mode  end
     else 
-      ANSITerminal.(print_string [cyan]("\n AI drew a card")); 
+      ANSITerminal.(print_string [cyan]("\n AI drew a card\n")); 
     do_play_game next_state mode  
   end 
 

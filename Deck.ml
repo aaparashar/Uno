@@ -378,12 +378,14 @@ let top_consecutive_color (d:t) =
     | h::t when (card_col h) = "wild" -> acc + 1
     | h::t -> consecutive_helper col (acc+1) t
   in
-
-  let tc = top_card d in
-  let tcol = card_col tc in
-  match tcol with
-  |"Wild" -> (tcol, 0)
-  |_ -> (tcol, (consecutive_helper tcol 0 d))
+  if (len d = 0) then
+    (string_of_color random_color, 0)
+  else
+    let tc = top_card d in
+    let tcol = card_col tc in
+    match tcol with
+    |"Wild" -> (tcol, 0)
+    |_ -> (tcol, (consecutive_helper tcol 0 d))
 
 let get_supreme_card c (ai_hand:t) (p_hand:t) (p_played:t) lastp_action =
   let tconsc = top_consecutive_color p_played in
@@ -445,7 +447,7 @@ let get_supreme_card c (ai_hand:t) (p_hand:t) (p_played:t) lastp_action =
         begin
           let powerless = remove_powers [] wildless in 
           match powerless with 
-          | [] -> get_valid_card c wildless 
+          | [] -> get_valid_card c ai_hand
           | _ -> powerless |> sort_card_num |> find_color (c |> card_col |> color_of_string) 
         end in
     match bc_opt with
