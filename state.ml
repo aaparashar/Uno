@@ -85,7 +85,7 @@ let draw (st:t) s : t =
       If card c is_valid and top card of playing_deck has power = "wild" then
       change color of top card back to wild and then add c to playing_deck *)
 let put c (st:t) s : t = 
-  if ((is_valid st.current_card c )&& (s="player") 
+  if ((is_valid c st.current_card )&& (s="player") 
       && (deck_contains c st.players_hand)) then
 
     if not (is_powercard c) then  

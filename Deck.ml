@@ -195,10 +195,8 @@ let is_valid  card1 card2 =
   match (card1,card2) with
   |(Num_Card n1,Num_Card n2) -> n1.color= n2.color || n1.number = n2.number
   |(Power_Card p1, Power_Card p2) -> p1.power=p2.power || p1.color=p2.color 
-                                     || p1.power = Wild || p1.power = Draw_Four
-                                     || p2.power = Wild || p2.power = Draw_Four  
-  |(Num_Card n1,Power_Card p1) -> n1.color= p1.color 
-                                  || p1.power = Wild || p1.power = Draw_Four 
+                                     || p1.power = Wild || p1.power = Draw_Four  
+  |(Num_Card n1,Power_Card p1) -> n1.color= p1.color  
   |(Power_Card p1, Num_Card n1) -> n1.color= p1.color 
                                    || p1.power = Wild || p1.power = Draw_Four 
 
