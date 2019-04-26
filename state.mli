@@ -3,7 +3,7 @@
 
    This module represents the state of a game as it is being played,
    including the player's hand, the AI's hand, cards that have been placed down,
-   and the remaining cards in the deck
+   and the remaining cards in the Deck
 *)
 
 
@@ -20,8 +20,8 @@ exception Invalid_Move
     purposes. *)
 val create_state : Deck.card -> Deck.t -> Deck.t -> Deck.t -> Deck.t -> Deck.t -> Deck.t -> string -> bool -> t
 
-(** [init_state d] is the initial state of the game when given a deck [d].
-    In that state, the deck is shuffled and each player is dealt seven cards *)
+(** [init_state d] is the initial state of the game when given a Deck [d].
+    In that state, the Deck is shuffled and each player is dealt seven cards *)
 val init_state : t
 
 (** [current_card st] is the last card of the current state [st]
@@ -34,19 +34,19 @@ val get_players_hand : t -> Deck.t
 (** [ai_hand st] is the cards in the AI's hand at state [st]*)
 val get_ai_hand : t -> Deck.t
 
-(** [draw_deck st] is the remainder of the deck at state [st] from which
+(** [draw_Deck st] is the remainder of the Deck at state [st] from which
     players will draw cards*)
 val get_draw_deck : t -> Deck.t
 
-(** [get_playing_deck st] is a deck at state [st] that contains all the cards 
+(** [get_playing_Deck st] is a Deck at state [st] that contains all the cards 
     that have been played so far. *)
 val get_playing_deck : t -> Deck.t
 
-(** [get_player_played st] is a deck at state [st] that contains all the cards
+(** [get_player_played st] is a Deck at state [st] that contains all the cards
     played by the player so far. *)
 val get_player_played : t -> Deck.t
 
-(** [get_ai_played st] is a deck at state [st] that contains all the cards
+(** [get_ai_played st] is a Deck at state [st] that contains all the cards
     played by the ai so far. *)
 val get_ai_played : t -> Deck.t
 
@@ -58,13 +58,13 @@ val get_lastp_action : t -> string
 val get_turn : t ->bool
 
 (** [put  c st str] is a state after a card c has been put down on to the 
-    playing deck by str.
+    playing Deck by str.
     Raises: [Invalid_Move] if adding c violates one of the rules of Uno *)
 val put : Deck.card -> t ->  string -> t
 
-(** [draw st str] is a state after str picks a card from the drawing deck. 
-    If the drawing deck was empty then the cards in the playing deck excluding 
-    the current card get shuffled and put in the drawing deck. *)
+(** [draw st str] is a state after str picks a card from the drawing Deck. 
+    If the drawing Deck was empty then the cards in the playing Deck excluding 
+    the current card get shuffled and put in the drawing Deck. *)
 val draw : t -> string -> t
 
 (** [has_won st] is true if either the player or the ai has won the game.

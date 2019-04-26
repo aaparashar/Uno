@@ -48,12 +48,12 @@ let pp_cmd cmd =
 
 (** [pp_state  st] pretty-prints each attribute of state [st], as a string *)
 let pp_state (st:State.t) =
-  "\nCurrent Card:\t"^(st|>State.get_current_card|>Deck.list_card|>pp_card)
-  ^"\nPlayer's Hand:\t"^(st|>State.get_players_hand|>Deck.to_list|>(pp_deck pp_card))
-  ^"\nAI's Hand:\t"^(st|>State.get_ai_hand|>Deck.to_list|>(pp_deck pp_card))
-  ^"\nDraw Deck:\t"^(st|>State.get_draw_deck|>Deck.to_list|>(pp_deck pp_card))
-  ^"\nPlaying Deck:\t"^(st|>State.get_playing_deck|>Deck.to_list|>(pp_deck pp_card))
-  ^"\nPlayer Has Played:\t"^(st|>State.get_player_played|>Deck.to_list|>(pp_deck pp_card))
+  "\nCurrent Card:\t"^(st|>State.get_current_card|>deck.list_card|>pp_card)
+  ^"\nPlayer's Hand:\t"^(st|>State.get_players_hand|>deck.to_list|>(pp_deck pp_card))
+  ^"\nAI's Hand:\t"^(st|>State.get_ai_hand|>deck.to_list|>(pp_deck pp_card))
+  ^"\nDraw deck:\t"^(st|>State.get_draw_deck|>deck.to_list|>(pp_deck pp_card))
+  ^"\nPlaying deck:\t"^(st|>State.get_playing_deck|>deck.to_list|>(pp_deck pp_card))
+  ^"\nPlayer Has Played:\t"^(st|>State.get_player_played|>deck.to_list|>(pp_deck pp_card))
   ^"\nLast Player Action:\t"^(st|>State.get_lastp_action)
   ^"\nTurn:\t"^string_of_bool(State.get_turn st)
 
@@ -115,74 +115,74 @@ let deck_diff fmt (a,b) =
   diff fmt deck_format (a,b)
 
 
-(*************    Deck Tests    *************)
+(*************    deck Tests    *************)
 
 (*TODO: edit types on test functions to include power and number cards *)
 
 (** [test_empty_deck name] constructs an OUnit test named [name] that 
-    asserts the quality of [[]]] with [Deck.to_list empty_deck]. *)  
+    asserts the quality of [[]]] with [deck.to_list empty_deck]. *)  
 let test_empty_deck
     (name : string) : test = 
   name >:: (fun _ -> 
-      assert_equal [] (Deck.to_list empty_deck) 
+      assert_equal [] (deck.to_list empty_deck) 
         ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
 
 (** [test_shuffle name d] constructs an OUnit test named [name] that 
-    asserts the quality of [Deck.to_list (shuffle d)] with 
-    [Deck.to_list d]. *)  
+    asserts the quality of [deck.to_list (shuffle d)] with 
+    [deck.to_list d]. *)  
 let test_shuffle
     (name : string)
-    (d: Deck.t) = 
+    (d: deck.t) = 
   let shuffled = shuffle d in
   name >:: (fun _ ->
-      let dl = Deck.to_list d in
-      let sl = Deck.to_list shuffled in
+      let dl = deck.to_list d in
+      let sl = deck.to_list shuffled in
       assert_equal sl dl 
         ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
 
 (** [test_deal name d expected] constructs an OUnit test named [name] that 
-    asserts the quality of [Deck.to_list (fst (deal d))] with [expected]. *)  
+    asserts the quality of [deck.to_list (fst (deal d))] with [expected]. *)  
 let test_deal
     (name : string)
-    (d: Deck.t)  
+    (d: deck.t)  
     (expected: (string*string) list) : test =
   name >:: (fun _ ->
-      assert_equal expected (Deck.to_list (fst (deal d)))
+      assert_equal expected (deck.to_list (fst (deal d)))
         ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
 
 (** [test_top_card name d expected] constructs an OUnit test named [name] 
     that asserts the quality of [top_card d |> list_card] with [expected]. *)
 let test_top_card 
     (name : string)
-    (d: Deck.t)
+    (d: deck.t)
     (expected : (string*string)) =
   name >:: (fun _ ->
       let c = top_card d |> list_card in
       assert_equal expected c ~printer:pp_card)
 
 (** [test_add_card name d c expected] constructs an OUnit test named [name] 
-    that asserts the quality of [add_card c d |> Deck.to_list] with 
+    that asserts the quality of [add_card c d |> deck.to_list] with 
     [expected]. *)
 let test_add_card 
     (name : string)
-    (d: Deck.t)
-    (c: Deck.card)
+    (d: deck.t)
+    (c: deck.card)
     (expected: (string*string) list) =
   name >:: (fun _ ->
-      let dl = add_card c d |> Deck.to_list in 
+      let dl = add_card c d |> deck.to_list in 
       assert_equal expected dl 
         ~cmp:cmp_deck_lists ~pp_diff:(deck_diff))
 
 (** [test_remove_card name d c expected] constructs an OUnit test named 
-    [name] that asserts the quality of [remove_card c d |> Deck.to_list] 
+    [name] that asserts the quality of [remove_card c d |> deck.to_list] 
     with [expected]. *)
 let test_remove_card 
     (name : string)
-    (d: Deck.t)
-    (c: Deck.card)
+    (d: deck.t)
+    (c: deck.card)
     (expected : (string*string) list) =
   name >:: (fun _ ->
-      let dl = remove_card c d |> Deck.to_list in
+      let dl = remove_card c d |> deck.to_list in
       assert_equal expected dl 
         ~cmp:cmp_deck_lists ~pp_diff:(deck_diff))
 
@@ -201,7 +201,7 @@ let test_is_valid
 let test_contains
     (name : string)
     (c: card)
-    (d : Deck.t)
+    (d : deck.t)
     (expected : bool) =
   name >:: (fun _ ->
       assert_equal expected (deck_contains c d) ~printer:string_of_bool)
@@ -210,7 +210,7 @@ let test_contains
     asserts the quality of [get_valid_card c d] with [expected]. *)
 let test_get_valid_card
     (name : string)
-    (d: Deck.t)
+    (d: deck.t)
     (c: card)
     (expected : (string*string)) =
   name >:: (fun _ ->
@@ -225,19 +225,19 @@ let deck_tests =
   let my_deck = fst (deal initial_deck) in
   let ai_deck = fst (deal (snd (deal initial_deck))) in
   let remaining = snd (deal (snd (deal initial_deck))) in
-  let y3 = Deck.create_num_card "yellow" 3 in
-  let y4 = Deck.create_num_card "yellow" 4 in
-  let r9 = Deck.create_num_card "red" 9 in
-  let b9 = Deck.create_num_card "blue" 9 in
-  let g5 = Deck.create_num_card "green" 5 in
-  let yrev = Deck.create_pow_card "yellow" "reverse" in 
-  let bskip = Deck.create_pow_card "blue" "skip" in 
-  let rd2 = Deck.create_pow_card "red" "draw two" in
-  let w = Deck.create_pow_card "wild" "wild" in 
-  let wd4 = Deck.create_pow_card "wild" "draw four" in 
-  let d1 = Deck.add_card y3 Deck.empty_deck in
-  let d2 = Deck.add_card b9 d1 in
-  let d3 = Deck.add_card g5 d2 in
+  let y3 = deck.create_num_card "yellow" 3 in
+  let y4 = deck.create_num_card "yellow" 4 in
+  let r9 = deck.create_num_card "red" 9 in
+  let b9 = deck.create_num_card "blue" 9 in
+  let g5 = deck.create_num_card "green" 5 in
+  let yrev = deck.create_pow_card "yellow" "reverse" in 
+  let bskip = deck.create_pow_card "blue" "skip" in 
+  let rd2 = deck.create_pow_card "red" "draw two" in
+  let w = deck.create_pow_card "wild" "wild" in 
+  let wd4 = deck.create_pow_card "wild" "draw four" in 
+  let d1 = deck.add_card y3 deck.empty_deck in
+  let d2 = deck.add_card b9 d1 in
+  let d3 = deck.add_card g5 d2 in
   [
     (* Empty deck tests **)
     test_empty_deck "Empty deck test";
@@ -358,36 +358,36 @@ let test_get_current_card
 
 
 (** [test_get_players_hand name st expected] constructs an OUnit test named 
-    [name] that asserts the quality of [Deck.to_list (State.get_players_hand st)] 
+    [name] that asserts the quality of [deck.to_list (State.get_players_hand st)] 
     with [expected]. *)
 let test_get_players_hand
     (name: string)
     (st: State.t)
     (expected: (string*string) list) =
   name >:: (fun _ ->
-      assert_equal expected (Deck.to_list (State.get_players_hand st)) 
+      assert_equal expected (deck.to_list (State.get_players_hand st)) 
         ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
 
 (** [test_get_ai_hand name st expected] constructs an OUnit test named 
-    [name] that asserts the quality of [Deck.to_list (State.get_ai_hand st)] 
+    [name] that asserts the quality of [deck.to_list (State.get_ai_hand st)] 
     with [expected]. *)
 let test_get_ai_hand
     (name: string)
     (st: State.t)
     (expected: (string*string) list) =
   name >:: (fun _ ->
-      assert_equal expected (Deck.to_list (State.get_ai_hand st))
+      assert_equal expected (deck.to_list (State.get_ai_hand st))
         ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
 
 (** [test_get_draw_deck name st expected] constructs an OUnit test named 
-    [name] that asserts the quality of [Deck.to_list (State.get_draw_deck st)] 
+    [name] that asserts the quality of [deck.to_list (State.get_draw_deck st)] 
     with [expected]. *)
 let test_get_draw_deck
     (name: string)
     (st: State.t)
     (expected: (string*string) list) =
   name >:: (fun _ ->
-      assert_equal expected (Deck.to_list (State.get_draw_deck st))
+      assert_equal expected (deck.to_list (State.get_draw_deck st))
         ~cmp:cmp_deck_lists ~pp_diff:deck_diff)
 
 (** [test_has_won name st expected] constructs an OUnit test named 
@@ -412,7 +412,7 @@ let test_get_turn
     [name] that asserts the quality of [State.put c st s] with [expected]. *)
 let test_put
     (name: string)
-    (c: Deck.card)
+    (c: deck.card)
     (st: State.t)
     (s: string)
     (expected: State.t) =
