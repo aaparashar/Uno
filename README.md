@@ -1,5 +1,4 @@
 # UNO
-Authors: Aarushi Parashar, Aaron Peng and Christina Li
 ## System Description:
 A fun, multi-level implementation of the popular card game Uno in the command line.
 ### Description:
